@@ -13,8 +13,16 @@ hibernate {
 environments {
     development {
         dataSource {
-            dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
-            url = "jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
+//          ARCHIVO LOCAL  
+//			dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
+//            url = "jdbc:h2:mem:devDb;MVCC=TRUE;LOCK_TIMEOUT=10000"
+			
+//			BASE DE DATOS LOCAL POSTGRES
+			url = "jdbc:postgresql://localhost:5432/sig_dev"
+			hibernate.default_schema = "public"
+			dbCreate = "update"
+			username = "postgres"
+			password = "qwe123"
         }
     }
     test {
