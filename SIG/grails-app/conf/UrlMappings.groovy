@@ -10,8 +10,7 @@ class UrlMappings {
 			action = [GET: "show", DELETE: "delete", PUT: "update"]
 		}
 		
-
-		"/"(view:"/index")
+		"/"(view:'/index')
 		"500"(view:'/error')
 	}
 }

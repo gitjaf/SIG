@@ -1,0 +1,17 @@
+<div>
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="span10">
+				<!--Body content-->
+				<div>{{tarea.asunto}}</div>
+				<ul class="phones">
+					{{tarea}}
+					<li ng-repeat="relacion in tarea._embedded.tareasRelacionadas">{{documento.nombre}}
+						<p>{{tarea.descripcion}}</p> <a href="#{{relacion._links.self.href}}">{{relacion._links.self.href}}</a>
+					</li>
+				</ul>
+
+			</div>
+		</div>
+	</div>
+</div>

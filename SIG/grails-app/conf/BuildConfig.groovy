@@ -6,6 +6,9 @@ grails.project.target.level = 1.6
 grails.project.source.level = 1.6
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
 
+// Useful to test plugins you are developing.
+grails.plugin.location.hal = "/home/julian/Documentos/Trabajo/git/grails-plugins/HAL/HAL/HAL"
+
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits("global") {

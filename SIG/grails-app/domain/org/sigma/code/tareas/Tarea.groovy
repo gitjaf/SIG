@@ -1,5 +1,7 @@
 package org.sigma.code.tareas
 
+import groovy.transform.ToString;
+
 import org.sigma.code.common.Documento
 import org.sigma.code.common.Usuario
 
@@ -38,12 +40,13 @@ class Tarea {
 		prioridad(nullable: true)
 		tareaSuperior(nullable: true)
 		tareasRelacionadas(nullable: true)
-		
+				
 	}
 	
 	public String getAsunto(){
 		return asunto
 	}
+	
 	
 	static mapping = {
 		table 'sig_grv_tar_tarea'
@@ -59,20 +62,9 @@ class Tarea {
 			   
 	}
 	
-//	@Override
-//	boolean equals(Object other) {
-//		if(other == null) {return false}
-//		
-//		if(this.id != (other as Tarea).id) {return false}
-//		
-//		return true
-//	}
-
-	// Lanza un Exception - cannot invoke method hashCode() on null object
-//	@Override
-//	public int hashCode() {
-//		return this.asunto.hashCode() + ((this?.id != 'null') ? this.id.hashCode() : 0)
-//	}
+	def halRepresenter = [title: asunto, embedded: ["tipo", "tareasRelacionadas"]]
+	
+	
 	
    
 }

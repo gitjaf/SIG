@@ -9,7 +9,7 @@ class BootStrap {
 	def fixtureLoader // Autowired by Fixtures plugin
 	
     def init = { servletContext ->
-		
+		boolean isProd = GrailsUtil.environment == grails.util.Environment.PRODUCTION
 		boolean isTest = GrailsUtil.environment == grails.util.Environment.TEST
 		if (isTest){
 			

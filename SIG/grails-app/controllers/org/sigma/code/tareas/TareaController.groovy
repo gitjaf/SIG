@@ -1,17 +1,25 @@
 
 package org.sigma.code.tareas
 
+import org.codehaus.groovy.grails.web.mapping.LinkGenerator;
+import org.h2.command.ddl.CreateLinkedTable;
+import org.sigma.code.plugins.HalBuilderService;
 import org.springframework.dao.DataIntegrityViolationException
 import grails.converters.JSON
+
 
 import java.text.SimpleDateFormat
 
 class TareaController {
 
+	def halBuilderService
+	
+	LinkGenerator grailsLinkGenerator
+	
     static allowedMethods = [show: ["GET", "POST"], save: "POST", update: "PUT", delete: "DELETE"]
 
     def index() {
-        redirect(action: "list", params: params)
+        render(action: "list", params: params)
     }
 
     def list() {
@@ -21,7 +29,12 @@ class TareaController {
 		
 		response.status = 200
 		
-		render tareaInstanceList as JSON
+		def list = (halBuilderService.buildList(tareaInstanceList)) as JSON
+		
+		def jsController = ""
+		
+		render list
+		
     }
     
     def save() {
@@ -54,7 +67,8 @@ class TareaController {
     }
 
     def show() {
-        def tareaInstance = Tarea.get(params.id)
+        def tareaInstance = halBuilderService.build(Tarea.get(params.id))
+		
         if (!tareaInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'tarea.label', default: 'Tarea'), params.id])
             response.status = 404
