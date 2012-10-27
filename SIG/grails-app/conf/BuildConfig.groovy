@@ -8,6 +8,7 @@ grails.project.source.level = 1.6
 
 // Useful to test plugins you are developing.
 grails.plugin.location.hal = "/home/julian/Documentos/Trabajo/git/grails-plugins/HAL/HAL/HAL"
+grails.plugin.location.halCollections = "/home/julian/Documentos/Trabajo/git/grails-plugins/HAL-Collections/HAL-Collections/HAL-Collections"
 
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies

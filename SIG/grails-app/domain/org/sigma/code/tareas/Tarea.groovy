@@ -58,7 +58,6 @@ class Tarea {
 		descripcion type: 'text'
 		
 		tipo lazy: false
-		
 			   
 	}
 	

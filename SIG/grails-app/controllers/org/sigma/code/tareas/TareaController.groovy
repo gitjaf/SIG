@@ -14,6 +14,8 @@ class TareaController {
 
 	def halBuilderService
 	
+	def halCollectionBuilderService
+	
 	LinkGenerator grailsLinkGenerator
 	
     static allowedMethods = [show: ["GET", "POST"], save: "POST", update: "PUT", delete: "DELETE"]
@@ -23,37 +25,34 @@ class TareaController {
     }
 
     def list() {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
+
+		def list = (halCollectionBuilderService.buildRepresentation(Tarea.list(), request.getMethod(), params))
 		
-		def tareaInstanceList = Tarea.list()
-		
+		// def list = halBuilderService.buildModelList(Tarea.list())
+
 		response.status = 200
-		
-		def list = (halBuilderService.buildList(tareaInstanceList)) as JSON
-		
-		def jsController = ""
-		
-		render list
+
+		render list as JSON
 		
     }
     
     def save() {
         def tareaInstance = new Tarea()
 
-		 bindData(tareaInstance, request.JSON, ['fechaInicio', 'fechaVencimiento']) 
+		bindData(tareaInstance, request.JSON, ['fechaInicio', 'fechaVencimiento']) 
 		 
-		 tareaInstance.fechaInicio = request.JSON.fechaInicio ? new SimpleDateFormat('yyyy-MM-dd').parse(request.JSON.fechaInicio) : null 
-		 tareaInstance.fechaVencimiento = request.JSON.fechaVencimiento ? new SimpleDateFormat('yyyy-MM-dd').parse(request.JSON.fechaVencimiento) : null 
+		tareaInstance.fechaInicio = request.JSON.fechaInicio ? new SimpleDateFormat('yyyy-MM-dd').parse(request.JSON.fechaInicio) : null 
+		tareaInstance.fechaVencimiento = request.JSON.fechaVencimiento ? new SimpleDateFormat('yyyy-MM-dd').parse(request.JSON.fechaVencimiento) : null 
 
-	 	 tareaInstance.tareaSuperior = Tarea.get(request.JSON?.idTareaSuperior) 
+	 	tareaInstance.tareaSuperior = Tarea.get(request.JSON?.idTareaSuperior) 
  
-	 	 tareaInstance.tipo = Clasificacion.get(request.JSON?.idTipo) 
+	 	tareaInstance.tipo = Clasificacion.get(request.JSON?.idTipo) 
  
-	 	 request.JSON?.idDocumentos?.each{ id -> tareaInstance.addToDocumentos(Documento.get(id))} 
+	 	request.JSON?.idDocumentos?.each{ id -> tareaInstance.addToDocumentos(Documento.get(id))} 
 
-	 	 request.JSON?.idSeguimientos?.each{ id -> tareaInstance.addToSeguimientos(Seguimiento.get(id))} 
+	 	request.JSON?.idSeguimientos?.each{ id -> tareaInstance.addToSeguimientos(Seguimiento.get(id))} 
 
-	 	 request.JSON?.idTareasRelacionadas?.each{ id -> tareaInstance.addToTareasRelacionadas(Tarea.get(id))} 
+	 	request.JSON?.idTareasRelacionadas?.each{ id -> tareaInstance.addToTareasRelacionadas(Tarea.get(id))} 
 
 		        
 		if (!tareaInstance.save(flush: true)) {
@@ -67,7 +66,7 @@ class TareaController {
     }
 
     def show() {
-        def tareaInstance = halBuilderService.build(Tarea.get(params.id))
+        def tareaInstance = halBuilderService.buildModel(Tarea.get(params.id))
 		
         if (!tareaInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'tarea.label', default: 'Tarea'), params.id])
@@ -156,4 +155,5 @@ class TareaController {
 			render flash.message
         }
     }
+	
 }

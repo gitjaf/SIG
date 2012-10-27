@@ -7,7 +7,7 @@
 				<ul class="phones">
 					{{tarea}}
 					<li ng-repeat="relacion in tarea._embedded.tareasRelacionadas">{{documento.nombre}}
-						<p>{{tarea.descripcion}}</p> <a href="#{{relacion._links.self.href}}">{{relacion._links.self.href}}</a>
+						<p>{{tarea.descripcion}}</p> <a ng-href="#{{relacion._links.self.href}}">{{relacion._links.self.href}}</a>
 					</li>
 				</ul>
 

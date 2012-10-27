@@ -4,8 +4,13 @@ modules = {
 		resource url:'js/application.js', disposition: 'head'
 		resource url:'js/ng-controllers/controller.js', disposition: 'head'
 		resource url:'js/ng-services/services.js', disposition: 'head'
+		resource url:'css/custom.css'
 		
     }
+	
+	customBootstrap {
+		dependsOn 'bootstrap', 'font-awesome'
+	}
 	
 	
 	
