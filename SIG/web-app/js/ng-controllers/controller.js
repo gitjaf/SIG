@@ -1,5 +1,10 @@
 function ListaTareaCtrl($scope, $routeParams, Tarea) {
-	$scope.tareas = Tarea.query();
+	var page = $routeParams.page ? $routeParams.page : 0;
+	var items = $routeParams.itemsPerPage ? $routeParams.itemsPerPage : 10;
+
+	
+	$scope.tareas = Tarea.query({"page": page, "itemsPerPage" : items});
+
 	$scope.orderProp = 'fechaInicio';
 }
 

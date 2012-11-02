@@ -11,9 +11,18 @@
 	<div class="row-fluid" style="margin-top:25px;">
 		<!--Body content-->
 		<div class="offset1 span8" >
-			<div class="pagination">
+			<div class="pager">
 				<ul>
-					<li><a ng-href="#{{tareas._links.next}}">Next</a></li>
+					<li ng-show="tareas._links.previous" >
+						<a ng-href="#{{tareas._links.previous}}" ng-disabled="tareas._links.previous">Previous</a>
+					</li>
+					<li ng-repeat="pageNumber in tareas.data.pages">
+						<a href="#/tareas?page={{pageNumber}}&itemsPerPage={{tareas.data.itemsPerPage}}">{{pageNumber}}</a>
+					</li>
+					<li ng-show="tareas._links.next">
+						<a ng-href="#{{tareas._links.next}}">Next</a>
+					</li>
+
 				</ul>
 			</div>
 			
