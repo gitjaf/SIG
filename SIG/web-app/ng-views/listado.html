@@ -2,22 +2,60 @@
 	<div class="container">
 		
 			<!--Sidebar content-->
-			<div class="span8 offset2" style="margin-top:10px;">
-				<input ng-model="query" type="search" placeholder="Buscar Tareas" class="input-xxlarge">
+			<div class="span9" style="margin-top:10px;">
+				<div class="input-append">
+					<input ng-model="query" type="search" placeholder="Buscar Tareas" class="span9">
+					<button class="btn ">&nbsp;<i class="icon-search"></i>&nbsp;</button><br>
+				</div>
+				<div class="pull-left">
+					<span class="muted"><small>{{tareas.data.total}} Tareas</small></span>
+				</div>
+				<div class="pull-right">
+					<span class="muted"><small>Ordenar por:</small></span>
+					<span class=""><a><small>Inicio</small></a></span>
+					<span class=""><a><small>Vencimiento</small></a></span>
+					<span class=""><a><small>Estado</small></a></span>
+					<span class=""><a><small>Prioridad</small></a></span>
+					
+				</div>
 			</div>
+
 
 	</div>
 
 	<div class="row-fluid" style="margin-top:25px;">
 		<!--Body content-->
-		<div class="offset1 span8" >
+		<div class="offset1 span8">	
+			<div class="row-fluid hoverDiv" ng-repeat="tarea in tareas._embedded.collection | filter: query | orderBy: orderProp">
+
+				<div class="row-fluid">
+					<a ng-href="#{{tarea._links.self.href}}" class="lead">{{tarea.asunto}} </a>
+					<span class="muted">{{tarea.fechaInicio | date:mediumDate}}</span>
+					<span class="muted"> - {{tarea.fechaVencimiento | date:mediumDate}}</span>
+					<span class="">{{tarea.estado}}</span>
+					<span class="">{{tarea.prioridad}}</span>
+					
+				</div>
+				<div class="row-fluid">
+					<div class="span6 muted">{{tarea.descripcion}}</div>
+				</div>
+			</div>
+		</div>
+		<div class="span2">
+			Sort By: <select ng-model="orderProp">
+				<option value="asunto">Alfabetico</option>
+				<option value="fechaInicio">Reciente</option>
+			</select>
+		</div>
+		<div class="span8" >
 			<div class="pager">
 				<ul>
 					<li ng-show="tareas._links.previous" >
 						<a ng-href="#{{tareas._links.previous}}" ng-disabled="tareas._links.previous">Previous</a>
 					</li>
-					<li ng-repeat="pageNumber in tareas.data.pages">
-						<a href="#/tareas?page={{pageNumber}}&itemsPerPage={{tareas.data.itemsPerPage}}">{{pageNumber}}</a>
+					<li ng-repeat="(number, link) in tareas._links.pages"
+						ng-class="{disabled: tareas._links.self == link }">
+						<a ng-href="#{{link}}">{{number}}</a>
 					</li>
 					<li ng-show="tareas._links.next">
 						<a ng-href="#{{tareas._links.next}}">Next</a>
@@ -25,30 +63,7 @@
 
 				</ul>
 			</div>
-			
-			<div class="row-fluid hoverDiv" ng-repeat="tarea in tareas._embedded.collection | filter: query | orderBy: orderProp">
-
-				<div class="row-fluid">
-					<div class="span4">{{tarea.asunto}}</div>
-					<div class="span2 muted">{{tarea.fechaInicio | date:mediumDate}}</div>
-					<div class="span1">{{tarea.estado}}</div>
-				</div>
-				<div class="row-fluid">
-					<div class="span4 muted">{{tarea.descripcion}}</div>
-					<div class="span2 muted">{{tarea.fechaVencimiento |	date:mediumDate}}</div>
-					<div class="span1">{{tarea.prioridad}}</div>
-					<div class="span2">
-						<a ng-href="#{{tarea._links.self.href}}"><i class="icon-eye-open icon-large"></i></a>
-					</div>
-				</div>
-			</div>
 		</div>
 
-		<div class="span2">
-			Sort By: <select ng-model="orderProp">
-				<option value="asunto">Alfabetico</option>
-				<option value="fechaInicio">Reciente</option>
-			</select>
-		</div>
 	</div>
 </div>

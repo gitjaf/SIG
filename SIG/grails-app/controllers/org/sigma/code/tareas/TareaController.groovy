@@ -26,7 +26,7 @@ class TareaController {
 
     def list() {
 
-		def list = (halCollectionBuilderService.buildRepresentation(Tarea.list(), request.getMethod(), params))
+    	def list = (halCollectionBuilderService.buildRepresentation(Tarea.list(sort: params?.sortBy), request.getMethod(), params))
 		
 		// def list = halBuilderService.buildModelList(Tarea.list())
 
