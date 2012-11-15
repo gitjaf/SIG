@@ -13,4 +13,18 @@ class TareaService {
 		
 		
     }
+
+
+    List<Tarea> getTareas(Map params){
+    	def query = Tarea.where {}
+    	
+    	if(params?.q){
+    		query = query.where {
+    			asunto =~ "%${params.q}%" || estado =~ "%${params.q}%" || prioridad =~ "%${params.q}%" || descripcion =~ "%${params.q}%"
+    		}
+    	}
+    	
+    	return query.list(sort: params?.sortBy)
+    }
+
 }

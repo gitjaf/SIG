@@ -5,17 +5,27 @@
 			<div class="span8" style="margin-top:10px;">
 				<div class="input-append">
 					<input ng-model="query" type="search" placeholder="Buscar Tareas" class="span8">
-					<button class="btn ">&nbsp;<i class="icon-search"></i>&nbsp;</button><br>
+					<button class="btn " ng-click="search(query)">&nbsp;<i class="icon-search"></i>&nbsp;</button><br>
 				</div>
 				<div class="pull-left">
-					<span class="muted"><small>{{tareas.data.total}} Tareas</small></span>
+					<span class="muted"><small>{{tareas.data.total}} Tareas en total</small></span>
 				</div>
 				<div class="pull-right">
 					<span class="muted"><small>Ordenar por:</small></span>
-					<span class=""><a><small>Inicio</small></a></span>
-					<span class=""><a><small>Vencimiento</small></a></span>
-					<span class=""><a><small>Estado</small></a></span>
-					<span class=""><a><small>Prioridad</small></a></span>
+					<span ng-class="{activeLink: tareas.data.sortBy == 'fechaInicio' }">
+						<a ng-click="sort('fechaInicio')">
+							<small>Inicio</small></a>
+					</span>
+					<span ng-class="{activeLink: tareas.data.sortBy == 'fechaVencimiento' }">
+						<a ng-click="sort('fechaVencimiento')">
+							<small>Vencimiento</small></a>
+					</span>
+					<span ng-class="{activeLink: tareas.data.sortBy == 'estado' }">
+						<a  ng-click="sort('estado')"><small>Estado</small></a>
+					</span>
+					<span ng-class="{activeLink: tareas.data.sortBy == 'prioridad' }">
+						<a ng-click="sort('prioridad')"><small>Prioridad</small></a>
+					</span>
 					
 				</div>
 			</div>
@@ -42,23 +52,23 @@
 			</div>
 		</div>
 		<div class="span2">
-			Sort By: <select ng-model="orderProp">
+			<!-- Sort By: <select ng-model="orderProp">
 				<option value="asunto">Alfabetico</option>
 				<option value="fechaInicio">Reciente</option>
-			</select>
+			</select> -->
 		</div>
 		<div class="span8" >
 			<div class="pager">
 				<ul>
 					<li ng-show="tareas._links.previous" >
-						<a ng-href="#{{tareas._links.previous}}" ng-disabled="tareas._links.previous">Previous</a>
+						<a ng-href="#{{tareas._links.previous.href}}" >Previous</a>
 					</li>
 					<li ng-repeat="(number, link) in tareas._links.pages"
-						ng-class="{disabled: tareas._links.self == link }">
-						<a ng-href="#{{link}}">{{number}}</a>
+						ng-class="{disabled: tareas._links.self.href == link.href }">
+						<a ng-href="#{{link.href}}">{{number}}</a>
 					</li>
 					<li ng-show="tareas._links.next">
-						<a ng-href="#{{tareas._links.next}}">Next</a>
+						<a ng-href="#{{tareas._links.next.href}}">Next</a>
 					</li>
 
 				</ul>

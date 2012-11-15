@@ -15,6 +15,8 @@ class TareaController {
 	def halBuilderService
 	
 	def halCollectionBuilderService
+
+	def tareaService
 	
 	LinkGenerator grailsLinkGenerator
 	
@@ -26,7 +28,7 @@ class TareaController {
 
     def list() {
 
-    	def list = (halCollectionBuilderService.buildRepresentation(Tarea.list(sort: params?.sortBy), request.getMethod(), params))
+    	def list = (halCollectionBuilderService.buildRepresentation(tareaService.getTareas(params), request.getMethod(), params))
 		
 		// def list = halBuilderService.buildModelList(Tarea.list())
 

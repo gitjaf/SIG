@@ -1,3 +1,4 @@
+
 .hoverDiv {
 	background: #fff;
 	
@@ -5,4 +6,9 @@
 
 .hoverDiv:HOVER {
 	background: #f5f5f5
+}
+
+.activeLink {
+	/*font-weight: bolder;*/
+	text-transform: uppercase;
 }
