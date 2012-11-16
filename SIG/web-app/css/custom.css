@@ -12,3 +12,38 @@
 	/*font-weight: bolder;*/
 	text-transform: uppercase;
 }
+
+/*--- Labels ----*/
+
+.label {
+	margin-right: 6px;
+}
+
+.nueva {
+	background-color: #049cdb;
+}
+
+.cerrada {
+	background-color: #f89406;
+}
+
+.encurso {
+	background-color: #7a43b6;
+}
+
+.terminada {
+	background-color: #46a546;
+}
+
+.alta {
+	background-color: #9d261d;	
+}
+
+.normal {
+	background-color: #f89406;	
+}
+
+.baja {
+	background-color: #46a546;	
+}
+

@@ -10,7 +10,7 @@ modules = {
     }
 	
 	customBootstrap {
-		dependsOn 'bootstrap', 'font-awesome'
+		dependsOn 'bootstrap-responsive-css', 'bootstrap-js', 'font-awesome'
 	}
 	
 	
