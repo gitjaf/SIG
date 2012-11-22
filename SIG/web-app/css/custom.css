@@ -9,8 +9,14 @@
 }
 
 .activeLink {
-	/*font-weight: bolder;*/
+	font-weight: bolder;
 	text-transform: uppercase;
+	
+}
+
+.sort_fields {
+	margin-right: 6px;
+
 }
 
 /*--- Labels ----*/
@@ -47,3 +53,54 @@
 	background-color: #46a546;	
 }
 
+/*----MODALS----*/
+
+
+.form {
+	width: 50%;
+	margin-top: -21%;
+}
+
+.modal.slide.left {
+  	left: 100%;
+
+  	-webkit-transition: opacity 0.3s linear, left 0.3s ease-out;
+     -moz-transition: opacity 0.3s linear, left 0.3s ease-out;
+       -o-transition: opacity 0.3s linear, left 0.3s ease-out;
+          transition: opacity 0.3s linear, left 0.3s ease-out;
+}
+
+.modal.slide.down {
+  	top: -25%;
+
+  	-webkit-transition: opacity 0.3s linear, top 0.3s ease-out;
+     -moz-transition: opacity 0.3s linear, top 0.3s ease-out;
+       -o-transition: opacity 0.3s linear, top 0.3s ease-out;
+          transition: opacity 0.3s linear, top 0.3s ease-out;	
+}
+
+.modal.slide.left.in {
+  	left: 67%;
+}
+
+.modal.slide.down.in{
+	top: 50%;
+}
+
+.modal-backdrop.fade.in{
+  opacity: 0.3;
+  filter: alpha(opacity=30);
+}
+
+.modal-backdrop.slide.in{
+	opacity: 0.3;
+	filter: alpha(opacity=30);
+}
+
+
+
+/*----DATEPICKER----*/
+
+.datepicker {
+	z-index: 3000;
+}

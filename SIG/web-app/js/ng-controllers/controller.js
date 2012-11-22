@@ -26,12 +26,19 @@ function ListaTareaCtrl($scope, $routeParams, $location, Tarea) {
 		return $routeParams.q === item;
 	}
 
+
 	
 
 }
 
 function DetalleTareaCtrl($scope, $routeParams, Tarea) {
 	$scope.tarea = Tarea.get({idTarea:$routeParams.tareaId});
+}
+
+function FormTareaCtrl($scope, $routeParams, Tarea) {
+	$scope.tarea = new Tarea();
+	$scope.form_action = "Nueva Tarea";
+	
 }
 
 

@@ -1,57 +1,68 @@
+
+
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span10">
 			<div class="row-fluid">
 				<div class="span12">
-					<div class="span2">
-						<button class="btn pull-right">Nueva</button>
-					</div>
-					<div class="input-append span10 hidden-phone">
-						<input ng-model="query" type="search" placeholder="Buscar Tareas" class="span8">
-						<button class="btn " ng-click="search(query)">&nbsp;<i class="icon-search"></i>&nbsp;</button><br>
+					<div class="input-append span8 offset2 hidden-phone">
+						<input data-ng-model="query" type="search" placeholder="Buscar Tareas" class="span7">
+						<button class="btn" data-ng-click="search(query)">&nbsp;<i class="icon-search"></i>&nbsp;</button><br>
 					</div>	
 				</div>
 				<div class="row-fluid hidden-phone">
 					
 					<div class="span4 offset2 collapse in">
 						<span class="muted"><small>Ordenar por:</small></span>
-						<span ng-class="{activeLink: tareas.data.sortBy == 'asunto' }">
-							<a ng-click="sort('asunto')">
-								<small>Asunto</small></a>
+						<span data-ng-class="{activeLink: tareas.data.sortBy == 'asunto' }">
+							<a data-ng-click="sort('asunto')">
+								Asunto
+							</a>
 						</span>
-						<span ng-class="{activeLink: tareas.data.sortBy == 'fechaInicio' }">
-							<a ng-click="sort('fechaInicio')">
-								<small>Inicio</small></a>
+						<span data-ng-class="{activeLink: tareas.data.sortBy == 'fechaInicio' }">
+							<a data-ng-click="sort('fechaInicio')">
+								Inicio
+							</a>
 						</span>
-						<span ng-class="{activeLink: tareas.data.sortBy == 'fechaVencimiento' }">
-							<a ng-click="sort('fechaVencimiento')">
-								<small>Vencimiento</small></a>
+						<span data-ng-class="{activeLink: tareas.data.sortBy == 'fechaVencimiento' }">
+							<a data-ng-click="sort('fechaVencimiento')">
+								Vencimiento
+							</a>
 						</span>
-						<span ng-class="{activeLink: tareas.data.sortBy == 'estado' }">
-							<a  ng-click="sort('estado')"><small>Estado</small></a>
+						<span data-ng-class="{activeLink: tareas.data.sortBy == 'estado' }">
+							<a  data-ng-click="sort('estado')">
+								Estado
+							</a>
 						</span>
-						<span ng-class="{activeLink: tareas.data.sortBy == 'prioridad' }">
-							<a ng-click="sort('prioridad')"><small>Prioridad</small></a>
+						<span data-ng-class="{activeLink: tareas.data.sortBy == 'prioridad' }">
+							<a data-ng-click="sort('prioridad')">
+								Prioridad
+							</a>
 						</span>
 					</div>
-					<div class="span2 offset2">
+					<div class="span2">
 						<span class="muted"><small>{{tareas.data.total}} Tarea(s)</small></span>
 					</div>
+				</div>
+			</div>
+			<div class="row-fluid">
+				<div class="span2">
+					<a class="btn pull-right" id="datepicker" data-toggle="modal" data-target="#edit">Nueva</a>
 				</div>
 			</div>
 			<div class="row-fluid" style="margin-top:25px;">
 				<!--Body content-->
 				<div class="offset1 span8">	
-					<div class="row-fluid hoverDiv" ng-repeat="tarea in tareas._embedded.collection | filter: query | orderBy: orderProp">
+					<div class="row-fluid hoverDiv" data-ng-repeat="tarea in tareas._embedded.collection | filter: query | orderBy: orderProp">
 
 						<div class="row-fluid">
-							<a ng-href="#{{tarea._links.self.href}}" class="lead">{{tarea.asunto}} </a>
+							<a data-ng-href="#{{tarea._links.self.href}}" class="lead">{{tarea.asunto}} </a>
 							<span class="muted">{{tarea.fechaInicio | date:mediumDate}}</span>
 							<span class="muted"> - {{tarea.fechaVencimiento | date:mediumDate}}</span>
-							<span ng-class="{label : tarea.estado}" class="{{(tarea.estado | lowercase).split(' ').join('')}}">
+							<span data-ng-class="{label : tarea.estado}" class="{{(tarea.estado | lowercase).split(' ').join('')}}">
 								{{tarea.estado}}
 							</span>
-							<span ng-class="{label : tarea.prioridad}" class="{{(tarea.prioridad | lowercase).split(' ').join('')}}">
+							<span data-ng-class="{label : tarea.prioridad}" class="{{(tarea.prioridad | lowercase).split(' ').join('')}}">
 								{{tarea.prioridad}}
 							</span>
 							
@@ -70,15 +81,15 @@
 				<div class="span8" >
 					<div class="pager">
 						<ul>
-							<li ng-show="tareas._links.previous" >
-								<a ng-href="#{{tareas._links.previous.href}}" >Previous</a>
+							<li data-ng-show="tareas._links.previous" >
+								<a data-ng-href="#{{tareas._links.previous.href}}" >Previous</a>
 							</li>
-							<li ng-repeat="(number, link) in tareas._links.pages"
-								ng-class="{disabled: tareas._links.self.href == link.href }">
-								<a ng-href="#{{link.href}}">{{number}}</a>
+							<li data-ng-repeat="(number, link) in tareas._links.pages"
+								data-ng-class="{disabled: tareas._links.self.href == link.href }">
+								<a data-ng-href="#{{link.href}}">{{number}}</a>
 							</li>
-							<li ng-show="tareas._links.next">
-								<a ng-href="#{{tareas._links.next.href}}">Next</a>
+							<li data-ng-show="tareas._links.next">
+								<a data-ng-href="#{{tareas._links.next.href}}">Next</a>
 							</li>
 
 						</ul>
@@ -91,6 +102,11 @@
 
 		</div>
 
+	</div>
+
+	<div data-ui-modal class="form fade slide left" data-ng-model="modal" id="edit">
+		<div data-ng-include src="'./ng-views/form.html'" data-ng-controller="FormTareaCtrl">
+		</div>
 	</div>
 
 	
