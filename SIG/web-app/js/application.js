@@ -8,7 +8,7 @@ if (typeof jQuery !== 'undefined') {
 	})(jQuery);
 }
 
-angular.module('sig', ['sigServices', 'ui']).
+angular.module('sig', ['sig.services', 'sig.directives', 'ui']).
 config(['$routeProvider', function($routeProvider) {
 	$routeProvider.
 	when('/tarea', {templateUrl: './ng-views/listado.html', controller: ListaTareaCtrl}).
@@ -18,3 +18,4 @@ config(['$routeProvider', function($routeProvider) {
 		return ("/tarea");
 	}});
 }]);
+

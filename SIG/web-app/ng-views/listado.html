@@ -5,14 +5,14 @@
 		<div class="span10">
 			<div class="row-fluid">
 				<div class="span12">
-					<div class="input-append span8 offset2 hidden-phone">
+					<div class="input-append span9 offset2 hidden-phone">
 						<input data-ng-model="query" type="search" placeholder="Buscar Tareas" class="span7">
 						<button class="btn" data-ng-click="search(query)">&nbsp;<i class="icon-search"></i>&nbsp;</button><br>
 					</div>	
 				</div>
 				<div class="row-fluid hidden-phone">
 					
-					<div class="span4 offset2 collapse in">
+					<div class="span5 offset2 collapse in">
 						<span class="muted"><small>Ordenar por:</small></span>
 						<span data-ng-class="{activeLink: tareas.data.sortBy == 'asunto' }">
 							<a data-ng-click="sort('asunto')">
@@ -47,7 +47,7 @@
 			</div>
 			<div class="row-fluid">
 				<div class="span2">
-					<a class="btn pull-right" id="datepicker" data-toggle="modal" data-target="#edit">Nueva</a>
+					<a class="btn pull-right" id="form" data-toggle="modal" data-target="#edit" >Nueva</a>
 				</div>
 			</div>
 			<div class="row-fluid" style="margin-top:25px;">

@@ -24,7 +24,7 @@ class Usuario {
 		seguidas column: 'id_usuario', joinTable: 'sig_grv_tar_usuario_seguidas'
 	}
 	
-	
+	def halRepresenter = [title: username, embedded: ["persona"]]
 
 	String toString() {
 		primeraEnMayuscula(persona.nombres) + " " + primeraEnMayuscula(persona.apellidos)
@@ -33,6 +33,8 @@ class Usuario {
 	String primeraEnMayuscula(String cadena){
 		cadena.toLowerCase().split(' ').collect{it.capitalize()}.join(' ')
 	}
+
+
 //	
 //	boolean equals(other){
 //		if(other?.id != this.id) { return false }

@@ -30,8 +30,6 @@ class TareaController {
 
     	def list = (halCollectionBuilderService.buildRepresentation(tareaService.getTareas(params), request.getMethod(), params))
 		
-		// def list = halBuilderService.buildModelList(Tarea.list())
-
 		response.status = 200
 
 		render list as JSON

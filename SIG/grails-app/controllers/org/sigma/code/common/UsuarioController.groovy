@@ -10,18 +10,21 @@ class UsuarioController {
 
     static allowedMethods = [show: ["GET", "POST"]]
 
+    def halBuilderService
+    
+    def halCollectionBuilderService
+
     def index() {
         redirect(action: "list", params: params)
     }
 
     def list() {
-        params.max = Math.min(params.max ? params.int('max') : 10, 100)
-		
-		def usuarioInstanceList = Usuario.list()
+        
+		def list = halBuilderService.buildModelList(Usuario.list(sort:"persona.apellidos"))
 		
 		response.status = 200
 		
-		render usuarioInstanceList as JSON
+		render list as JSON
     }
     
     

@@ -11,9 +11,7 @@ class TareaService {
 		
 		Tarea tarea = new Tarea(json)
 		
-		
     }
-
 
     List<Tarea> getTareas(Map params){
     	def query = Tarea.where {}

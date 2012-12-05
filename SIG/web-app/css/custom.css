@@ -55,10 +55,14 @@
 
 /*----MODALS----*/
 
+.modal-body {
+	max-height: 500px;
+	height: 500px;
+}
 
 .form {
-	width: 50%;
-	margin-top: -21%;
+	width: 55%;
+	margin-top: -24%;
 }
 
 .modal.slide.left {
@@ -80,7 +84,7 @@
 }
 
 .modal.slide.left.in {
-  	left: 67%;
+  	left: 65%;
 }
 
 .modal.slide.down.in{
@@ -103,4 +107,40 @@
 
 .datepicker {
 	z-index: 3000;
+}
+
+
+/*---COLORS---*/
+
+.txt-blue {
+	color: #049cdb;
+}
+
+.txt-white {
+	color: white;
+}
+
+/*---TYPEAHEAD---*/
+.typeahead {
+	z-index: 3000;
+}
+
+.dropdown-menu {
+	z-index: 3001;
+}
+
+/*----UI-ANIMATE----*/
+li {
+transition: all 0.5s ease;
+-o-transition: all 0.5s ease;
+-moz-transition: all 0.5s ease;
+-webkit-transition: all 0.5s ease;
+}
+
+/* The 'hidden' state to transition from & to */
+li.ui-animate {
+background: white;
+opacity: 0;
+max-height: 0;
+padding: 0 5px;
 }

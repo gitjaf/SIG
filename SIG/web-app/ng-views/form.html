@@ -1,0 +1,129 @@
+
+<div class="modal-header btn-primary">
+	<button type="button" class="close txt-white" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<h3 class="text-info txt-white">{{form_action}}</h3>
+</div>
+<div class="modal-body">
+	<form>
+	    <fieldset>
+	    	<div class="container-fluid">
+			    <div class="row-fluid">
+			    	<div class="span12">		    		
+			    		<label>Asunto</label>
+			    		<input id="form_asunto" type="text" placeholder="Asunto de la tarea" class="input-block-level">
+			    	</div>
+			    </div>
+			    <div class="row-fluid">
+			    	<div class="span12">
+				    	<div class="span3">
+				    		<label>Inicia</label>
+				    		<input id="form_inicio" type="text" class="span12 datepicker" placeholder="Fecha de Inicio"
+				    			data-date-format="dd/mm/yyyy" data-ng-model="date">
+				    	</div>
+				    	<div class="span3">
+							<label>Vence</label>
+				    		<input id="form_vence" type="text" class="span12 datepicker" placeholder="Fecha de Vencimiento"
+				    			data-date-format="dd/mm/yyyy" data-ng-model="date">
+				    	</div>
+				    	<div class="input-prepend span3">
+							<label>Estado</label>
+				    		<span class="btn-group">
+					    		<button class="btn dropdown-toggle" data-toggle="dropdown">
+					    			<span class="caret"></span>
+					    		</button>
+					    		<ul class="dropdown-menu" role="menu">
+					    			<li><a class="" data-ng-click="tarea.estado = 'Nueva'">Nueva</a></li>
+					    			<li><a class="" data-ng-click="tarea.estado = 'En Curso'">En Curso</a></li>
+					    			<li><a class="" data-ng-click="tarea.estado = 'Terminada'">Terminada</a></li>
+					    			<li><a class="" data-ng-click="tarea.estado = 'Cerrada'">Cerrada</a></li>
+				    			</ul>
+				    		</span>
+				    		<input id="form_estado" type="text" class="span9" disabled data-ng-model="tarea.estado" >
+				    	</div>
+				    	<div class="input-prepend span3">
+							<label>Prioridad</label>
+							<span class="btn-group">
+					    		<button class="btn dropdown-toggle" data-toggle="dropdown">
+					    			<span class="caret"></span>
+					    		</button>
+					    		<ul class="dropdown-menu" role="menu">
+					    			<li><a class="" data-ng-click="tarea.prioridad = 'Alta'">Alta</a></li>
+					    			<li><a class="" data-ng-click="tarea.prioridad = 'Normal'">Normal</a></li>
+					    			<li><a class="" data-ng-click="tarea.prioridad = 'Baja'">Baja</a></li>
+					    			<li><a class="" data-ng-click="tarea.prioridad = 'Indistinta'">Indistinta</a></li>
+				    			</ul>
+				    		</span>
+				    		<input id="form_prioridad" type="text" class="span9" disabled data-ng-model="tarea.prioridad">
+				    	</div>
+			    	</div>
+			    </div>
+			    <div class="row-fluid">
+			    	<div class="span12">
+			    		<div class="span6">
+			    			<label>Asignados</label>
+			    			<div class="input-append">
+				    			<input type="text" id="form_asigna" class="span10" placeholder="Buscar y agregar usuario como asignado" >
+				    			<button class="btn" data-ng-click="agregar(usuario, id, tarea.asignados)">
+				    				<i class="icon-plus"></i>
+				    			</button>
+			    			</div>
+			    			<ul>
+			    				<li data-ng-repeat="asignado in tarea.asignados" ui-animate>{{asignado.nombre}}
+			    					<button class="btn btn-link" data-ng-click="remover($index, tarea.asignados)"><i class="icon-remove"></i></button>
+			    				</li>
+			    			</ul>
+			    				 
+			    		</div>
+			    		<div class="span6">
+			    			<label>Seguidores</label>
+			    			<div class="input-append">
+				    			<input type="text" id="form_sigue" class="span10" 
+				    				placeholder="Buscar y agregar usuario como seguidor">
+				    			<button class="btn" data-ng-click="agregar(usuario, id, tarea.seguidores)">
+				    				<i class="icon-plus"></i>
+				    			</button>
+			    			</div>
+			    			<ul>
+			    				<li data-ng-repeat="seguidor in tarea.seguidores" ui-animate>{{seguidor.nombre}}
+			    					<button class="btn btn-link" data-ng-click="remover($index, tarea.seguidores)"><i class="icon-remove"></i></button>
+			    				</li>
+			    			</ul>
+			    		</div>
+			    	</div>
+			    </div>	
+			    <div class="row-fluid">
+			    	<div class="span12">
+			    		<div class="span12">
+			    			<label>Descripción</label>
+			    			<textarea id="form_desc" rows="4" data-ng-model="tarea.descripcion" class="span10"></textarea>
+			    		</div>
+			    	</div>
+			    </div>	
+	    	</div>
+	    </fieldset>
+    </form>
+</div>
+<div class="modal-footer">
+	<a data-dismiss="modal" class="btn" data-ng-click="cleanAll()">Close</a>
+	<a href="#" class="btn btn-primary">Save changes</a>
+</div>
+
+<script type="text/javascript">
+	jQuery('#form_inicio').datepicker('place');
+	jQuery('#form_vence').datepicker('place');
+	//Funciona, investigar por aca.
+	jQuery('#form_asigna').typeaheadmap({
+		"source": angular.element('#form_asigna').scope().usuarios,
+		"key" : ["_embedded.persona.nombres", "_embedded.persona.apellidos"],
+		"value" : "id",
+		"listener": angular.element('#form_asigna').scope().filler
+					
+	});
+	angular.element('#form_sigue').typeaheadmap({
+		"source": angular.element('#form_sigue').scope().usuarios,
+		"key" : ["_embedded.persona.nombres", "_embedded.persona.apellidos"],
+		"value" : "id",
+		"listener" : angular.element('#form_sigue').scope().filler
+	})
+
+</script>
