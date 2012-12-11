@@ -27,13 +27,17 @@ class TareaController {
     }
 
     def list() {
-
-    	def list = (halCollectionBuilderService.buildRepresentation(tareaService.getTareas(params), request.getMethod(), params))
-		
-		response.status = 200
+    	def list = [:]
+    	if(params?.userId){
+    		list = (halCollectionBuilderService.buildRepresentation(tareaService.getTareas(params, params.userId),
+    		 request.getMethod(), params, [prepend:"/${params.userId}", append:""]))
+    		response.status = 200
+			
+    	} else {
+    		response.status = 401
+    	}
 
 		render list as JSON
-		
     }
     
     def save() {

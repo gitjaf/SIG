@@ -1,10 +1,16 @@
-function ListaTareaCtrl($scope, $routeParams, $location, Tarea) {
+function ListaTareaCtrl($scope, $routeParams, $location, Tarea, $rootScope) {
+	
 	var page = $routeParams.page ? $routeParams.page : 0;
 	var items = $routeParams.itemsPerPage ? $routeParams.itemsPerPage : 10;
 	var sortBy = $routeParams.sortBy ? $routeParams.sortBy : "fechaInicio";
 	var query = $routeParams.q ? $routeParams.q : "";
+
+	if($routeParams.userId){
+		$rootScope.userId = ($rootScope.userId != $routeParams.userId) ? $routeParams.userId : $rootScope.userId;
 	
-	$scope.tareas = Tarea.query({"page": page, "itemsPerPage" : items, "sortBy": sortBy, "q": query});
+		$scope.tareas = Tarea.query({"page": page, "itemsPerPage" : items, "sortBy": sortBy,
+	 	"q": query, userId: $rootScope.userId});
+	}
 
 	$scope.query = query;
 
@@ -18,12 +24,24 @@ function ListaTareaCtrl($scope, $routeParams, $location, Tarea) {
 	}
 
 	$scope.$on('filter', function(event, filter){
-		$location.search("q", filter);
-		$location.search("page", "0");
+		var q = "/tarea" + (filter != '' ? ("?q=" + filter) : '')
+		$location.url($rootScope.userId + q);
+		
 	});
 
 	$scope.isActive = function(item) {
-		return $routeParams.q === item;
+		if($routeParams.q){
+			return $routeParams.q === item;
+		}
+		return undefined;
+	}
+
+	$scope.nuevaTarea = function(){
+		$scope.form_action = "Nueva Tarea";
+		$scope.tarea = new Tarea();
+		$scope.tarea.asignados = [];
+		$scope.tarea.seguidores = [];
+		$scope.tarea.responsable = $rootScope.userId;
 	}
 
 }
@@ -40,14 +58,9 @@ function FormTareaCtrl($scope, $routeParams, Tarea, Usuario) {
 	var sort = "apellidos"
 	var q = ""
 
-	$scope.tarea = new Tarea();
-	$scope.tarea.asignados = [];
-	$scope.tarea.seguidores = [];
-		
-	$scope.form_action = "Nueva Tarea";
-	
 	$scope.usuarios = Usuario.query({"page": page, "itemsPerPage": items, "sortBy": sort, "q": q});
 
+	
 	$scope.filler = function(k, v){
 		$scope.usuario = k;
 		$scope.id = v;
@@ -72,6 +85,7 @@ function FormTareaCtrl($scope, $routeParams, Tarea, Usuario) {
 
 	$scope.cleanAll = function(){
 		$scope.clean(formElements);
+		$scope.nuevaTarea();
 	}
 
 	$scope.clean = function(elements){

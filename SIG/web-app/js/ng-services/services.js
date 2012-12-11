@@ -2,7 +2,8 @@ var services = angular.module('sig.services', ['ngResource'])
 	
 
 services.factory('Tarea', function($resource){
-	return $resource('/SIG/tarea/:idTarea', {page: '@page', itemsPerPage: '@itemsPerPage', sortBy: '@sortBy', q: '@q'}, 
+	return $resource('/SIG/tarea/:idTarea', {page: '@page', itemsPerPage: '@itemsPerPage',
+	 sortBy: '@sortBy', q: '@q', userId:'@userId'}, 
 		{query: {method: 'GET', params:{}, isArray: false}});
 });
 

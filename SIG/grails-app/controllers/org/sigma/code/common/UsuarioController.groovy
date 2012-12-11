@@ -19,9 +19,9 @@ class UsuarioController {
     }
 
     def list() {
-        
-		def list = halBuilderService.buildModelList(Usuario.list(sort:"persona.apellidos"))
-		
+                
+		def list = halBuilderService.buildModelList(Usuario.list(sort:"persona.apellidos"), null)
+
 		response.status = 200
 		
 		render list as JSON

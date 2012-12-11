@@ -12,9 +12,9 @@
 <body>
 	<div class="navbar hidden-phone">
 		<div class="navbar-inner" data-ng-controller="ListaTareaCtrl">
-			<a class="brand" href="#">Tareas</a>
+			<a class="brand" data-ng-click="$emit('filter', '')">Tareas</a>
 			<ul class="nav">
-				<li data-ng-class="{active: isActive(undefined)}"><a href="#/tareas" data-ng-click="query = ''">Todas</a></li>
+				<li data-ng-class="{active: isActive('') == undefined}"><a data-ng-click="$emit('filter', '')">Todas</a></li>
 				<li data-ng-class="{active: isActive('Nueva')}"><a data-ng-click="$emit('filter', 'Nueva')">A Iniciar</a></li>
 				<li data-ng-class="{active: isActive('En Curso')}"><a data-ng-click="$emit('filter', 'En Curso')">En Curso</a></li>
 				<li data-ng-class="{active: isActive('Terminada')}"><a data-ng-click="$emit('filter', 'Terminada')">Terminadas</a></li>

@@ -11,11 +11,11 @@ if (typeof jQuery !== 'undefined') {
 angular.module('sig', ['sig.services', 'sig.directives', 'ui']).
 config(['$routeProvider', function($routeProvider) {
 	$routeProvider.
-	when('/tarea', {templateUrl: './ng-views/listado.html', controller: ListaTareaCtrl}).
-	when('/edit', {templateUrl: './ng-views/form.html', controller: FormTareaCtrl}).
-	when('/tarea/:tareaId', {templateUrl: './ng-views/detalle.html', controller: DetalleTareaCtrl}).
+	when('/:userId/tarea', {templateUrl: './ng-views/listado.html', controller: ListaTareaCtrl}).
+	when('/:userId/edit', {templateUrl: './ng-views/form.html', controller: FormTareaCtrl}).
+	when('/:userId/tarea/:tareaId', {templateUrl: './ng-views/detalle.html', controller: DetalleTareaCtrl}).
 	otherwise({redirectTo: function(params, path, search){
-		return ("/tarea");
+		return (path + "tarea");
 	}});
 }]);
 
