@@ -20,7 +20,7 @@ class UsuarioController {
 
     def list() {
                 
-		def list = halBuilderService.buildModelList(Usuario.list(sort:"persona.apellidos"), null)
+		def list = halBuilderService.buildModelList(Usuario.list(sort:"persona.apellidos"))
 
 		response.status = 200
 		

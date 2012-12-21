@@ -45,8 +45,8 @@ class TareaController {
 
 		bindData(tareaInstance, request.JSON, ['fechaInicio', 'fechaVencimiento']) 
 		 
-		tareaInstance.fechaInicio = request.JSON.fechaInicio ? new SimpleDateFormat('yyyy-MM-dd').parse(request.JSON.fechaInicio) : null 
-		tareaInstance.fechaVencimiento = request.JSON.fechaVencimiento ? new SimpleDateFormat('yyyy-MM-dd').parse(request.JSON.fechaVencimiento) : null 
+		tareaInstance.fechaInicio = request.JSON.fechaInicio ? new Date(request.JSON.fechaInicio) : null 
+		tareaInstance.fechaVencimiento = request.JSON.fechaVencimiento ? new Date(request.JSON.fechaVencimiento) : null 
 
 	 	tareaInstance.tareaSuperior = Tarea.get(request.JSON?.idTareaSuperior) 
  

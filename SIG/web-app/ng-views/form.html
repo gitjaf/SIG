@@ -10,20 +10,54 @@
 			    <div class="row-fluid">
 			    	<div class="span12">		    		
 			    		<label>Asunto</label>
-			    		<input id="form_asunto" type="text" placeholder="Asunto de la tarea" class="input-block-level">
+			    		<input id="form_asunto" type="text" placeholder="Asunto de la tarea" class="input-block-level" data-ng-model="tarea.asunto">
 			    	</div>
 			    </div>
-			    <div class="row-fluid">
+			    <div >
+			    	<a data-ng-click="showTipo=!showTipo" data-ng-hide="showTipo">Clasificar como...
+			    	</a>
+			    </div>
+			    <div class="row-fluid" data-ng-class="{in: showTipo, collapse: !showTipo}" ui-toggle="showTipo" id="tipo">
 			    	<div class="span12">
-				    	<div class="span3">
+				    	<div class="span10 span10-5">
+							<label>Tipo</label>
+							<div class="pull-left input-prepend">
+				    			<span class="btn-group">
+					    			<button class="btn dropdown-toggle" data-toggle="dropdown">
+						    			<span class="caret"></span>
+						    		</button>
+						    		<ul class="dropdown-menu" role="menu">
+						    			<li data-ng-repeat="tipo in tipos"><a class="" data-ng-click="selectTipo(tipo)">{{tipo.nombre}}</a></li>
+					    			</ul>
+				    			</span>
+				    			<input id="form_tipo" type="text" class="input-xlarge" data-ng-model="tarea.tipo.nombre" data-ng-change="checkTipo(tarea.tipo)" placeholder="Clasificación de la tarea">
+				    		</div>
+				    		<div class="span1" data-ng-show="showAddTipo"><button class="btn btn-success" data-ng-click="saveTipo(tarea.tipo.nombre)"><i class="icon-plus icon-white"></i></button></div>
+				    		<div class="span1" data-ng-show="showDeleteTipo"><button class="btn btn-danger" data-ng-click="deleteTipo(tarea.tipo)"><i class="icon-trash icon-white"></i></button></div>
+			    		</div>
+			    		<span class="pull-left"><button class="close" data-ng-click="showTipo=!showTipo">&times;</button></span>
+				    	
+			    	</div>
+			    </div>
+					<ul class="nav nav-list">
+    					<li class="divider"></li>
+				    </ul>    
+			    <div >
+			    	<a data-ng-click="showTiempo=!showTiempo" data-ng-hide="showTiempo">Tiempos, prioridad y estado...
+			    	</a>
+
+			    </div>
+			    <div class="row-fluid" data-ng-class="{in: showTiempo, collapse: !showTiempo}" ui-toggle="showTiempo" id="tiempo">
+			    	<div class="span12">
+				    	<div class="span2 span2-5">
 				    		<label>Inicia</label>
-				    		<input id="form_inicio" type="text" class="span12 datepicker" placeholder="Fecha de Inicio"
+				    		<input id="form_inicio" type="text" class="span12 datepicker" placeholder="Inicia el"
 				    			data-date-format="dd/mm/yyyy" data-ng-model="date">
 				    	</div>
-				    	<div class="span3">
+				    	<div class="span2 span2-5">
 							<label>Vence</label>
-				    		<input id="form_vence" type="text" class="span12 datepicker" placeholder="Fecha de Vencimiento"
-				    			data-date-format="dd/mm/yyyy" data-ng-model="date">
+				    		<input id="form_vence" type="text" class="span12 datepicker" placeholder="Vence el"
+				    			data-date-format="dd/mm/yyyy" data-ng-model="date2">
 				    	</div>
 				    	<div class="input-prepend span3">
 							<label>Estado</label>
@@ -53,13 +87,24 @@
 					    			<li><a class="" data-ng-click="tarea.prioridad = 'Indistinta'">Indistinta</a></li>
 				    			</ul>
 				    		</span>
-				    		<input id="form_prioridad" type="text" class="span9" disabled data-ng-model="tarea.prioridad">
+				    		<input id="form_prioridad" type="text" class="span9" disabled data-ng-model="tarea.prioridad"> 
+				    		
 				    	</div>
+				    	<span class="pull-left"><button class="close" data-ng-click="showTiempo=!showTiempo">&times;</button></span>
+				    	
+
 			    	</div>
 			    </div>
-			    <div class="row-fluid">
+			    <ul class="nav nav-list">
+    					<li class="divider"></li>
+				    </ul>    
+			    <div>
+			    	<a data-ng-click="showAsigna=!showAsigna" data-ng-hide="showAsigna">Asignar usuarios...
+			    	</a>
+			    </div>
+			    <div class="row-fluid" data-ng-class="{in: showAsigna, collapse: !showAsigna}" ui-toggle="showAsigna" id="asigna">
 			    	<div class="span12">
-			    		<div class="span6">
+			    		<div class="span5 span5-5">
 			    			<label>Asignados</label>
 			    			<div class="input-append">
 				    			<input type="text" id="form_asigna" class="span10" placeholder="Buscar y agregar usuario como asignado" >
@@ -74,7 +119,7 @@
 			    			</ul>
 			    				 
 			    		</div>
-			    		<div class="span6">
+			    		<div class="span5 span5-5">
 			    			<label>Seguidores</label>
 			    			<div class="input-append">
 				    			<input type="text" id="form_sigue" class="span10" 
@@ -89,14 +134,23 @@
 			    				</li>
 			    			</ul>
 			    		</div>
+			    		<span  class="pull-left"><button class="close" data-ng-click="showAsigna=!showAsigna">&times;</button></span>
 			    	</div>
+			    </div>
+			    <ul class="nav nav-list">
+    					<li class="divider"></li>
+				</ul>
+			    <div >
+			    	<a data-ng-click="showDesc=!showDesc" data-ng-hide="showDesc">Agregar descripción...
+			    	</a>
 			    </div>	
-			    <div class="row-fluid">
+			    <div class="row-fluid" data-ng-class="{in: showDesc, collapse: !showDesc}" ui-toggle="showDesc" id="desc">
 			    	<div class="span12">
-			    		<div class="span12">
+			    		<div class="span10 span10-5">
 			    			<label>Descripción</label>
 			    			<textarea id="form_desc" rows="4" data-ng-model="tarea.descripcion" class="span10"></textarea>
 			    		</div>
+			    		<span class="pull-left"><button class="close" data-ng-click="showDesc=!showDesc">&times;</button></span>
 			    	</div>
 			    </div>	
 	    	</div>
@@ -105,25 +159,37 @@
 </div>
 <div class="modal-footer">
 	<a data-dismiss="modal" class="btn" data-ng-click="cleanAll()">Close</a>
-	<a href="#" class="btn btn-primary">Save changes</a>
+	<a data-dismiss="modal" class="btn btn-primary" data-ng-click="save()">Save changes</a>
 </div>
 
 <script type="text/javascript">
-	jQuery('#form_inicio').datepicker('place');
-	jQuery('#form_vence').datepicker('place');
-	//Funciona, investigar por aca.
+	jQuery('#form_inicio').datepicker('place').on('changeDate', function(ev){
+		angular.element('#form_inicio').scope().tarea.fechaInicio = ev.date.valueOf();
+	});
+
+	jQuery('#form_vence').datepicker('place').on('changeDate', function(ev){
+		angular.element('#form_vence').scope().tarea.fechaVencimiento = ev.date.valueOf();
+	});
+
 	jQuery('#form_asigna').typeaheadmap({
 		"source": angular.element('#form_asigna').scope().usuarios,
 		"key" : ["_embedded.persona.nombres", "_embedded.persona.apellidos"],
 		"value" : "id",
-		"listener": angular.element('#form_asigna').scope().filler
+		"listener": angular.element('#form_asigna').scope().selectUser
 					
 	});
 	angular.element('#form_sigue').typeaheadmap({
 		"source": angular.element('#form_sigue').scope().usuarios,
 		"key" : ["_embedded.persona.nombres", "_embedded.persona.apellidos"],
 		"value" : "id",
-		"listener" : angular.element('#form_sigue').scope().filler
+		"listener" : angular.element('#form_sigue').scope().selectUser
+	});
+
+	angular.element('#form_tipo').typeaheadmap({
+		"source": angular.element('#form_tipo').scope().tipos,
+		"key" : "nombre",
+		"value": "id",
+		"listener": angular.element('#form_tipo').scope().autocompleteTipo
 	})
 
 </script>

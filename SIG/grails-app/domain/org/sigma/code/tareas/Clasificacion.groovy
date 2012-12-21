@@ -23,4 +23,6 @@ class Clasificacion {
     String toString(){
         nombre
     }
+
+    def halRepresenter = [title: nombre, embedded: []]
 }

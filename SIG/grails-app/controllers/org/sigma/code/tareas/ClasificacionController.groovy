@@ -10,6 +10,8 @@ class ClasificacionController {
 
     static allowedMethods = [show: ["GET", "POST"], save: "POST", update: "PUT", delete: "DELETE"]
 
+    def halBuilderService
+
     def index() {
         redirect(action: "list", params: params)
     }
@@ -17,7 +19,7 @@ class ClasificacionController {
     def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		
-		def clasificacionInstanceList = Clasificacion.list()
+		def clasificacionInstanceList = halBuilderService.buildModelList(Clasificacion.list())
 		
 		response.status = 200
 		
@@ -33,7 +35,10 @@ class ClasificacionController {
         }
 
 		flash.message = message(code: 'default.created.message', args: [message(code: 'clasificacion.label', default: 'Clasificacion'), clasificacionInstance.id])
+        clasificacionInstance = halBuilderService.buildModel(clasificacionInstance)
+        
         response.status = 201
+        
 		render clasificacionInstance as JSON
     }
 
@@ -81,6 +86,7 @@ class ClasificacionController {
     }
 
     def delete() {
+       
         def clasificacionInstance = Clasificacion.get(params.id)
         if (!clasificacionInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'clasificacion.label', default: 'Clasificacion'), params.id])

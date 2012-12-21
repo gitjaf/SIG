@@ -2,12 +2,20 @@ var services = angular.module('sig.services', ['ngResource'])
 	
 
 services.factory('Tarea', function($resource){
-	return $resource('/SIG/tarea/:idTarea', {page: '@page', itemsPerPage: '@itemsPerPage',
-	 sortBy: '@sortBy', q: '@q', userId:'@userId'}, 
-		{query: {method: 'GET', params:{}, isArray: false}});
+	return $resource('/SIG/tarea/:idTarea', {}, 
+		{query: {method: 'GET', params:{page: '@page', itemsPerPage: '@itemsPerPage',
+	 sortBy: '@sortBy', q: '@q', userId:'@userId'}, isArray: false}});
 });
 
 services.factory('Usuario', function($resource){
-	return $resource('/SIG/usuario/:idUsuario', {page: '@page', itemsPerPage: '@itemsPerPage', sortBy: '@sortBy', q: '@q'},
-		{query: {method: 'GET', params: {}, isArray: true}});
+	return $resource('/SIG/usuario/:idUsuario', {},
+		{query: {method: 'GET', params: {page: '@page', itemsPerPage: '@itemsPerPage',
+	 sortBy: '@sortBy', q: '@q'}, isArray: true}});
+});
+
+services.factory('Tipo', function($resource){
+	return $resource('/SIG/clasificacion/:idTipo', {},
+			{
+				query: {method: 'GET', params:{q: '@q', userId: '@userId'}, isArray: true},
+			});
 });

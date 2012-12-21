@@ -62,7 +62,9 @@
 
 .form {
 	width: 55%;
-	margin-top: -24%;
+	top: 40%;
+	/*-moz-margin-top: -24%;
+	-webkit-top: 40%;*/
 }
 
 .modal.slide.left {
@@ -107,8 +109,20 @@
 
 .datepicker {
 	z-index: 3000;
+
 }
 
+.span2.span2-5 {
+	width: 17.53%;
+}
+
+.span5.span5-5 {
+	width: 43.171%;
+}
+
+.span10.span10-5 {
+	width: 88.906%;
+}
 
 /*---COLORS---*/
 
@@ -126,21 +140,36 @@
 }
 
 .dropdown-menu {
-	z-index: 3001;
+	z-index: 9001;
 }
 
 /*----UI-ANIMATE----*/
 li {
-transition: all 0.5s ease;
--o-transition: all 0.5s ease;
--moz-transition: all 0.5s ease;
--webkit-transition: all 0.5s ease;
+	transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-webkit-transition: all 0.5s ease;
 }
 
 /* The 'hidden' state to transition from & to */
 li.ui-animate {
-background: white;
-opacity: 0;
-max-height: 0;
-padding: 0 5px;
+	background: white;
+	opacity: 0;
+	max-height: 0;
+	padding: 0 5px;
+}
+
+
+/*----UI-HIDE / UI-SHOW----*/
+.ui-show {
+	transition: all 0.5s ease; // You should probably browser-prefix this
+}
+.ui-hide {
+	opacity: 0;
+	transition: all 0.5s ease; // You should probably browser-prefix this
+	display: none;
+}
+
+.hide{
+	display: none;
 }
