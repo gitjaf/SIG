@@ -106,7 +106,6 @@
 
 
 /*----DATEPICKER----*/
-
 .datepicker {
 	z-index: 3000;
 
@@ -172,4 +171,11 @@ li.ui-animate {
 
 .hide{
 	display: none;
+}
+
+
+/*----POPOVER----*/
+
+.popover{
+	z-index: 9999;
 }

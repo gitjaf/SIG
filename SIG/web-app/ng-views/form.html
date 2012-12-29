@@ -4,13 +4,13 @@
 	<h3 class="text-info txt-white">{{form_action}}</h3>
 </div>
 <div class="modal-body">
-	<form>
+	<form name="form" class="css-form" novalidate>
 	    <fieldset>
 	    	<div class="container-fluid">
 			    <div class="row-fluid">
 			    	<div class="span12">		    		
 			    		<label>Asunto</label>
-			    		<input id="form_asunto" type="text" placeholder="Asunto de la tarea" class="input-block-level" data-ng-model="tarea.asunto">
+			    		<input id="form_asunto" type="text" placeholder="Asunto de la tarea" class="input-block-level" data-ng-model="tarea.asunto" required>
 			    	</div>
 			    </div>
 			    <div >
@@ -32,8 +32,9 @@
 				    			</span>
 				    			<input id="form_tipo" type="text" class="input-xlarge" data-ng-model="tarea.tipo.nombre" data-ng-change="checkTipo(tarea.tipo)" placeholder="Clasificación de la tarea">
 				    		</div>
-				    		<div class="span1" data-ng-show="showAddTipo"><button class="btn btn-success" data-ng-click="saveTipo(tarea.tipo.nombre)"><i class="icon-plus icon-white"></i></button></div>
-				    		<div class="span1" data-ng-show="showDeleteTipo"><button class="btn btn-danger" data-ng-click="deleteTipo(tarea.tipo)"><i class="icon-trash icon-white"></i></button></div>
+				    		<div class="span1" data-ng-show="showAddTipo"><button id="save_tipo" class="btn btn-success" data-ng-click="saveTipo(tarea.tipo.nombre)"><i class="icon-plus icon-white"></i></button></div>
+				    		<div class="span1" data-ng-show="showDeleteTipo"><button id="delete_tipo" class="btn btn-danger" data-ng-click="deleteTipo(tarea.tipo)"><i class="icon-trash icon-white"></i></button></div>
+				    		
 			    		</div>
 			    		<span class="pull-left"><button class="close" data-ng-click="showTipo=!showTipo">&times;</button></span>
 				    	
@@ -51,14 +52,21 @@
 			    	<div class="span12">
 				    	<div class="span2 span2-5">
 				    		<label>Inicia</label>
-				    		<input id="form_inicio" type="text" class="span12 datepicker" placeholder="Inicia el"
-				    			data-date-format="dd/mm/yyyy" data-ng-model="date">
+				    		<div id="dp_inicio" class="input-append span10" >
+				    			<input id="form_inicio" type="text" class="span12" placeholder="Inicia el" data-ng-model="dateInicia" data-date="12-02-2012" data-date-format="dd/mm/yyyy" readonly>
+				    			<span class="add-on" data-ng-click="clearDate('#form_inicio', $scope.tarea.fechaInicio)"><i class="icon-trash"></i></span>
+				    			
+				    		</div>
 				    	</div>
 				    	<div class="span2 span2-5">
-							<label>Vence</label>
-				    		<input id="form_vence" type="text" class="span12 datepicker" placeholder="Vence el"
-				    			data-date-format="dd/mm/yyyy" data-ng-model="date2">
+				    		<label>Vence</label>
+				    		<div id="dp_vence" class="input-append span10" >
+				    			<input id="form_vence"  type="text" class="span12" placeholder="Vence el" data-ng-model="dateVence" data-date="12-02-2012" data-date-format="dd/mm/yyyy" readonly>
+				    			<span class="add-on" data-ng-click="clearDate('#form_vence', $scope.tarea.fechaVencimiento)"><i class="icon-trash"></i></span>
+				    			
+				    		</div>
 				    	</div>
+				    	
 				    	<div class="input-prepend span3">
 							<label>Estado</label>
 				    		<span class="btn-group">
@@ -72,7 +80,7 @@
 					    			<li><a class="" data-ng-click="tarea.estado = 'Cerrada'">Cerrada</a></li>
 				    			</ul>
 				    		</span>
-				    		<input id="form_estado" type="text" class="span9" disabled data-ng-model="tarea.estado" >
+				    		<input id="form_estado" type="text" class="span10" readonly data-ng-model="tarea.estado" >
 				    	</div>
 				    	<div class="input-prepend span3">
 							<label>Prioridad</label>
@@ -81,13 +89,13 @@
 					    			<span class="caret"></span>
 					    		</button>
 					    		<ul class="dropdown-menu" role="menu">
+					    			<li><a class="" data-ng-click="tarea.prioridad = 'Sin Apuro'">Sin Apuro</a></li>
 					    			<li><a class="" data-ng-click="tarea.prioridad = 'Alta'">Alta</a></li>
 					    			<li><a class="" data-ng-click="tarea.prioridad = 'Normal'">Normal</a></li>
 					    			<li><a class="" data-ng-click="tarea.prioridad = 'Baja'">Baja</a></li>
-					    			<li><a class="" data-ng-click="tarea.prioridad = 'Indistinta'">Indistinta</a></li>
-				    			</ul>
+					    		</ul>
 				    		</span>
-				    		<input id="form_prioridad" type="text" class="span9" disabled data-ng-model="tarea.prioridad"> 
+				    		<input id="form_prioridad" type="text" class="span10" readonly data-ng-model="tarea.prioridad"> 
 				    		
 				    	</div>
 				    	<span class="pull-left"><button class="close" data-ng-click="showTiempo=!showTiempo">&times;</button></span>
@@ -111,6 +119,7 @@
 				    			<button class="btn" data-ng-click="agregar(usuario, id, tarea.asignados)">
 				    				<i class="icon-plus"></i>
 				    			</button>
+
 			    			</div>
 			    			<ul>
 			    				<li data-ng-repeat="asignado in tarea.asignados" ui-animate>{{asignado.nombre}}
@@ -159,12 +168,13 @@
 </div>
 <div class="modal-footer">
 	<a data-dismiss="modal" class="btn" data-ng-click="cleanAll()">Close</a>
-	<a data-dismiss="modal" class="btn btn-primary" data-ng-click="save()">Save changes</a>
+	<a data-dismiss="modal" data-ng-disabled="form.$invalid" class="btn btn-primary" data-ng-click="save()">Save changes</a>
 </div>
 
 <script type="text/javascript">
 	jQuery('#form_inicio').datepicker('place').on('changeDate', function(ev){
 		angular.element('#form_inicio').scope().tarea.fechaInicio = ev.date.valueOf();
+		
 	});
 
 	jQuery('#form_vence').datepicker('place').on('changeDate', function(ev){

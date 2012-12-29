@@ -40,9 +40,12 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, Tarea, Tipo
 		$scope.form_action = "Nueva Tarea";
 		$scope.tarea = new Tarea();
 		$scope.tarea.tipo = new Tipo();
+		$scope.tarea.estado = 'Nueva';
+		$scope.tarea.prioridad = 'Sin Apuro'
 		$scope.tarea.asignados = [];
 		$scope.tarea.seguidores = [];
 		$scope.tarea.responsable = $rootScope.userId;
+		
 	}
 
 	$scope.save = function(){
@@ -69,7 +72,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, Tarea, Usuario, Tipo) {
 	
 	$scope.showAddTipo = false;
 	$scope.showDeleteTipo = false;
-		
+	
 	$scope.selectUser = function(k, v){
 		$scope.usuario = k;
 		$scope.id = v;
@@ -147,6 +150,11 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, Tarea, Usuario, Tipo) {
 		t.$save(function(t,putResponseHeaders){
 			addTipo(t);
 			$scope.checkTipo(t);
+			showMessage('#form_tipo','Crear Clasificacion', 'Clasificación creada con éxito', 4000);
+
+		}, function(response, putResponseHeaders){
+			$scope.message = "Error al crear la clasificación '" + nombre + "'";
+			
 		});
 	
 	}
@@ -159,9 +167,18 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, Tarea, Usuario, Tipo) {
 			}
 		};
 
-		tipo.$delete({idTipo: tipo.id});
+		tipo.$delete({idTipo: tipo.id}, function(t, putResponseHeaders){
+			showMessage('#form_tipo','Eliminar Clasificación', 'Clasificación eliminada con éxito', 4000);
+		}, function(response, putResponseHeaders){
+			showMessage('#form_tipo','Eliminar Clasificación', 'Error al intentar eliminar una clasificación', 4000);
+		});
 		
 		$scope.checkTipo($scope.tarea.tipo);
+	}
+
+	$scope.clearDate = function(elemento, atributo){
+		angular.element(elemento).val("");
+		atributo = "";
 	}
 
 	function isAdmin(id){
@@ -177,6 +194,18 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, Tarea, Usuario, Tipo) {
 		$scope.tarea.tipo = angular.copy(tipo);
 		
 	}
+
+	function showMessage(elemento, titulo, mensaje, tiempo){
+		angular.element(elemento).popover({"title": titulo, "content": mensaje, "trigger": 'manual', "delay": 1000});
+		angular.element(elemento).popover('show');
+		setTimeout(function(){
+			angular.element(elemento).popover('hide');
+			angular.element(elemento).popover('destroy');
+		}, tiempo);
+	}
+
+	
+
 }
 
 
