@@ -111,6 +111,8 @@
 
 }
 
+
+/*---SPANS-----*/
 .span2.span2-5 {
 	width: 17.53%;
 }
@@ -131,6 +133,10 @@
 
 .txt-white {
 	color: white;
+}
+
+.invalid {
+	color: #DA4F49;
 }
 
 /*---TYPEAHEAD---*/
@@ -178,4 +184,19 @@ li.ui-animate {
 
 .popover{
 	z-index: 9999;
+}
+
+.popover-title{
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+.title-success{
+	color: #5BB75B;
+	font-weight: bold;
+}
+
+.title-error{
+	color: #DA4F49;
+	font-weight: bold;
 }

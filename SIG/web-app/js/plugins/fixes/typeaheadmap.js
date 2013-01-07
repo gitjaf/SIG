@@ -152,7 +152,7 @@
       }))
     }
   , displayer: function(that, item, highlighted) {
-	return highlighted + ' ' + getObj(item, that.value) 
+	return highlighted + ' ' // + getObj(item, that.value) Esto permite visualizar el id de cada objeto que se muestra en la lista del typeaheadmap 
    }
   , render: function (items) {
       var that = this

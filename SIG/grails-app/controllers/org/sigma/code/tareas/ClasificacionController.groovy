@@ -1,7 +1,7 @@
 
 package org.sigma.code.tareas
 
-import org.springframework.dao.DataIntegrityViolationException
+
 import grails.converters.JSON
 
 import java.text.SimpleDateFormat
@@ -11,6 +11,8 @@ class ClasificacionController {
     static allowedMethods = [show: ["GET", "POST"], save: "POST", update: "PUT", delete: "DELETE"]
 
     def halBuilderService
+
+    def clasificacionService
 
     def index() {
         redirect(action: "list", params: params)
@@ -27,9 +29,9 @@ class ClasificacionController {
     }
     
     def save() {
-        def clasificacionInstance = new Clasificacion(request.JSON)
+        def clasificacionInstance = clasificacionService.crearClasificacion(request.JSON)
 		
-		if (!clasificacionInstance.save(flush: true)) {
+		if (!clasificacionInstance) {
 			response.status = 500
 			return
         }
@@ -87,24 +89,12 @@ class ClasificacionController {
 
     def delete() {
        
-        def clasificacionInstance = Clasificacion.get(params.id)
-        if (!clasificacionInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'clasificacion.label', default: 'Clasificacion'), params.id])
-            response.status = 404
-			render flash.message
-            return
-        }
+        def resp = clasificacionService.borrarClasificacion(params.id as Integer)
+        
+        flash.message = resp.message
+        response.status = resp.statusCode
 
-        try {
-            clasificacionInstance.delete(flush: true)
-			flash.message = message(code: 'default.deleted.message', args: [message(code: 'clasificacion.label', default: 'Clasificacion'), params.id])
-            response.status = 200
-			render flash.message
-        }
-        catch (DataIntegrityViolationException e) {
-			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'clasificacion.label', default: 'Clasificacion'), params.id])
-            response.status = 500
-			render flash.message
-        }
+        render flash.message
+        
     }
 }

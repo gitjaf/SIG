@@ -17,9 +17,7 @@ class TareaController {
 	def halCollectionBuilderService
 
 	def tareaService
-	
-	LinkGenerator grailsLinkGenerator
-	
+		
     static allowedMethods = [show: ["GET", "POST"], save: "POST", update: "PUT", delete: "DELETE"]
 
     def index() {
@@ -41,32 +39,16 @@ class TareaController {
     }
     
     def save() {
-        def tareaInstance = new Tarea()
-
-		bindData(tareaInstance, request.JSON, ['fechaInicio', 'fechaVencimiento']) 
-		 
-		tareaInstance.fechaInicio = request.JSON.fechaInicio ? new Date(request.JSON.fechaInicio) : null 
-		tareaInstance.fechaVencimiento = request.JSON.fechaVencimiento ? new Date(request.JSON.fechaVencimiento) : null 
-
-	 	tareaInstance.tareaSuperior = Tarea.get(request.JSON?.idTareaSuperior) 
- 
-	 	tareaInstance.tipo = Clasificacion.get(request.JSON?.idTipo) 
- 
-	 	request.JSON?.idDocumentos?.each{ id -> tareaInstance.addToDocumentos(Documento.get(id))} 
-
-	 	request.JSON?.idSeguimientos?.each{ id -> tareaInstance.addToSeguimientos(Seguimiento.get(id))} 
-
-	 	request.JSON?.idTareasRelacionadas?.each{ id -> tareaInstance.addToTareasRelacionadas(Tarea.get(id))} 
-
+        def tareaInstance = tareaService.saveTarea(request.JSON)
 		        
-		if (!tareaInstance.save(flush: true)) {
+		if (!tareaInstance) {
 			response.status = 500
 			return
         }
 
 		flash.message = message(code: 'default.created.message', args: [message(code: 'tarea.label', default: 'Tarea'), tareaInstance.id])
         response.status = 201
-		render tareaInstance as JSON
+        render halBuilderService.buildModel(tareaInstance) as JSON
     }
 
     def show() {

@@ -11,6 +11,11 @@ class Tarea {
 	public final static ESTADO_EN_CURSO = "En Curso"
 	public final static ESTADO_TERMINADA = "Terminada"
 	
+	public final static PRIORIDAD_ALTA = "Alta"
+	public final static PRIORIDAD_NORMAL = "Normal"
+	public final static PRIORIDAD_BAJA = "Baja"
+	public final static PRIORIDAD_NULA = "Sin Apuro"
+
 	String asunto
 	String descripcion
 	Date fechaInicio

@@ -49,7 +49,56 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, Tarea, Tipo
 	}
 
 	$scope.save = function(){
-		$scope.tarea.$save();
+		$scope.tarea.$save(function(tarea, putResponseHeaders){
+			$scope.tareas._embedded.collection.splice(0,0,tarea);
+			$scope.tareas.data.total = $scope.tareas.data.total + 1;
+			$scope.message({
+				"element" : "#nueva",
+				"title" : "Nueva Tarea",
+				"content" : "La tarea '" + tarea.asunto + "' fue creada con exito",
+				"trigger" : "manual",
+				"delay" : 1000,
+				"timeout" : 3000,
+				"error": false
+
+			});
+		},function(response, putResponseHeaders){
+			$scope.message({
+				"element" : "#nueva",
+				"title" : "Nueva Tarea",
+				"content" : "Error al crear la tarea '" + $scope.tarea.asunto + "'",
+				"trigger" : "manual",
+				"delay" : 1000,
+				"timeout" : 3000,
+				"error": true
+
+			});
+		});
+	}
+
+	$scope.message = function(prop){
+		if(!prop.error){
+			prop.title = "<div class='title-success'>" + prop.title + "</div>"
+			prop.content = "<div class='muted'>" + prop.content + "</div>"
+		} else {
+			prop.title = "<div class='title-error'> " + prop.title + "</div>"
+			prop.content = "<div class='muted'>" + prop.content + "</div>"
+		}
+
+		angular.element(prop.element).popover({
+			"title": prop.title,
+			"content": prop.content,
+			"trigger": prop.trigger,
+			"delay": prop.delay});
+		if(prop.action){
+			angular.element(prop.element).popover(prop.action);
+		}else{
+			angular.element(prop.element).popover('show');
+			setTimeout(function(){
+				angular.element(prop.element).popover('hide');
+				angular.element(prop.element).popover('destroy');
+			}, prop.timeout);
+		}
 	}
 
 }
@@ -72,6 +121,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, Tarea, Usuario, Tipo) {
 	
 	$scope.showAddTipo = false;
 	$scope.showDeleteTipo = false;
+	
 	
 	$scope.selectUser = function(k, v){
 		$scope.usuario = k;
@@ -150,16 +200,31 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, Tarea, Usuario, Tipo) {
 		t.$save(function(t,putResponseHeaders){
 			addTipo(t);
 			$scope.checkTipo(t);
-			showMessage('#form_tipo','Crear Clasificacion', 'Clasificación creada con éxito', 4000);
-
+			$scope.message({
+				"element" : '#form_tipo',
+				"title" : 'Crear Clasificación',
+				"content" : 'Clasificación creada con éxito',
+				"timeout" : 3000,
+				"error" : false,
+				"delay" : 1000,
+				"trigger" : "manual"
+			});
 		}, function(response, putResponseHeaders){
-			$scope.message = "Error al crear la clasificación '" + nombre + "'";
-			
+			$scope.message({
+				"element" : '#form_tipo',
+				"title" : 'Crear Clasificación',
+				"content" : 'Error al intentar crear la clasificación ' + nombre,
+				"timeout" :  3000,
+				"error" : true,
+				"delay" : 1000,
+				"trigger" : "manual"
+			});
 		});
 	
 	}
 
 	$scope.deleteTipo = function(tipo){
+		var t = new Tipo(tipo);
 		for (var i = 0; i < $scope.tipos.length; i++) {
 			if($scope.tipos[i].id == tipo.id){
 				$scope.tipos.splice(i, 1);
@@ -167,10 +232,27 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, Tarea, Usuario, Tipo) {
 			}
 		};
 
-		tipo.$delete({idTipo: tipo.id}, function(t, putResponseHeaders){
-			showMessage('#form_tipo','Eliminar Clasificación', 'Clasificación eliminada con éxito', 4000);
+		t.$delete({idTipo: tipo.id}, function(t, putResponseHeaders){
+			$scope.message({
+				"element" : '#form_tipo',
+				"title" : 'Eliminar Clasificación',
+				"content" : 'Clasificación eliminada con éxito',
+				"timeout" : 3000,
+				"error" : false,
+				"delay" : 1000,
+				"trigger" : "manual"
+			});
+
 		}, function(response, putResponseHeaders){
-			showMessage('#form_tipo','Eliminar Clasificación', 'Error al intentar eliminar una clasificación', 4000);
+			$scope.message({
+				"element" : '#form_tipo',
+				"title" : 'Eliminar Clasificación',
+				"content" : 'Error al intentar eliminar una clasificación',
+				"timeout" :  3000,
+				"error" : true,
+				"delay" : 1000,
+				"trigger" : "manual"
+			});
 		});
 		
 		$scope.checkTipo($scope.tarea.tipo);
@@ -178,8 +260,15 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, Tarea, Usuario, Tipo) {
 
 	$scope.clearDate = function(elemento, atributo){
 		angular.element(elemento).val("");
-		atributo = "";
+		$scope.tarea[atributo] = undefined;
+		$scope.message({
+			"element" : "#add_on_vence",
+			"action" : 'destroy'
+		});
+		$scope.invalidDate = false;
 	}
+
+	
 
 	function isAdmin(id){
 		return id == 1;
@@ -193,15 +282,6 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, Tarea, Usuario, Tipo) {
 		$scope.tipos.push(tipo);
 		$scope.tarea.tipo = angular.copy(tipo);
 		
-	}
-
-	function showMessage(elemento, titulo, mensaje, tiempo){
-		angular.element(elemento).popover({"title": titulo, "content": mensaje, "trigger": 'manual', "delay": 1000});
-		angular.element(elemento).popover('show');
-		setTimeout(function(){
-			angular.element(elemento).popover('hide');
-			angular.element(elemento).popover('destroy');
-		}, tiempo);
 	}
 
 	
