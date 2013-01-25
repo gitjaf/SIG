@@ -25,6 +25,6 @@
 	<div data-ng-view>
 	</div>
 	
-<r:layoutResources/>
+<r:layoutResources/>	
 </body>
 </html>

@@ -61,7 +61,8 @@
 				    	<div class="span2 span2-5" data-ng-class="{invalid: invalidDate}">
 				    		<label>Vence</label>
 				    		<div id="dp_vence" class="input-append span10" >
-				    			<input id="form_vence" type="text" class="span12" placeholder="Vence el" data-ng-model="dateVence" data-date="12-02-2012" data-date-format="dd/mm/yyyy" readonly>
+				    			<input id="form_vence" type="text" class="span12" placeholder="Vence el" data-ng-model="dateVence" data-date="12-02-2012" data-date-format="dd/mm/yyyy" 
+				    			readonly>
 				    			<span id="add_on_vence"class="add-on"  data-ng-click="clearDate('#form_vence', 'fechaVencimiento')"><i class="icon-trash"></i></span>
 				    			
 				    		</div>
@@ -80,7 +81,7 @@
 					    			<li><a class="" data-ng-click="tarea.estado = 'Cerrada'">Cerrada</a></li>
 				    			</ul>
 				    		</span>
-				    		<input id="form_estado" type="text" class="span10" readonly data-ng-model="tarea.estado" >
+				    		<input id="form_estado" type="text" class="span10" disabled data-ng-model="tarea.estado" >
 				    	</div>
 				    	<div class="input-prepend span3">
 							<label>Prioridad</label>
@@ -95,7 +96,7 @@
 					    			<li><a class="" data-ng-click="tarea.prioridad = 'Baja'">Baja</a></li>
 					    		</ul>
 				    		</span>
-				    		<input id="form_prioridad" type="text" class="span10" readonly data-ng-model="tarea.prioridad"> 
+				    		<input id="form_prioridad" type="text" class="span10" disabled data-ng-model="tarea.prioridad"> 
 				    		
 				    	</div>
 				    	<span class="pull-left"><button class="close" data-ng-click="showTiempo=!showTiempo">&times;</button></span>
@@ -122,7 +123,7 @@
 
 			    			</div>
 			    			<ul>
-			    				<li data-ng-repeat="asignado in tarea.asignados" ui-animate>{{asignado.nombre}}
+			    				<li data-ng-repeat="asignado in tarea.asignados" ui-animate>{{asignado._embedded.persona.nombres}} {{asignado._embedded.persona.apellidos}}
 			    					<button class="btn btn-link" data-ng-click="remover($index, tarea.asignados)"><i class="icon-remove"></i></button>
 			    				</li>
 			    			</ul>
@@ -138,7 +139,7 @@
 				    			</button>
 			    			</div>
 			    			<ul>
-			    				<li data-ng-repeat="seguidor in tarea.seguidores" ui-animate>{{seguidor.nombre}}
+			    				<li data-ng-repeat="seguidor in tarea.seguidores" ui-animate>{{seguidor._embedded.persona.nombres}} {{seguidor._embedded.persona.apellidos}}
 			    					<button class="btn btn-link" data-ng-click="remover($index, tarea.seguidores)"><i class="icon-remove"></i></button>
 			    				</li>
 			    			</ul>
@@ -168,14 +169,13 @@
 </div>
 <div class="modal-footer">
 	<a data-dismiss="modal" class="btn" data-ng-click="cleanAll()">Close</a>
-	<a data-dismiss="modal" data-ng-disabled="form.$invalid" class="btn btn-primary" data-ng-click="save()">Save changes</a>
+	<a data-dismiss="modal" data-ng-disabled="form.$invalid" class="btn btn-success" data-ng-click="save()">Guardar</a>
 </div>
 
 <script type="text/javascript">
 	var scope = angular.element('#form_asigna').scope();
 
 	jQuery('#form_inicio').datepicker('place').on('changeDate', function(ev){
-		console.log(scope.tarea.fechaVencimiento);
 		if(scope.tarea.fechaVencimiento < ev.date.valueOf()){
 			scope.invalidDate = true;
 			scope.message({
@@ -198,7 +198,7 @@
 			scope.$apply();
 		}
 		scope.tarea.fechaInicio = ev.date.valueOf();
-	});
+	})
 
 	jQuery('#form_vence').datepicker('place').on('changeDate', function(ev){
 		if(scope.tarea.fechaInicio > ev.date.valueOf()){
@@ -223,7 +223,7 @@
 			scope.$apply();
 		}
 		scope.tarea.fechaVencimiento = ev.date.valueOf();
-	});
+	})
 
 	jQuery('#form_asigna').typeaheadmap({
 		"source": scope.usuarios,
@@ -245,5 +245,7 @@
 		"value": "id",
 		"listener": scope.autocompleteTipo
 	})
+
+	
 
 </script>

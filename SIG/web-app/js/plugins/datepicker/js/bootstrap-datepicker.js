@@ -112,7 +112,7 @@
 			if (!this.isInput) {
 				$(document).off('mousedown', this.hide);
 			}
-			this.set();
+			// this.set(); Si se descomenta la fecha actualmente remarcada en el calendario sera seteada en el componente al clickear fuera de el.
 			this.element.trigger({
 				type: 'hide',
 				date: this.date

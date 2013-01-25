@@ -10,3 +10,9 @@ target-eclipse
 /web-app/plugins
 /web-app/WEB-INF/classes
 .link_to_grails_plugins
+.directory
+.tags
+.tags_sorted_by_file
+SIG/.directory
+SIG/.groovy/suggestions.xdsl
+SIG/DomainUML.html

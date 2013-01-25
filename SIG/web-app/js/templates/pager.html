@@ -1,0 +1,18 @@
+<div class="span8" >
+	<div class="pager">
+		<ul>
+			<li data-ng-show="collection._links.previous" >
+				<a data-ng-href="#{{collection._links.previous.href}}" >Previous</a>
+			</li>
+			<li data-ng-repeat="(number, link) in collection._links.pages"
+				data-ng-class="{disabled: collection._links.self.href == link.href }">
+				<a data-ng-href="#{{link.href}}">{{number}}</a>
+			</li>
+			<li data-ng-show="collection._links.next">
+				<a data-ng-href="#{{collection._links.next.href}}">Next</a>
+			</li>
+
+		</ul>
+	</div>
+</div>
+ 

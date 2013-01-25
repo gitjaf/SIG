@@ -1,4 +1,4 @@
-function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, Tarea, Tipo) {
+function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Tarea, Tipo, $document) {
 	
 	var page = $routeParams.page ? $routeParams.page : 0;
 	var items = $routeParams.itemsPerPage ? $routeParams.itemsPerPage : 10;
@@ -10,14 +10,17 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, Tarea, Tipo
 	
 		$scope.tareas = Tarea.query({"page": page, "itemsPerPage" : items, "sortBy": sortBy,
 	 	"q": query, userId: $rootScope.userId});
+	 	
 	}
 
+	$scope.hover = false;
 	$scope.query = query;
 
 	$scope.sort = function(field) {
 		$location.search("sortBy", field);
 	}
 
+	
 	$scope.search = function(query){
 		$location.search("q", query);
 		$location.search("page","0");
@@ -36,44 +39,76 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, Tarea, Tipo
 		return undefined;
 	}
 
-	$scope.nuevaTarea = function(){
-		$scope.form_action = "Nueva Tarea";
-		$scope.tarea = new Tarea();
-		$scope.tarea.tipo = new Tipo();
-		$scope.tarea.estado = 'Nueva';
-		$scope.tarea.prioridad = 'Sin Apuro'
-		$scope.tarea.asignados = [];
-		$scope.tarea.seguidores = [];
-		$scope.tarea.responsable = $rootScope.userId;
+	$scope.nuevaTarea = function(tarea){
+		if(!tarea){
+			crearTarea();
+		}else {
+			editarTarea(tarea);
+		}
 		
 	}
 
 	$scope.save = function(){
-		$scope.tarea.$save(function(tarea, putResponseHeaders){
-			$scope.tareas._embedded.collection.splice(0,0,tarea);
-			$scope.tareas.data.total = $scope.tareas.data.total + 1;
-			$scope.message({
-				"element" : "#nueva",
-				"title" : "Nueva Tarea",
-				"content" : "La tarea '" + tarea.asunto + "' fue creada con exito",
+		var tareas = $scope.tareas._embedded.collection;
+		if($scope.tarea.id){
+			$scope.tarea.$update({idTarea: $scope.tarea.id, userId: $rootScope.userId}, function(tarea, putResponseHeaders){
+				tareas.splice(tareas.indexOf(
+					($filter('filter')(tareas, function(t){
+						return (t.id == $scope.tarea.id);
+					}))[0]
+				),1,tarea);
+				$scope.message({
+				"element" : "#titulo-tarea-"+tarea.id,
+				"title" : "Editar Tarea",
+				"content" : "La tarea '" + tarea.asunto + "' fue editada con exito",
 				"trigger" : "manual",
 				"delay" : 1000,
 				"timeout" : 3000,
 				"error": false
 
 			});
-		},function(response, putResponseHeaders){
-			$scope.message({
-				"element" : "#nueva",
-				"title" : "Nueva Tarea",
-				"content" : "Error al crear la tarea '" + $scope.tarea.asunto + "'",
+			}, function(response, putResponseHeaders){
+				$scope.message({
+				"element" : "#titulo-tarea-"+response.data.id,
+				"title" : "Editar Tarea",
+				"content" : "Error al editar la tarea '" + $scope.tarea.asunto + "'",
 				"trigger" : "manual",
 				"delay" : 1000,
 				"timeout" : 3000,
 				"error": true
 
 			});
-		});
+			})
+		} else {
+
+			$scope.tarea.$save(function(tarea, putResponseHeaders){
+				//FIXME - Si la coleccion esta vacia (como ocurre con un nuevo usuario sin tareas asignadas)
+				// esto tira error al crear la primer tarea - ARREGLAR
+				$scope.tareas._embedded.collection.splice(0,0,tarea);
+				$scope.tareas.data.total = $scope.tareas.data.total + 1;
+				$scope.message({
+					"element" : "#nueva",
+					"title" : "Nueva Tarea",
+					"content" : "La tarea '" + tarea.asunto + "' fue creada con exito",
+					"trigger" : "manual",
+					"delay" : 1000,
+					"timeout" : 3000,
+					"error": false
+
+				});
+			},function(response, putResponseHeaders){
+				$scope.message({
+					"element" : "#nueva",
+					"title" : "Nueva Tarea",
+					"content" : "Error al crear la tarea '" + $scope.tarea.asunto + "'",
+					"trigger" : "manual",
+					"delay" : 1000,
+					"timeout" : 3000,
+					"error": true
+
+				});
+			});
+		}
 	}
 
 	$scope.message = function(prop){
@@ -101,13 +136,52 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, Tarea, Tipo
 		}
 	}
 
+
+	function crearTarea(){
+		$scope.tarea = new Tarea();
+		$scope.form_action = "Nueva Tarea";
+		$scope.tarea.tipo = new Tipo();
+		$scope.tarea.estado = 'Nueva';
+		$scope.tarea.prioridad = 'Sin Apuro'
+		$scope.tarea.asignados = [];
+		$scope.tarea.seguidores = [];
+		$scope.tarea.responsable = $rootScope.userId;
+
+	}
+
+	function editarTarea(tarea){
+		$scope.tarea = new Tarea();
+		$scope.tarea.id = tarea.id;
+		$scope.tarea.asunto = tarea.asunto;
+		$scope.tarea.fechaInicio = tarea.fechaInicio;
+		$scope.tarea.fechaVencimiento = tarea.fechaVencimiento;
+		$scope.tarea.descripcion = tarea.descripcion;
+		$scope.tarea.responsable = getProperty("responsable", tarea).id;
+		$scope.tarea.estado = tarea.estado;
+		$scope.tarea.prioridad = tarea.prioridad;
+		$scope.tarea.asignados = getProperty("asignados", tarea);
+		$scope.tarea.seguidores = getProperty("seguidores", tarea);
+		$scope.tarea.tipo = getProperty("tipo", tarea);
+		$scope.form_action = "Editar Tarea";
+		angular.element('#form_inicio').val($filter('date')(tarea.fechaInicio, "dd/MM/yyyy"));
+		angular.element('#form_vence').val($filter('date')(tarea.fechaVencimiento, "dd/MM/yyyy"));
+	}
+
+	function getProperty(property, object){
+		if(object._embedded && object._embedded[property] != undefined){
+			return object._embedded[property];
+		} else {
+			return [];
+		}
+
+	}
 }
 
 function DetalleTareaCtrl($scope, $routeParams, Tarea) {
 	$scope.tarea = Tarea.get({idTarea:$routeParams.tareaId});
 }
 
-function FormTareaCtrl($rootScope, $scope, $routeParams, Tarea, Usuario, Tipo) {
+function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario, Tipo) {
 	var formElements = ['#form_asunto', '#form_inicio', '#form_vence', '#form_estado', '#form_prioridad', '#form_sigue', '#form_asigna',
 		'#form_desc'];
 	var page = 0;
@@ -122,7 +196,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, Tarea, Usuario, Tipo) {
 	$scope.showAddTipo = false;
 	$scope.showDeleteTipo = false;
 	
-	
+		
 	$scope.selectUser = function(k, v){
 		$scope.usuario = k;
 		$scope.id = v;
@@ -132,10 +206,12 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, Tarea, Usuario, Tipo) {
 
 	$scope.agregar = function(usuario, id, collection) {
 		var fields = ["#form_asigna", "#form_sigue"]
-		var duplicate = $scope.checkForDuplicate("id", id, $scope.tarea.asignados) || $scope.checkForDuplicate("id", id, $scope.tarea.seguidores);
 		if(!duplicate){
 			if(usuario !== undefined && id !== undefined){
-				collection.push({"nombre" : usuario, "id" : id});
+				var duplicate = $scope.checkForDuplicate("id", id, $scope.tarea.asignados) || $scope.checkForDuplicate("id", id, $scope.tarea.seguidores);
+				collection.push(($filter('filter')($scope.usuarios, function(u){
+					return (u.id == id);
+				}))[0]);
 				$scope.clean(fields);
 				$scope.usuario = undefined;
 				$scope.id = undefined;
@@ -283,7 +359,6 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, Tarea, Usuario, Tipo) {
 		$scope.tarea.tipo = angular.copy(tipo);
 		
 	}
-
 	
 
 }

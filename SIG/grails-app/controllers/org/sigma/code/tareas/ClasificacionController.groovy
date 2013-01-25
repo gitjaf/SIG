@@ -89,10 +89,14 @@ class ClasificacionController {
 
     def delete() {
        
-        def resp = clasificacionService.borrarClasificacion(params.id as Integer)
+        response.status = clasificacionService.borrarClasificacion(params.id as Integer)
         
-        flash.message = resp.message
-        response.status = resp.statusCode
+        flash.message = 
+            response.status == 404 ? 
+            message(code: 'default.not.found.message', args: [message(code: 'clasificacion.label', default: 'Clasificacion'), params.id]) :
+                response.status == 200 ? 
+                message(code: 'default.deleted.message', args: [message(code: 'clasificacion.label', default: 'Clasificacion'), params.id]) :
+                message(code: 'default.not.deleted.message', args: [message(code: 'clasificacion.label', default: 'Clasificacion'), params.id])
 
         render flash.message
         

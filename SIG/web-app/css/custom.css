@@ -4,9 +4,11 @@
 	
 }
 
+
 .hoverDiv:HOVER {
-	background: #f5f5f5
+	background: #fffce2;
 }
+
 
 .activeLink {
 	font-weight: bolder;
@@ -18,11 +20,27 @@
 	margin-right: 6px;
 
 }
+.hide{
+	display: none;
+}
+
+
+input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
+    background-color: #EEEEEE;
+    cursor: pointer;
+}
+
 
 /*--- Labels ----*/
 
 .label {
-	margin-right: 6px;
+	margin-left: 5px;
+	vertical-align: text-top;
+}
+
+.badge {
+	margin-left: 5px;
+	vertical-align: text-top;	
 }
 
 .nueva {
@@ -199,4 +217,37 @@ li.ui-animate {
 .title-error{
 	color: #DA4F49;
 	font-weight: bold;
+}
+
+.listado-tareas{
+	border-top: solid 1px #e5e5e5;
+	margin-top: 5px;
+	margin-bottom: 2px;
+
+}
+
+.item-tareas{
+	border-bottom: solid 1px #e5e5e5;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+.titulo-tareas{
+	font-family: verdana;
+	font-size: 14pt;
+}
+
+.cliptext{
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+/*----- DIRECTIVES ------*/
+.task-buttons{
+	margin-right: 20px;
+}
+
+.task-buttons .drop{
+	border-right-width: 0px;
 }

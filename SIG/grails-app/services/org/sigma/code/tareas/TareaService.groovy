@@ -7,11 +7,24 @@ import org.codehaus.groovy.grails.web.json.JSONObject
 
 class TareaService {
 
+    Comparator fechaInicio = [compare: {a, b -> 
+            !a.fechaInicio && b.fechaInicio ? 1 : !b.fechaInicio && a.fechaInicio ? -1 : !a.fechaInicio &&
+            !b.fechaInicio ? a.asunto.compareTo(b.asunto) : a.fechaInicio == b.fechaInicio ? a.asunto.compareTo(b.asunto) :
+            b.fechaInicio.compareTo(a.fechaInicio)
+        }] as Comparator
+
+    Comparator fechaVencimiento = [compare: {a, b -> 
+            !a.fechaVencimiento && b.fechaVencimiento ? 1 : !b.fechaVencimiento && a.fechaVencimiento ? -1 : !a.fechaVencimiento &&
+            !b.fechaVencimiento ? a.asunto.compareTo(b.asunto) : a.fechaVencimiento == b.fechaVencimiento ? a.asunto.compareTo(b.asunto) : 
+            a.fechaVencimiento.compareTo(b.fechaVencimiento)
+        }] as Comparator
+
+
     Tarea saveTarea(JSONObject json) {
 
 		Usuario usuario = Usuario.get(json.responsable)
 		
-		Tarea tarea = this.crearTarea(json)
+		Tarea tarea = this.setValues(new Tarea(), json);
 
         usuario.addToCreadas(tarea)
 
@@ -19,9 +32,19 @@ class TareaService {
             return null
         }
 
-        
         return tarea
 
+    }
+
+    Tarea updateTarea(Tarea tarea, JSONObject json){
+        
+        tarea = this.setValues(tarea, json)
+
+        if(!tarea.save(flush: true)){
+            return null
+        }
+
+        return tarea
     }
 
     def getTareas(int id){
@@ -58,12 +81,14 @@ class TareaService {
 
         def sortBy = params.sortBy ? params.sortBy : "fechaInicio"
 
+        if(sortBy in ["fechaInicio", "fechaVencimiento"]){
+            return tareas.sort(this."$sortBy")
+        }
+
         return tareas.sort{it."$sortBy"}
     }
 
-    Tarea crearTarea(JSONObject json){
-
-        Tarea tarea = new Tarea()
+    Tarea setValues(Tarea tarea, JSONObject json){
 
         tarea.asunto = json.asunto
 

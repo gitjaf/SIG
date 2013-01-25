@@ -27,11 +27,13 @@ class Tarea {
 	Date dateCreated
 	Date lastUpdated
 	Boolean borrado = false
-	
+	Usuario responsable
+
+
 	static hasMany = [tareasRelacionadas : Tarea, seguimientos : Seguimiento, documentos : Documento,
 											asignados : Usuario, seguidores : Usuario]
 
-	static mappedBy = [asignados: "asignadas", seguidores: "seguidas"]
+	static mappedBy = [asignados: "asignadas", seguidores: "seguidas", responsable: "creadas"]
 	
 	static belongsTo = Usuario
 	
@@ -66,7 +68,7 @@ class Tarea {
 			   
 	}
 	
-	def halRepresenter = [title: asunto, embedded: ["tipo", "tareasRelacionadas"]]
+	def halRepresenter = [title: asunto, embedded: ["tipo", "tareasRelacionadas", "asignados", "seguidores", "responsable"]]
 	
 	
 	

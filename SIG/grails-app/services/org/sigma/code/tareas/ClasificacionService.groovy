@@ -18,27 +18,18 @@ class ClasificacionService {
     def borrarClasificacion(int id){
 
     	def clasificacionInstance = Clasificacion.get(id)
-    	def message
-    	def statusCode
-
 
     	if (!clasificacionInstance) {
-			message = message(code: 'default.not.found.message', args: [message(code: 'clasificacion.label', default: 'Clasificacion'), params.id])
-            statusCode = 404
+			return 404
         }
 
         try {
             clasificacionInstance.delete(flush: true)
-			message = message(code: 'default.deleted.message', args: [message(code: 'clasificacion.label', default: 'Clasificacion'), params.id])
-            statusCode = 200
+			return 200
 		}
         catch (DataIntegrityViolationException e) {
-			message = message(code: 'default.not.deleted.message', args: [message(code: 'clasificacion.label', default: 'Clasificacion'), params.id])
-            statusCode = 500
+			return 500
 	    }
-        finally{
-        	return [message: message, statusCode: statusCode]
         
-        }
     }
 }

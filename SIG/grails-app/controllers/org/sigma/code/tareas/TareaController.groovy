@@ -65,7 +65,7 @@ class TareaController {
     }
 
     def update() {
-        def tareaInstance = Tarea.get(params.id)
+        def tareaInstance = Tarea.get(params.id as Long)
         if (!tareaInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'tarea.label', default: 'Tarea'), params.id])
             response.status = 404
@@ -82,34 +82,8 @@ class TareaController {
             }
         }
 
-        tareaInstance.properties = request.JSON
-		
-		 bindData(tareaInstance, request.JSON, ['fechaInicio', 'fechaVencimiento']) 
-
-		 tareaInstance.fechaInicio = request.JSON.fechaInicio ? new SimpleDateFormat('yyyy-MM-dd').parse(request.JSON.fechaInicio) : null 
-	 	 tareaInstance.fechaVencimiento = request.JSON.fechaVencimiento ? new SimpleDateFormat('yyyy-MM-dd').parse(request.JSON.fechaVencimiento) : null 
-	 
-	 	 tareaInstance.tareaSuperior = (request.JSON?.idTareaSuperior) ?  Tarea.get(request.JSON?.idTareaSuperior) : tareaInstance.tareaSuperior 
- 
-	 	 tareaInstance.tipo = (request.JSON?.idTipo) ?  Clasificacion.get(request.JSON?.idTipo) : tareaInstance.tipo 
- 
- 	 	 if(request.JSON?.idDocumentos || request.JSON?.idDocumentos?.isEmpty()){ 
-	 	 	 tareaInstance.documentos?.clear() 
-	 	 	 request.JSON.idDocumentos.each{id -> tareaInstance.addToDocumentos(Documento.get(id))} 
-	 	} 
-
- 	 	 if(request.JSON?.idSeguimientos || request.JSON?.idSeguimientos?.isEmpty()){ 
-	 	 	 tareaInstance.seguimientos?.clear() 
-	 	 	 request.JSON.idSeguimientos.each{id -> tareaInstance.addToSeguimientos(Seguimiento.get(id))} 
-	 	} 
-
- 	 	 if(request.JSON?.idTareasRelacionadas || request.JSON?.idTareasRelacionadas?.isEmpty()){ 
-	 	 	 tareaInstance.tareasRelacionadas?.clear() 
-	 	 	 request.JSON.idTareasRelacionadas.each{id -> tareaInstance.addToTareasRelacionadas(Tarea.get(id))} 
-	 	} 
-
-		
-        if (!tareaInstance.save(flush: true)) {
+        tareaInstance = tareaService.updateTarea(tareaInstance, request.JSON)
+        if (!tareaInstance) {
             response.status = 500
 			render tareaInstance as JSON
             return
@@ -117,7 +91,7 @@ class TareaController {
 
 		flash.message = message(code: 'default.updated.message', args: [message(code: 'tarea.label', default: 'Tarea'), tareaInstance.id])
 		response.status = 200
-        render tareaInstance as JSON
+        render halBuilderService.buildModel(tareaInstance) as JSON
     }
 
     def delete() {

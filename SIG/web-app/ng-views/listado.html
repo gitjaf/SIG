@@ -1,5 +1,4 @@
 
-
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="span10">
@@ -45,32 +44,45 @@
 					</div>
 				</div>
 			</div>
-			<div class="row-fluid">
-				<div class="span2">
+			<div class="row-fluid offset1 span8">
+				<div class="">
 					<a class="btn pull-right" id="nueva" data-ng-click="nuevaTarea()" data-toggle="modal" data-target="#edit">Nueva</a>
 				</div>
 			</div>
-			<div class="row-fluid" style="margin-top:25px;">
-				<!--Body content-->
-				<div class="offset1 span8">	
-					<div class="row-fluid hoverDiv" data-ng-repeat="tarea in tareas._embedded.collection | filter: query | orderBy: orderProp">
+			<div class="row-fluid offset1 span8 listado-tareas"  >
+					<div class="row-fluid" data-ng-repeat="tarea in tareas._embedded.collection | filter: query | orderBy: orderProp" >
+					
+						<div id="tarea{{tarea.id}}" class="hoverDiv item-tareas" data-toggle="collapse" data-ng-href="#desc{{tarea.id}}" ng-mouseenter="showButtons=true" ng-mouseleave="showButtons=false">
+							<div class="row-fluid span12">
+								<span id="titulo-tarea-{{tarea.id}}"  class="lead has-tooltip txt-blue" data-tooltip data-title="{{tarea.asunto}}">{{tarea.asunto | cut:false:50}}  </span>
+							
+								<span data-ng-class="{label : tarea.estado}" class="{{(tarea.estado | lowercase).split(' ').join('')}}">
+									{{tarea.estado}}
+								</span>
+								<span data-ng-class="{label : tarea.prioridad}" class="{{(tarea.prioridad | lowercase).split(' ').join('')}}">
+									{{tarea.prioridad}}
+								</span>
+								<span class="badge" data-ng-show="tarea._embedded.tareasRelacionadas">{{tarea._embedded.tareasRelacionadas.length}}</span>
+								
+							</div>
+							<div class="span12" style="margin-left: 2px;">
+								<span class="muted" data-ng-show="tarea.fechaInicio"><small>{{tarea.fechaInicio | date:mediumDate}}</small></span>
+								<span class="muted" data-ng-show="tarea.fechaVencimiento"><small> - {{tarea.fechaVencimiento | date:mediumDate}}</small></span>
+								<div class="pull-right" data-ng-show="showButtons" >
+									<div taskbuttons item="tarea" click="nuevaTarea(tarea)"></div>
+								</div>
 
-						<div class="row-fluid">
-							<a data-ng-href="#{{tarea._links.self.href}}" class="lead">{{tarea.asunto}} </a>
-							<span class="muted">{{tarea.fechaInicio | date:mediumDate}}</span>
-							<span class="muted"> - {{tarea.fechaVencimiento | date:mediumDate}}</span>
-							<span data-ng-class="{label : tarea.estado}" class="{{(tarea.estado | lowercase).split(' ').join('')}}">
-								{{tarea.estado}}
-							</span>
-							<span data-ng-class="{label : tarea.prioridad}" class="{{(tarea.prioridad | lowercase).split(' ').join('')}}">
-								{{tarea.prioridad}}
-							</span>
+							</div>
+							
+							
+							<div class="row-fluid collapse" id="desc{{tarea.id}}">
+								<div class="span6 muted">{{tarea.descripcion}}</div>
+							</div>
 							
 						</div>
-						<div class="row-fluid">
-							<div class="span6 muted">{{tarea.descripcion}}</div>
-						</div>
+										
 					</div>
+					
 				</div>
 				<div class="span2">
 					<!-- Sort By: <select ng-model="orderProp">
@@ -78,23 +90,9 @@
 						<option value="fechaInicio">Reciente</option>
 					</select> -->
 				</div>
-				<div class="span8" >
-					<div class="pager">
-						<ul>
-							<li data-ng-show="tareas._links.previous" >
-								<a data-ng-href="#{{tareas._links.previous.href}}" >Previous</a>
-							</li>
-							<li data-ng-repeat="(number, link) in tareas._links.pages"
-								data-ng-class="{disabled: tareas._links.self.href == link.href }">
-								<a data-ng-href="#{{link.href}}">{{number}}</a>
-							</li>
-							<li data-ng-show="tareas._links.next">
-								<a data-ng-href="#{{tareas._links.next.href}}">Next</a>
-							</li>
+				
+				<pager collection="tareas"/>
 
-						</ul>
-					</div>
-				</div>
 
 			</div>
 		</div>
