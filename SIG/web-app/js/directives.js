@@ -20,10 +20,37 @@ directives.directive("pager", function() {
 
 directives.directive("taskbuttons", function() {
 	return {
-		scope: {item: '=item', click:'&click'},
+		scope: {item: '=item', edit:'&edit', addsub:'&addsub'},
 		restrict: 'A',
 		templateUrl: 'js/templates/task-buttons.html',
 		
+	}
+});
+
+directives.directive("alert", function() {
+	return {
+		replace: true,
+		scope: {title:'=title', message:'=message', alert: '=showon', type: '=type'},
+		restrict: 'A',
+		templateUrl: 'js/templates/alert.html',
+		link: function(scope, element, attrs){
+			scope.$watch("type", function(){
+				element.removeClass('alert-error alert-success');
+				element.addClass(scope.type);
+				
+			});
+
+			scope.alert = false;
+			
+			scope.$watch("alert", function(){
+				if(scope.alert){
+					element.slideDown();
+				} else {
+					element.slideUp();
+				}
+			});
+
+		}
 	}
 });
 

@@ -10,7 +10,7 @@
 
 </head>
 <body>
-	<div class="navbar hidden-phone">
+	%{-- <div class="navbar hidden-phone">
 		<div class="navbar-inner" data-ng-controller="ListaTareaCtrl">
 			<a class="brand" data-ng-click="$emit('filter', '')">Tareas</a>
 			<ul class="nav">
@@ -21,7 +21,7 @@
 				<li data-ng-class="{active: isActive('Cerrada')}"><a data-ng-click="$emit('filter', 'Cerrada')">Cerradas</a></li>
 			</ul>
 		</div>
-	</div>
+	</div> --}%
 	<div data-ng-view>
 	</div>
 	

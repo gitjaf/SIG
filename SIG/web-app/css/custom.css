@@ -24,12 +24,55 @@
 	display: none;
 }
 
+.header{
+	background-color: #f1f1f1;
+	padding-top: 10px;
+	border-bottom: solid 1px #eaeaea;
+}
+
+.module-name{
+	padding-left: 10px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-right: 0px;
+	color: #ddd;
+	margin: 0px;
+}
+
+.buscador{
+	padding-top: 6px;
+
+}
+
+.header-listado{
+	margin-bottom: 0px;
+	padding-top: 10px;
+}
+
 
 input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
     background-color: #EEEEEE;
     cursor: pointer;
 }
 
+.edited{
+	background-color: #FCF8E3;
+}
+
+.created{
+	background-color: #DFF0D8;
+}
+
+.deleted{
+	background-color: #EED3D7;
+}
+
+
+/*----BOOTSTRAP -----*/
+
+.row-fluid .offset1:first-child{
+	margin-left: 11.1111%;
+}
 
 /*--- Labels ----*/
 
@@ -196,7 +239,15 @@ li.ui-animate {
 .hide{
 	display: none;
 }
+/*----ALERTS-----*/
 
+.floating{
+	position: fixed;
+	top: 0px;
+	z-index: 3000;
+	width: 1309px; /* Para Chrome */
+	width: -moz-available;/* Para Firefox */
+}
 
 /*----POPOVER----*/
 

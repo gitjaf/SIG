@@ -20,7 +20,6 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 		$location.search("sortBy", field);
 	}
 
-	
 	$scope.search = function(query){
 		$location.search("q", query);
 		$location.search("page","0");
@@ -43,70 +42,96 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 		if(!tarea){
 			crearTarea();
 		}else {
-			editarTarea(tarea);
+			crearTarea();
+			crearSubTarea(tarea);
 		}
 		
+	}
+
+	$scope.editarTarea = function(tarea){
+		$scope.tarea = new Tarea();
+		$scope.tarea.id = tarea.id;
+		$scope.tarea.asunto = tarea.asunto;
+		$scope.tarea.fechaInicio = $filter('date')(tarea.fechaInicio, "dd/MM/yyyy");
+		$scope.tarea.fechaVencimiento = $filter('date')(tarea.fechaVencimiento, "dd/MM/yyyy");
+		$scope.tarea.descripcion = tarea.descripcion;
+		$scope.tarea.responsable = getProperty("responsable", tarea).id;
+		$scope.tarea.estado = tarea.estado;
+		$scope.tarea.prioridad = tarea.prioridad;
+		$scope.tarea.asignados = getProperty("asignados", tarea);
+		$scope.tarea.seguidores = getProperty("seguidores", tarea);
+		$scope.tarea.tipo = getProperty("tipo", tarea);
+		$scope.form_action = "Editar Tarea";
+		angular.element('#form_inicio').val($scope.tarea.fechaInicio);
+		angular.element('#form_vence').val($scope.tarea.fechaVencimiento);
 	}
 
 	$scope.save = function(){
 		var tareas = $scope.tareas._embedded.collection;
 		if($scope.tarea.id){
-			$scope.tarea.$update({idTarea: $scope.tarea.id, userId: $rootScope.userId}, function(tarea, putResponseHeaders){
-				tareas.splice(tareas.indexOf(
-					($filter('filter')(tareas, function(t){
-						return (t.id == $scope.tarea.id);
-					}))[0]
-				),1,tarea);
-				$scope.message({
-				"element" : "#titulo-tarea-"+tarea.id,
-				"title" : "Editar Tarea",
-				"content" : "La tarea '" + tarea.asunto + "' fue editada con exito",
-				"trigger" : "manual",
-				"delay" : 1000,
-				"timeout" : 3000,
-				"error": false
+			$scope.tarea.$update({idTarea: $scope.tarea.id, userId: $rootScope.userId},
+			function(tarea, putResponseHeaders){
+				removeObject(tareas, tarea, "id");
+				if($scope.tareasRecientes) {
+					removeObject($scope.tareasRecientes, tarea, "id");
+					$scope.tareasRecientes.splice(0,0,tarea)
 
-			});
+				} else {
+					$scope.tareasRecientes = [tarea];
+				} 
+				$scope.mensaje = "La tarea '" + tarea.asunto + "' fue editada con exito";
+				$scope.titulo = "Editar Tarea: ";
+				$scope.alert = true;
+				$scope.alertType = 'alert-success';
+				setTimeout(function(){
+					$scope.alert = false;
+					$scope.$apply();
+					angular.element("#tarea"+tarea.id).addClass("edited");
+				}, 3000);
+				
 			}, function(response, putResponseHeaders){
-				$scope.message({
-				"element" : "#titulo-tarea-"+response.data.id,
-				"title" : "Editar Tarea",
-				"content" : "Error al editar la tarea '" + $scope.tarea.asunto + "'",
-				"trigger" : "manual",
-				"delay" : 1000,
-				"timeout" : 3000,
-				"error": true
-
-			});
+				$scope.mensaje = "Error al editar la tarea '" + $scope.tarea.asunto + "'";
+				$scope.titulo = "Editar Tarea: ";
+				$scope.alert = true;
+				$scope.alertType = 'alert-error';
+				setTimeout(function(){
+					$scope.alert = false;
+					$scope.$apply();
+				}, 3000);
+				
 			})
+			
 		} else {
 
 			$scope.tarea.$save(function(tarea, putResponseHeaders){
 				//FIXME - Si la coleccion esta vacia (como ocurre con un nuevo usuario sin tareas asignadas)
 				// esto tira error al crear la primer tarea - ARREGLAR
-				$scope.tareas._embedded.collection.splice(0,0,tarea);
+				if($scope.tareasRecientes) {
+					$scope.tareasRecientes.splice(0,0,tarea)
+				} else {
+					$scope.tareasRecientes = [tarea];
+				} 
 				$scope.tareas.data.total = $scope.tareas.data.total + 1;
-				$scope.message({
-					"element" : "#nueva",
-					"title" : "Nueva Tarea",
-					"content" : "La tarea '" + tarea.asunto + "' fue creada con exito",
-					"trigger" : "manual",
-					"delay" : 1000,
-					"timeout" : 3000,
-					"error": false
-
-				});
+				$scope.mensaje = "La tarea '" + tarea.asunto + "' fue creada con exito";
+				$scope.titulo = "Crear Tarea: ";
+				$scope.alert = true;
+				$scope.alertType = 'alert-success';
+				setTimeout(function(){
+					$scope.alert = false;
+					$scope.$apply();
+					angular.element("#tarea"+tarea.id).addClass("created");
+				}, 3000);
+				
 			},function(response, putResponseHeaders){
-				$scope.message({
-					"element" : "#nueva",
-					"title" : "Nueva Tarea",
-					"content" : "Error al crear la tarea '" + $scope.tarea.asunto + "'",
-					"trigger" : "manual",
-					"delay" : 1000,
-					"timeout" : 3000,
-					"error": true
+				$scope.mensaje = "Error al crear la tarea '" + $scope.tarea.asunto + "'";
+				$scope.titulo = "Crear Tarea: ";
+				$scope.alert = true;
+				$scope.alertType = 'alert-error';
+				setTimeout(function(){
+					$scope.alert = false;
+					$scope.$apply();
+				}, 3000);
 
-				});
 			});
 		}
 	}
@@ -136,7 +161,6 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 		}
 	}
 
-
 	function crearTarea(){
 		$scope.tarea = new Tarea();
 		$scope.form_action = "Nueva Tarea";
@@ -146,25 +170,13 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 		$scope.tarea.asignados = [];
 		$scope.tarea.seguidores = [];
 		$scope.tarea.responsable = $rootScope.userId;
-
 	}
 
-	function editarTarea(tarea){
-		$scope.tarea = new Tarea();
-		$scope.tarea.id = tarea.id;
-		$scope.tarea.asunto = tarea.asunto;
-		$scope.tarea.fechaInicio = tarea.fechaInicio;
-		$scope.tarea.fechaVencimiento = tarea.fechaVencimiento;
-		$scope.tarea.descripcion = tarea.descripcion;
-		$scope.tarea.responsable = getProperty("responsable", tarea).id;
-		$scope.tarea.estado = tarea.estado;
-		$scope.tarea.prioridad = tarea.prioridad;
-		$scope.tarea.asignados = getProperty("asignados", tarea);
-		$scope.tarea.seguidores = getProperty("seguidores", tarea);
-		$scope.tarea.tipo = getProperty("tipo", tarea);
-		$scope.form_action = "Editar Tarea";
-		angular.element('#form_inicio').val($filter('date')(tarea.fechaInicio, "dd/MM/yyyy"));
-		angular.element('#form_vence').val($filter('date')(tarea.fechaVencimiento, "dd/MM/yyyy"));
+	function crearSubTarea(tarea){
+		console.log($scope.tarea);
+		$scope.tarea.idTareaSuperior = tarea.id;
+		$scope.form_action = "Sub-Tarea de " + tarea.asunto;
+		
 	}
 
 	function getProperty(property, object){
@@ -175,6 +187,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 		}
 
 	}
+
 }
 
 function DetalleTareaCtrl($scope, $routeParams, Tarea) {
@@ -182,7 +195,7 @@ function DetalleTareaCtrl($scope, $routeParams, Tarea) {
 }
 
 function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario, Tipo) {
-	var formElements = ['#form_asunto', '#form_inicio', '#form_vence', '#form_estado', '#form_prioridad', '#form_sigue', '#form_asigna',
+	var formElements = ['#form_asunto', '#form_inicio', '#form_vence', '#form_sigue', '#form_asigna',
 		'#form_desc'];
 	var page = 0;
 	var items = 0;
@@ -201,8 +214,6 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 		$scope.usuario = k;
 		$scope.id = v;
 	}
-
-	
 
 	$scope.agregar = function(usuario, id, collection) {
 		var fields = ["#form_asigna", "#form_sigue"]
@@ -226,6 +237,8 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 	$scope.cleanAll = function(){
 		$scope.clean(formElements);
 		$scope.nuevaTarea();
+		$scope.showAddTipo = false;
+		$scope.showDeleteTipo = false;
 	}
 
 	$scope.clean = function(elements){
@@ -344,8 +357,6 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 		$scope.invalidDate = false;
 	}
 
-	
-
 	function isAdmin(id){
 		return id == 1;
 	}
@@ -363,4 +374,18 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 
 }
 
+// --- FUNCIONES AUXILIARES -----
+
+/* Elimina un objeto de una colección.
+	Recibe como parametros la coleccion, el objeto a eliminar de la colección y
+	la property con la cual realizar la comparación para identificar el objeto
+	dentro de la colección.
+*/
+function removeObject(collection, object, property){
+	for (var i = 0; i < collection.length; i++) {
+		if(collection[i][property] == object[property]){
+			collection.splice(i, 1);
+		}
+	};
+}
 

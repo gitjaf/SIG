@@ -1,10 +1,10 @@
 <div class="btn-group task-buttons">
 	<a class="btn btn-mini drop" data-toggle="dropdown"><i class="icon-plus"></i></a>
 	<ul class="dropdown-menu">
-		<li><a href="">Agregar Subtarea</a></li>
+		<li><a data-ng-click="addsub(item)" data-toggle="modal" data-target="#edit">Agregar Subtarea</a></li>
 		<li><a href="">Agregar Seguimiento</a></li>
 		<li><a href="">Agregar Documento</a></li>
 	</ul>
-	<a class="btn btn-mini" data-ng-click="click(item)" data-toggle="modal" data-target="#edit"><i class="icon-pencil"></i></a>
-	<a class="btn btn-mini"><i class="icon-trash"></i></a>
+	<a class="btn btn-mini" data-ng-click="edit(item)" data-toggle="modal" data-target="#edit"><i class="icon-pencil"></i></a>
+	<a class="btn btn-mini" ><i class="icon-trash"></i></a>
 </div>
