@@ -26,3 +26,10 @@ services.factory('Tipo', function($resource){
 				query: {method: 'GET', params:{q: '@q', userId: '@userId'}, isArray: true}
 			});
 });
+
+services.factory('Seguimiento', function($resource){
+	return $resource('/SIG/seguimiento/:idSeguimiento',{},
+	{
+		query: {method: 'GET', params:{q: '@q', userId: '@userId'}, isArray: true}
+	});
+});

@@ -1,0 +1,47 @@
+<div class="modal-header nueva">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<h3 class="text-info txt-white">{{form_action}}</h3>
+</div>
+<div class="modal-body">
+	<form id="form_seg" name="form_seg" class="css-form" novalidate>
+	    <fieldset>
+	    	<div class="container-fluid">
+			    <div class="row-fluid">
+			    	<div class="span12">
+				    	<div class="span2 span2-5">
+					    		<label>Inicia</label>
+					    		<div id="dp_seg" class="input-append span10" >
+					    			<input id="form_fecha" type="text" class="span12" placeholder="Fecha" data-ng-model="dateSeg" data-date="12-02-2012" data-date-format="dd/mm/yyyy" readonly>
+					    			<span class="add-on" data-ng-click="clearDate('#form_fecha')"><i class="icon-trash"></i></span>
+				    			
+				    		</div>
+				    	</div>
+				    	<div class="span9">		    		
+				    		<label>Titulo</label>
+				    		<input id="seg_titulo" type="text" placeholder="Titulo del Seguimiento" class="input-block-level" data-ng-model="seguimiento.titulo" required>
+				    	</div>
+				    	<div class="span12" style="margin-left: 0px;">
+				    		<label>Descripción</label>
+				    		<textarea id="form_desc" rows="4" data-ng-model="seguimiento.descripcion" class="span11 span11-5"></textarea>
+				    	
+				    	</div>
+			    	</div>
+			    
+			    </div>	
+	    	</div>
+	    </fieldset>
+    </form>
+</div>
+<div class="modal-footer">
+	<a data-dismiss="modal" class="btn" data-ng-click="cleanAll()">Close</a>
+	<a data-dismiss="modal" data-ng-disabled="form_seg.$invalid" class="btn btn-success" data-ng-click="saveSeguimiento(tarea)">Guardar</a>
+</div>
+
+<script type="text/javascript">
+	var scope = angular.element('#form_fecha').scope();
+
+	jQuery('#form_fecha').datepicker('place').on('changeDate', function(ev){
+		scope.seguimiento.fecha = ev.date.valueOf();
+	});
+
+</script>

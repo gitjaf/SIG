@@ -1,4 +1,4 @@
-function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Tarea, Tipo, $document) {
+function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Tarea, Tipo, Seguimiento, $document) {
 	
 	var page = $routeParams.page ? $routeParams.page : 0;
 	var items = $routeParams.itemsPerPage ? $routeParams.itemsPerPage : 10;
@@ -39,6 +39,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 	}
 
 	$scope.nuevaTarea = function(tarea){
+		$scope.form = 'tarea';
 		if(!tarea){
 			crearTarea();
 		}else {
@@ -49,6 +50,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 	}
 
 	$scope.editarTarea = function(tarea){
+		$scope.form = 'tarea';
 		$scope.tarea = new Tarea();
 		$scope.tarea.id = tarea.id;
 		$scope.tarea.asunto = tarea.asunto;
@@ -79,26 +81,19 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 				} else {
 					$scope.tareasRecientes = [tarea];
 				} 
-				$scope.mensaje = "La tarea '" + tarea.asunto + "' fue editada con exito";
-				$scope.titulo = "Editar Tarea: ";
-				$scope.alert = true;
-				$scope.alertType = 'alert-success';
-				setTimeout(function(){
-					$scope.alert = false;
-					$scope.$apply();
-					angular.element("#tarea"+tarea.id).addClass("edited");
-				}, 3000);
+				var mensaje = "La tarea '" + tarea.asunto + "' fue editada con exito",
+				titulo = "Editar Tarea: ",
+				duracion = 4000,
+				tipo = 'alert-success';
+				$scope.alert(titulo, mensaje, tipo, duracion);
 				
 			}, function(response, putResponseHeaders){
-				$scope.mensaje = "Error al editar la tarea '" + $scope.tarea.asunto + "'";
-				$scope.titulo = "Editar Tarea: ";
-				$scope.alert = true;
-				$scope.alertType = 'alert-error';
-				setTimeout(function(){
-					$scope.alert = false;
-					$scope.$apply();
-				}, 3000);
-				
+				var mensaje = "Error al editar la tarea '" + $scope.tarea.asunto + "'",
+				duracion = 4000,
+				titulo = "Editar Tarea: ",
+				tipo = 'alert-error';
+
+				$scope.alert(titulo, mensaje, tipo, duracion);	
 			})
 			
 		} else {
@@ -112,28 +107,44 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 					$scope.tareasRecientes = [tarea];
 				} 
 				$scope.tareas.data.total = $scope.tareas.data.total + 1;
-				$scope.mensaje = "La tarea '" + tarea.asunto + "' fue creada con exito";
-				$scope.titulo = "Crear Tarea: ";
-				$scope.alert = true;
-				$scope.alertType = 'alert-success';
-				setTimeout(function(){
-					$scope.alert = false;
-					$scope.$apply();
-					angular.element("#tarea"+tarea.id).addClass("created");
-				}, 3000);
+				
+				var mensaje = "La tarea '" + tarea.asunto + "' fue creada con exito",
+				titulo = "Crear Tarea: ",
+				tipo = 'alert-success',
+				duracion = 4000;
+
+				$scope.alert(titulo, mensaje, tipo, duracion);
 				
 			},function(response, putResponseHeaders){
-				$scope.mensaje = "Error al crear la tarea '" + $scope.tarea.asunto + "'";
-				$scope.titulo = "Crear Tarea: ";
-				$scope.alert = true;
-				$scope.alertType = 'alert-error';
-				setTimeout(function(){
-					$scope.alert = false;
-					$scope.$apply();
-				}, 3000);
+				var mensaje = "Error al crear la tarea '" + $scope.tarea.asunto + "'",
+				titulo = "Crear Tarea: ",
+				tipo = 'alert-error',
+				duracion = 4000;
 
+				$scope.alert(titulo, mensaje, tipo, duracion);
 			});
 		}
+	}
+
+
+
+	$scope.nuevoSeguimiento = function(tarea){
+		$scope.form = 'seguimiento';
+		$scope.form_action = "Seguimiento de " + tarea.asunto;
+		$scope.tarea = tarea;
+		$scope.seguimiento = new Seguimiento();
+
+	}
+
+	$scope.alert = function(titulo, mensaje, tipo, duracion){
+		$scope.titulo = titulo;
+		$scope.mensaje = mensaje;
+		$scope.alertType = tipo;
+		$scope.showAlert = true;
+		setTimeout(function(){
+			$scope.showAlert = false;
+			$scope.$apply();
+		}, duracion);
 	}
 
 	$scope.message = function(prop){
@@ -173,7 +184,6 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 	}
 
 	function crearSubTarea(tarea){
-		console.log($scope.tarea);
 		$scope.tarea.idTareaSuperior = tarea.id;
 		$scope.form_action = "Sub-Tarea de " + tarea.asunto;
 		

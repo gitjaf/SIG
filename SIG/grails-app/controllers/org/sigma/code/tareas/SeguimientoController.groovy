@@ -8,6 +8,11 @@ import java.text.SimpleDateFormat
 
 class SeguimientoController {
 
+	def halBuilderService
+	def halCollectionBuilderService
+
+	def seguimientoService
+
 	static allowedMethods = [show: ["GET", "POST"], save: "POST", update: "PUT", delete: "DELETE"]
 
 	def index() {
@@ -25,21 +30,17 @@ class SeguimientoController {
 	}
 
 	def save() {
-		def seguimientoInstance = new Seguimiento(request.JSON)
+		
+		def seguimientoInstance = seguimientoService.saveSeguimiento(request.JSON)
 
-		bindData(seguimientoInstance, request.JSON, ['fecha'])
-		seguimientoInstance.fecha = request.JSON.fecha ? new SimpleDateFormat('yyyy-MM-dd').parse(request.JSON.fecha) : null
-
-		seguimientoInstance.responsable = Usuario.get(request.JSON?.idResponsable)
-
-		if (!seguimientoInstance.save(flush: true)) {
+		if (!seguimientoInstance) {
 			response.status = 500
 			return
 		}
 
 		flash.message = message(code: 'default.created.message', args: [message(code: 'seguimiento.label', default: 'Seguimiento'), seguimientoInstance.id])
 		response.status = 201
-		render seguimientoInstance as JSON
+		render (halBuilderService.buildModel(seguimientoInstance) as JSON)
 	}
 
 	def show() {

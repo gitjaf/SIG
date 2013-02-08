@@ -27,4 +27,7 @@ class Seguimiento {
 		
 		descripcion type:'text'
     }
+
+    def halRepresenter = [title: titulo, embedded: ["responsable"]]
+    
 }

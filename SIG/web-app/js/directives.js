@@ -20,9 +20,9 @@ directives.directive("pager", function() {
 
 directives.directive("taskbuttons", function() {
 	return {
-		scope: {item: '=item', edit:'&edit', addsub:'&addsub'},
+		scope: {item: '=item', edit:'&edit', addsub:'&addsub', addseg:'&addseg'},
 		restrict: 'A',
-		templateUrl: 'js/templates/task-buttons.html',
+		templateUrl: 'js/templates/task-buttons.html'
 		
 	}
 });

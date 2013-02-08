@@ -68,7 +68,7 @@ class Tarea {
 			   
 	}
 	
-	def halRepresenter = [title: asunto, embedded: ["tipo", "tareasRelacionadas", "asignados", "seguidores", "responsable"]]
+	def halRepresenter = [title: asunto, embedded: ["tipo", "tareasRelacionadas", "asignados", "seguidores", "responsable", "seguimientos"]]
 	
 	
 	

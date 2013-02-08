@@ -186,6 +186,10 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 	width: 88.906%;
 }
 
+.span11.span11-5{
+	width: 94.5%;
+}
+
 /*---COLORS---*/
 
 .txt-blue {
