@@ -54,6 +54,34 @@ directives.directive("alert", function() {
 	}
 });
 
+directives.directive("collapseLink", function(){
+	return {
+		transclude: true,
+		scope: {obj: '@elementId'},
+		template: '<a data-toggle="collapse" data-ng-href="{{obj}}" data-ng-transclude>{{text}}</a>',
+		restrict: 'E',
+		link: function(scope, element, attrs){
+			console.log(scope, element, attrs);
+			var showing = false;
+			scope.text = "Ver mas...";
+			element.on('click', function(e){
+				showing = !showing;
+				if(showing){
+					scope.text = "Ocultar";
+					scope.$apply();
+				} else{
+					scope.text = "Ver mas...";
+					scope.$apply();
+				}
+			});
+		},
+
+		replace: true
+	}
+
+});
+
+
 
 
 

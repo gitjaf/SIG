@@ -10,9 +10,10 @@
 }
 
 
-.activeLink {
+.activeLink a {
 	font-weight: bolder;
 	text-transform: uppercase;
+	color: #ff6624;
 	
 }
 
@@ -49,6 +50,37 @@
 	padding-top: 10px;
 }
 
+.filtros{
+	margin-top: 20px;
+	-moz-box-sizing: border-box;
+    display: block;
+    float: left;
+	width: 10%;
+	margin-left: -20px;
+}
+
+
+.filtros ul li{
+	padding-top: 4px;
+	padding-bottom: 4px;
+	padding-left: 10px;
+}
+
+.filtros ul li:hover{
+	background-color: #eaeaea;
+}
+
+.filtros ul li.active{
+	background-color: #ff6624;
+}
+
+.filtros ul li a:hover{
+	text-decoration: none;
+}
+
+.filtros ul li.active a{
+	color: white;
+}
 
 input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
     background-color: #EEEEEE;
@@ -70,8 +102,8 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 
 /*----BOOTSTRAP -----*/
 
-.row-fluid .offset1:first-child{
-	margin-left: 11.1111%;
+.row-fluid .header-listado:first-child{
+	margin-left: 2.5%;
 }
 
 /*--- Labels ----*/

@@ -8,7 +8,7 @@ if (typeof jQuery !== 'undefined') {
 	})(jQuery);
 }
 
-angular.module('sig', ['sig.services', 'sig.directives', 'ui']).
+angular.module('sig', ['sig.services', 'sig.directives', 'ui', 'angular-underscore']).
 config(['$routeProvider', function($routeProvider) {
 	$routeProvider.
 	when('/:userId/tarea', {templateUrl: './ng-views/listado.html', controller: ListaTareaCtrl}).
