@@ -142,11 +142,11 @@
 							<span class="badge" data-ng-show="tarea._embedded.tareasRelacionadas">{{tarea._embedded.tareasRelacionadas.length}}</span>
 							
 						</div>
-						<div class="span12" style="margin-left: 2px;">
+						<div class="span12 listado_estado" style="margin-left: 2px;">
 							<span class="muted" data-ng-show="tarea.fechaInicio"><small><i class="icon-calendar"></i> {{tarea.fechaInicio | date:mediumDate}}</small></span>
 							<span class="muted" data-ng-hide="tarea.fechaInicio"><small><i class="icon-calendar"></i> Sin Inicio</small></span> 
-							<span class="muted" data-ng-show="tarea.fechaVencimiento"><small> - {{tarea.fechaVencimiento | date:mediumDate}}</small></span>
-							<span class="muted" data-ng-hide="tarea.fechaVencimiento"><small> - Sin Vencimiento</small></span> | 
+							<span class="muted" data-ng-show="tarea.fechaVencimiento"><small> - {{tarea.fechaVencimiento | date:mediumDate}}</small> | </span>
+							<span class="muted" data-ng-hide="tarea.fechaVencimiento"><small> - Sin Vencimiento</small> | </span> 
 							<span class="muted" data-ng-show="tarea._embedded.tipo"><small><i class="icon-tags"></i>  {{tarea._embedded.tipo.nombre}}</small> | </span>
 							<span><small><collapse-link element-id="#desc{{tarea.id}}"></collapse-link></small>
 							</span>
@@ -157,21 +157,21 @@
 						</div>
 							
 							
-						<div class="row-fluid collapse" id="desc{{tarea.id}}">
+						<div class="row-fluid collapse listado_descripcion" id="desc{{tarea.id}}">
 							<div class="span5" data-ng-show="tarea._embedded.asignados">
-									Asignados: 
+									<i class="icon-user"></i>  Asignados: 
 									<span class="muted" data-ng-repeat="asignado in tarea._embedded.asignados">{{asignado._embedded.persona.nombres}} {{asignado._embedded.persona.apellidos}}, </span>
 
 							</div>
 							<div class="span5" data-ng-show="tarea._embedded.asignados">
-									Seguidores:
+									<i class="icon-user"></i>  Seguidores:
 									<span class="muted" data-ng-repeat="seguidor in tarea._embedded.seguidores">{{seguidor._embedded.persona.nombres}} {{seguidor._embedded.persona.apellidos}}, </span>
 							</div>
 							<div class="span12 muted">{{tarea.descripcion}}</div>
-							<div class="span12 muted" data-ng-repeat="seguimiento in tarea._embedded.seguimientos">
-								<div class="span9">{{seguimiento.titulo}}</div>
-								<div class="span2">{{seguimiento.fecha}}</div>
-								<div class="span12">{{seguimiento.descripcion}}</div>
+							<div class="span9 seguimiento" data-ng-repeat="seguimiento in tarea._embedded.seguimientos">
+								<div class="span9 muted titulo_seguimiento">{{seguimiento.titulo}}</div>
+								<div class="span2 muted fecha_seguimiento pull-right"><small>{{seguimiento.fecha | date:mediumDate}}</small></div>
+								<div class="span12 muted"><small>{{seguimiento.descripcion}}</small></div>
 							</div>
 						</div>
 							

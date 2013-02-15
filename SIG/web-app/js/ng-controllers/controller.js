@@ -15,7 +15,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 
 	$scope.hover = false;
 	$scope.query = query;
-
+		 	
 	$scope.sort = function(field) {
 		$location.search("sortBy", field);
 	}
@@ -53,17 +53,28 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 		$scope.form = 'tarea';
 		$scope.tarea = new Tarea();
 		$scope.tarea.id = tarea.id;
+		$scope.tarea.responsable = getProperty("responsable", tarea).id;
+		
 		$scope.tarea.asunto = tarea.asunto;
+		$scope.tarea.tipo = getProperty("tipo", tarea);
+		$scope.showTipo = !(_.isEmpty($scope.tarea.tipo));
+
 		$scope.tarea.fechaInicio = $filter('date')(tarea.fechaInicio, "dd/MM/yyyy");
 		$scope.tarea.fechaVencimiento = $filter('date')(tarea.fechaVencimiento, "dd/MM/yyyy");
-		$scope.tarea.descripcion = tarea.descripcion;
-		$scope.tarea.responsable = getProperty("responsable", tarea).id;
 		$scope.tarea.estado = tarea.estado;
 		$scope.tarea.prioridad = tarea.prioridad;
+		$scope.showTiempo = !(_.isEmpty($scope.tarea.fechaInicio) && _.isEmpty($scope.tarea.fechaVencimiento));
+
 		$scope.tarea.asignados = getProperty("asignados", tarea);
 		$scope.tarea.seguidores = getProperty("seguidores", tarea);
-		$scope.tarea.tipo = getProperty("tipo", tarea);
+		$scope.showAsigna = !(_.isEmpty($scope.tarea.asignados) && _.isEmpty($scope.tarea.seguidores));
+
+		$scope.tarea.descripcion = tarea.descripcion;
+		$scope.showDesc = !(_.isEmpty($scope.tarea.descripcion));
+		
 		$scope.form_action = "Editar Tarea";
+		//FIXME - Esto no funciona para setear valores a los campos de fecha.
+		//Solamente los setea una vez que los campos han sido inicializados y expuestos.
 		angular.element('#form_inicio').val($scope.tarea.fechaInicio);
 		angular.element('#form_vence').val($scope.tarea.fechaVencimiento);
 	}
@@ -74,12 +85,12 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 			$scope.tarea.$update({idTarea: $scope.tarea.id, userId: $rootScope.userId},
 			function(tarea, putResponseHeaders){
 				removeObject(tareas, tarea, "id");
-				if($scope.tareasRecientes) {
-					removeObject($scope.tareasRecientes, tarea, "id");
-					$scope.tareasRecientes.splice(0,0,tarea)
+				if($scope.tareas._embedded.collection) {
+					$scope.tareas._embedded.collection.push(tarea);
+					$scope.tareas._embedded.collection = _.sortBy($scope.tareas._embedded.collection, sortBy);
 
 				} else {
-					$scope.tareasRecientes = [tarea];
+					$scope.tareas._embedded.collection = [tarea];
 				} 
 				var mensaje = "La tarea '" + tarea.asunto + "' fue editada con exito",
 				titulo = "Editar Tarea: ",
@@ -99,12 +110,11 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 		} else {
 
 			$scope.tarea.$save(function(tarea, putResponseHeaders){
-				//FIXME - Si la coleccion esta vacia (como ocurre con un nuevo usuario sin tareas asignadas)
-				// esto tira error al crear la primer tarea - ARREGLAR
-				if($scope.tareasRecientes) {
-					$scope.tareasRecientes.splice(0,0,tarea)
+				if($scope.tareas._embedded.collection) {
+					$scope.tareas._embedded.collection.push(tarea);
+					$scope.tareas._embedded.collection = _.sortBy($scope.tareas._embedded.collection, sortBy);
 				} else {
-					$scope.tareasRecientes = [tarea];
+					$scope.tareas= [tarea];
 				} 
 				$scope.tareas.data.total = $scope.tareas.data.total + 1;
 				

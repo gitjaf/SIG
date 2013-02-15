@@ -3,7 +3,7 @@ package org.sigma.code.tareas
 
 import org.sigma.code.common.Usuario
 
-class Seguimiento {
+class Seguimiento implements Comparable{
 
     String titulo
     String descripcion
@@ -24,10 +24,13 @@ class Seguimiento {
     
     static mapping = {
         table 'sig_grv_tar_seguimiento'
-		
 		descripcion type:'text'
     }
 
     def halRepresenter = [title: titulo, embedded: ["responsable"]]
     
+
+    int compareTo(obj){
+        obj.fecha.compareTo(fecha)
+    }
 }

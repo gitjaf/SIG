@@ -29,6 +29,7 @@ class Tarea {
 	Boolean borrado = false
 	Usuario responsable
 
+	SortedSet seguimientos
 
 	static hasMany = [tareasRelacionadas : Tarea, seguimientos : Seguimiento, documentos : Documento,
 											asignados : Usuario, seguidores : Usuario]
