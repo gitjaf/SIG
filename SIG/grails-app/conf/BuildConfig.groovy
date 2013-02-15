@@ -64,5 +64,6 @@ grails.project.dependency.resolution = {
 
         compile ':cache:1.0.0'
         compile ":underscore:1.4.3"
+        compile ":font-awesome-resources:3.0"
     }
 }

@@ -1,4 +1,5 @@
-function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Tarea, Tipo, Seguimiento, $document) {
+function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Usuario,
+ Tarea, Tipo, Seguimiento, $document) {
 	
 	var page = $routeParams.page ? $routeParams.page : 0;
 	var items = $routeParams.itemsPerPage ? $routeParams.itemsPerPage : 10;
@@ -7,7 +8,8 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 
 	if($routeParams.userId){
 		$rootScope.userId = ($rootScope.userId != $routeParams.userId) ? $routeParams.userId : $rootScope.userId;
-	
+		$rootScope.user = Usuario.get({"idUsuario": $rootScope.userId});
+		
 		$scope.tareas = Tarea.query({"page": page, "itemsPerPage" : items, "sortBy": sortBy,
 	 	"q": query, userId: $rootScope.userId});
 	 	
@@ -15,7 +17,8 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 
 	$scope.hover = false;
 	$scope.query = query;
-		 	
+	$scope.sortBy = sortBy;
+
 	$scope.sort = function(field) {
 		$location.search("sortBy", field);
 	}
@@ -40,6 +43,10 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 
 	$scope.nuevaTarea = function(tarea){
 		$scope.form = 'tarea';
+		$scope.showTipo = false;
+		$scope.showTiempo = false;
+		$scope.showAsigna = false;
+		$scope.showDesc = false;
 		if(!tarea){
 			crearTarea();
 		}else {
@@ -49,34 +56,29 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 		
 	}
 
-	$scope.editarTarea = function(tarea){
+	$scope.editarTarea = function(t){
 		$scope.form = 'tarea';
 		$scope.tarea = new Tarea();
-		$scope.tarea.id = tarea.id;
-		$scope.tarea.responsable = getProperty("responsable", tarea).id;
+		angular.copy(t, $scope.tarea);
 		
-		$scope.tarea.asunto = tarea.asunto;
-		$scope.tarea.tipo = getProperty("tipo", tarea);
+		$scope.tarea.asunto = t.asunto;
+		$scope.tarea.tipo = getProperty("tipo", $scope.tarea);
 		$scope.showTipo = !(_.isEmpty($scope.tarea.tipo));
 
-		$scope.tarea.fechaInicio = $filter('date')(tarea.fechaInicio, "dd/MM/yyyy");
-		$scope.tarea.fechaVencimiento = $filter('date')(tarea.fechaVencimiento, "dd/MM/yyyy");
-		$scope.tarea.estado = tarea.estado;
-		$scope.tarea.prioridad = tarea.prioridad;
+		$scope.tarea.fechaInicio = $filter('date')($scope.tarea.fechaInicio, "dd/MM/yyyy");
+		$scope.tarea.fechaVencimiento = $filter('date')($scope.tarea.fechaVencimiento, "dd/MM/yyyy");
+		$scope.dateInicia = $scope.tarea.fechaInicio
+		$scope.dateVence = $scope.tarea.fechaVencimiento
 		$scope.showTiempo = !(_.isEmpty($scope.tarea.fechaInicio) && _.isEmpty($scope.tarea.fechaVencimiento));
 
-		$scope.tarea.asignados = getProperty("asignados", tarea);
-		$scope.tarea.seguidores = getProperty("seguidores", tarea);
+		$scope.tarea.asignados = getProperty("asignados", $scope.tarea);
+		$scope.tarea.seguidores = getProperty("seguidores", $scope.tarea);
 		$scope.showAsigna = !(_.isEmpty($scope.tarea.asignados) && _.isEmpty($scope.tarea.seguidores));
 
-		$scope.tarea.descripcion = tarea.descripcion;
 		$scope.showDesc = !(_.isEmpty($scope.tarea.descripcion));
 		
 		$scope.form_action = "Editar Tarea";
-		//FIXME - Esto no funciona para setear valores a los campos de fecha.
-		//Solamente los setea una vez que los campos han sido inicializados y expuestos.
-		angular.element('#form_inicio').val($scope.tarea.fechaInicio);
-		angular.element('#form_vence').val($scope.tarea.fechaVencimiento);
+		
 	}
 
 	$scope.save = function(){
@@ -87,11 +89,10 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 				removeObject(tareas, tarea, "id");
 				if($scope.tareas._embedded.collection) {
 					$scope.tareas._embedded.collection.push(tarea);
-					$scope.tareas._embedded.collection = _.sortBy($scope.tareas._embedded.collection, sortBy);
-
 				} else {
 					$scope.tareas._embedded.collection = [tarea];
-				} 
+				}
+				
 				var mensaje = "La tarea '" + tarea.asunto + "' fue editada con exito",
 				titulo = "Editar Tarea: ",
 				duracion = 4000,
@@ -105,14 +106,13 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 				tipo = 'alert-error';
 
 				$scope.alert(titulo, mensaje, tipo, duracion);	
-			})
+			});
 			
 		} else {
 
 			$scope.tarea.$save(function(tarea, putResponseHeaders){
 				if($scope.tareas._embedded.collection) {
 					$scope.tareas._embedded.collection.push(tarea);
-					$scope.tareas._embedded.collection = _.sortBy($scope.tareas._embedded.collection, sortBy);
 				} else {
 					$scope.tareas= [tarea];
 				} 
@@ -135,8 +135,6 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Ta
 			});
 		}
 	}
-
-
 
 	$scope.nuevoSeguimiento = function(tarea){
 		$scope.form = 'seguimiento';

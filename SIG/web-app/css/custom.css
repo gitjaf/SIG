@@ -11,10 +11,11 @@
 }
 
 
-.activeLink a {
+.activeLink, .activeLink a{
 	font-weight: bolder;
 	text-transform: uppercase;
 	color: #ff6624;
+	
 	
 }
 
@@ -51,6 +52,10 @@
 	padding-top: 10px;
 }
 
+.header-usuario{
+	text-align: center;
+}
+
 .filtros{
 	margin-top: 20px;
 	-moz-box-sizing: border-box;
@@ -73,6 +78,7 @@
 
 .filtros ul li.active{
 	background-color: #ff6624;
+	color: white;
 }
 
 .filtros ul li a:hover{
@@ -95,6 +101,10 @@
 
 .seguimiento:hover .muted{
 	color: black;
+}
+
+.seguimiento:hover .titulo_seguimiento, .seguimiento:hover .fecha_seguimiento {
+	color: #049cdb;
 }
 
 .titulo_seguimiento{

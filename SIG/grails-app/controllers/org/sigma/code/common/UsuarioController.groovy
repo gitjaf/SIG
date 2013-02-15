@@ -37,6 +37,6 @@ class UsuarioController {
             return
         }
 		response.status = 200
-        render usuarioInstance as JSON
+        render halBuilderService.buildModel(usuarioInstance) as JSON
     }
 }

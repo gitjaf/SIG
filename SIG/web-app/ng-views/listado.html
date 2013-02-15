@@ -2,10 +2,14 @@
 <div class="row-fluid header">
 	<div class="span12">
 		<div class="span2 muted lead "><h3 class="module-name">SIG Tareas</h3></div>
-		<div class="input-append span9 hidden-phone buscador">
-			<input data-ng-model="query" type="search" placeholder="Buscar Tareas" class="span7">
+		<div class="input-append span5 hidden-phone buscador">
+			<input data-ng-model="query" type="search" placeholder="Buscar Tareas" class="span12">
 			<button class="btn" data-ng-click="search(query)">&nbsp;<i class="icon-search"></i>&nbsp;</button><br>
-		</div>	
+		</div>
+		<div class="span2 pull-right header-usuario">
+			<i class="icon-user icon-2x"></i><br>
+			 {{user._embedded.persona.nombres}} {{user._embedded.persona.apellidos}}
+		</div>
 	</div>
 				<!-- <div class="row-fluid hidden-phone">
 					
@@ -18,23 +22,23 @@
 		<div class="filtros">
 			<ul class="unstyled">
 				<li data-ng-class="{active: isActive('') == undefined}">
-					<i data-ng-show="isActive('') == undefined" class="icon-chevron-right icon-white"></i>
+					<i data-ng-show="isActive('') == undefined" class="icon-chevron-right"></i>
 					<a class="muted" data-ng-click="$emit('filter', '')">Todas</a>
 				</li>
 				<li data-ng-class="{active: isActive('Nueva')}">
-					<i data-ng-show="isActive('Nueva')"  class="icon-chevron-right icon-white"></i>
+					<i data-ng-show="isActive('Nueva')"  class="icon-chevron-right "></i>
 					<a class="muted" data-ng-click="$emit('filter', 'Nueva')">A Iniciar</a>
 				</li>
 				<li data-ng-class="{active: isActive('En Curso')}">
-					<i data-ng-show="isActive('En Curso')" class="icon-chevron-right icon-white"></i>
+					<i data-ng-show="isActive('En Curso')" class="icon-chevron-right "></i>
 					<a class="muted" data-ng-click="$emit('filter', 'En Curso')">En Curso</a>
 				</li>
 				<li data-ng-class="{active: isActive('Terminada')}">
-					<i data-ng-show="isActive('Terminada')" class="icon-chevron-right icon-white"></i>
+					<i data-ng-show="isActive('Terminada')" class="icon-chevron-right "></i>
 					<a class="muted" data-ng-click="$emit('filter', 'Terminada')">Terminadas</a>
 				</li>
 				<li data-ng-class="{active: isActive('Cerrada')}">
-					<i data-ng-show="isActive('Cerrada')"  class="icon-chevron-right icon-white"></i>
+					<i data-ng-show="isActive('Cerrada')"  class="icon-chevron-right "></i>
 					<a class="muted" data-ng-click="$emit('filter', 'Cerrada')">Cerradas</a>
 				</li>
 			</ul>
@@ -127,7 +131,7 @@
 			</div>
 			
 			<div class="row-fluid span8 listado-tareas"  >
-				<div class="row-fluid" data-ng-repeat="tarea in tareas._embedded.collection | filter: query | orderBy: orderProp" >
+				<div class="row-fluid" data-ng-repeat="tarea in tareas._embedded.collection | filter: query | orderBy: sortBy" >
 					
 					<div id="tarea{{tarea.id}}" class="hoverDiv item-tareas" data-ng-mouseenter="showButtons=true" data-ng-mouseleave="showButtons=false">
 						<div class="row-fluid span12">

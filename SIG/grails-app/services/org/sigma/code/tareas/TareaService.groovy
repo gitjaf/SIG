@@ -97,10 +97,10 @@ class TareaService {
         tarea.prioridad = json.prioridad
 
         tarea.descripcion = json.descripcion
-                       
-        tarea.fechaInicio = json.fechaInicio ? new Date(json.fechaInicio) : null 
         
-        tarea.fechaVencimiento = json.fechaVencimiento ? new Date(json.fechaVencimiento) : null 
+        tarea.fechaInicio = json.fechaInicio ? Date.parse("dd/MM/yyyy", json.fechaInicio) : null 
+        
+        tarea.fechaVencimiento = json.fechaVencimiento ? Date.parse("dd/MM/yyyy", json.fechaVencimiento) : null 
 
         tarea.tareaSuperior = Tarea.get(json?.idTareaSuperior) 
  

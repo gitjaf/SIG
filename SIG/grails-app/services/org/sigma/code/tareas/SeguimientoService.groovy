@@ -14,7 +14,7 @@ class SeguimientoService {
     	Seguimiento seg = new Seguimiento()
 
     	seg.titulo = json.titulo
-    	seg.fecha = json.fecha ? new Date(json.fecha) : null
+    	seg.fecha = json.fecha ? Date.parse("dd/MM/yyyy", json.fecha) : null
     	seg.descripcion = json.descripcion ?: null
     	seg.responsable = Usuario.get(json.idUsuario as Long)
 
