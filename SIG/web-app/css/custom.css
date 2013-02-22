@@ -49,11 +49,73 @@
 
 .header-listado{
 	margin-bottom: 0px;
-	padding-top: 10px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	
+}
+
+.header-tabs{
+	margin-left: 0px !important;
+	height: 20px;
+
+	/** GRADIENTE */
+	background: rgb(246,246,246); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(246,246,246,1) 0%, rgba(228,228,228,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(246,246,246,1)), color-stop(100%,rgba(228,228,228,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(246,246,246,1) 0%,rgba(228,228,228,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(246,246,246,1) 0%,rgba(228,228,228,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(246,246,246,1) 0%,rgba(228,228,228,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(246,246,246,1) 0%,rgba(228,228,228,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f6f6', endColorstr='#e4e4e4',GradientType=0 ); /* IE6-9 */
+
+
+}
+
+.header-listado .header-tabs .nav-tabs{
+	margin-bottom: 0px;
+	margin-top: 0px;
+	font-size: 10pt;
+	font-weight: bold;
+	
+}
+
+
+.header-listado .header-tabs .nav-tabs li a{
+	padding-top: 4px;
+	padding-bottom: 4px;
+	color: #aaa;
+}
+
+.header-listado .header-tabs .nav-tabs li.active a{
+	color: #555;
+}
+
+.row-fluid .header-listado:first-child {
+	margin-left: 0px !important;
+}
+
+.header-listado .pagination{
+	margin-top:0px;
+	margin-bottom: 0px;
+	padding-top: 5px;
+}
+
+.header-pagination{
+	margin-left: 0px !important;
+	border-bottom: solid 1px #ddd ;
+}
+
+.header-pagination .pagination{
+	margin-left: 5px !important;
 }
 
 .header-usuario{
 	text-align: center;
+}
+
+.boton-nueva{
+	padding-top: 5px;
+	margin-right: 5px;
 }
 
 .filtros{
@@ -61,7 +123,7 @@
 	-moz-box-sizing: border-box;
     display: block;
     float: left;
-	width: 10%;
+	width: 12%;
 	margin-left: -20px;
 }
 
@@ -118,12 +180,17 @@
 	text-decoration: underline;
 }
 
-.listado_estado{
+.listado-estado{
 	padding-left: 4px;
 }
 
-.listado_descripcion{
+.listado-descripcion{
 	padding-left: 6px;
+	padding-top: 5px;
+}
+
+.numero-tarea{
+	vertical-align: text-bottom;
 }
 
 input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
@@ -150,6 +217,12 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 	margin-left: 2.5%;
 }
 
+.pagination.page0 ul:first-child{
+	border-left: 1px solid #dddddd;
+	border-top-left-radius: 3px;
+	border-bottom-left-radius: 3px;
+}
+
 /*--- Labels ----*/
 
 .label {
@@ -160,6 +233,10 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 .badge {
 	margin-left: 5px;
 	vertical-align: text-top;	
+}
+
+.bdg-white {
+	background-color: rgba(255,255,255,0.4);
 }
 
 .nueva {
@@ -199,9 +276,17 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 
 .form {
 	width: 55%;
-	top: 40%;
+	top: 1%;
 	/*-moz-margin-top: -24%;
 	-webkit-top: 40%;*/
+}
+
+.modal.fade{
+	top:1%;
+}
+
+.modal.fade.in{
+	top:1%;
 }
 
 .modal.slide.left {
@@ -280,6 +365,10 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 	color: #DA4F49;
 }
 
+.txt-orange {
+	color: #FF6624;
+}
+
 /*---TYPEAHEAD---*/
 .typeahead {
 	z-index: 3000;
@@ -350,12 +439,17 @@ li.ui-animate {
 	font-weight: bold;
 }
 
-.listado-tareas{
-	border-top: solid 1px #e5e5e5;
+.container-listado-tareas{
+	border: solid 1px #e5e5e5;
+	border-radius: 4px;
 	margin-top: 5px;
-	margin-bottom: 2px;
-
 }
+
+.listado-tareas{
+	margin-left: 0px !important;
+}
+
+
 
 .item-tareas{
 	border-bottom: solid 1px #e5e5e5;
@@ -363,10 +457,26 @@ li.ui-animate {
 	padding-bottom: 3px;
 }
 
-.titulo-tareas{
-	font-family: verdana;
-	font-size: 14pt;
+.listado-titulo{
+	font-size: 13pt;
+	font-weight: bold;
 }
+
+.row-fluid.span12.container-listado-titulo{
+	min-height: 0px;
+	height: 22px;
+	padding-top: 3px;
+	padding-bottom: 4px;
+
+}
+
+.span12.listado-estado{
+	min-height: 0px;
+	height: 25px;
+
+}
+
+.row-fluid.span12.
 
 .cliptext{
 	overflow: hidden;
