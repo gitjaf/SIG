@@ -1,3 +1,6 @@
+body{
+	background-color: #F1F1F1;
+}
 
 .hoverDiv {
 	background: #fff;
@@ -9,7 +12,6 @@
 	background: #F6F4EA;
 	/*background: #fffce2;*/
 }
-
 
 .activeLink, .activeLink a{
 	font-weight: bolder;
@@ -79,7 +81,6 @@
 	
 }
 
-
 .header-listado .header-tabs .nav-tabs li a{
 	padding-top: 4px;
 	padding-bottom: 4px;
@@ -87,7 +88,88 @@
 }
 
 .header-listado .header-tabs .nav-tabs li.active a{
-	color: #555;
+	color: #555555;
+}
+
+.header-detalles{
+	margin-left: 0px !important;
+	border-bottom: solid 1px #ddd;
+	text-align: center;
+}
+
+.header-detalles .detalle{
+	margin-left: 10px !important;
+}
+
+.header-detalles:first-child{
+	margin-left: 0px !important;
+}
+
+.row-fluid [class*="span"].body-detalles{
+	margin-left: 0px !important;
+}
+
+.container-tarea-detalle{
+
+}
+
+.container-detalle{
+	margin-top: 2%;
+	min-height: 692px;
+	border: solid 1px #eee;
+	border-radius: 5px;
+	width: 115%;
+	margin-left: -2px !important;
+	margin-bottom: 2%;
+	padding-bottom: 2%;
+	background-color: white;
+}
+
+.container-detalle .container-titulo{
+	background-color: white;
+}
+
+.titulo-tarea{
+	margin-left: 5px !important;
+}
+
+
+.detalle{
+	padding-bottom: 8px;
+}
+
+.detalle a{
+	text-decoration: none;
+}
+
+.detalle.active{
+	color: #FF6624 !important;
+	font-weight: bold !important;
+	border-bottom: solid 3px #FF6624;
+}
+
+.detalle-asignados{
+	margin-left: 2% !important;
+	margin-top: 2%;
+}
+
+.detalle-asignados div{
+	margin-left: 4%;
+}
+
+.detalle-descripcion{
+	margin-left: 2%;
+	margin-top: 2%;
+}
+
+.detalle-seguimientos{
+	margin-top: 2%;
+}
+
+.footer-listado{
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-left: 5px !important; 
 }
 
 .row-fluid .header-listado:first-child {
@@ -103,6 +185,7 @@
 .header-pagination{
 	margin-left: 0px !important;
 	border-bottom: solid 1px #ddd ;
+	background-color: white;
 }
 
 .header-pagination .pagination{
@@ -123,15 +206,36 @@
 	-moz-box-sizing: border-box;
     display: block;
     float: left;
-	width: 12%;
-	margin-left: -20px;
+	white-space: nowrap !important;
+	
 }
 
+.row-fluid .span2.filtros{
+	width: 13%;
+}
+
+.filtros.filtros-toggle{
+	width:2% !important;
+	height: 100%;
+}
+
+.filtros-button{
+	padding-top: 55px;
+	padding-bottom: 55px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+
+.filtros-toggle:hover{
+	background-color: #eee;
+}
 
 .filtros ul li{
 	padding-top: 4px;
 	padding-bottom: 4px;
 	padding-left: 10px;
+	white-space: nowrap;
 }
 
 .filtros ul li:hover{
@@ -152,13 +256,14 @@
 }
 
 .seguimiento{
-	background-color: rgba(0,0,0,0.05);
+	background-color: white;
 	border-radius: 2px;
-	margin-top: 6px;
+	margin-left: 0px !important;
+	border-top: 1px solid #ddd;
 }
 
 .seguimiento:hover{
-	background-color: rgba(0,0,0,0.15);
+	background-color: #eaeaea;
 }
 
 .seguimiento:hover .muted{
@@ -180,17 +285,19 @@
 	text-decoration: underline;
 }
 
-.listado-estado{
+.container-listado-estado{
 	padding-left: 4px;
+	padding-top: 6px;
+	margin-left: 2px !important;
 }
 
 .listado-descripcion{
-	padding-left: 6px;
 	padding-top: 5px;
 }
 
 .numero-tarea{
 	vertical-align: text-bottom;
+	padding-left: 4px;
 }
 
 input[disabled], select[disabled], textarea[disabled], input[readonly], select[readonly], textarea[readonly] {
@@ -442,14 +549,17 @@ li.ui-animate {
 .container-listado-tareas{
 	border: solid 1px #e5e5e5;
 	border-radius: 4px;
-	margin-top: 5px;
+	margin-top: 10px;
+	background-color: white;
+}
+
+.row-fluid [class*="span"].container-listado-tareas{
+	margin-left: 0px;
 }
 
 .listado-tareas{
 	margin-left: 0px !important;
 }
-
-
 
 .item-tareas{
 	border-bottom: solid 1px #e5e5e5;
@@ -460,12 +570,14 @@ li.ui-animate {
 .listado-titulo{
 	font-size: 13pt;
 	font-weight: bold;
+	padding-left:8px;
 }
+
 
 .row-fluid.span12.container-listado-titulo{
 	min-height: 0px;
 	height: 22px;
-	padding-top: 3px;
+	padding-top: 5px;
 	padding-bottom: 4px;
 
 }
@@ -491,4 +603,38 @@ li.ui-animate {
 
 .task-buttons .drop{
 	border-right-width: 0px;
+}
+
+/*------ CSS ARROW PLEASE -------*/
+
+.arrow_box {
+	position: relative;
+	background: #f0edff;
+	/*border: 1px solid #040505;*/
+}
+.arrow_box:after, .arrow_box:before {
+	right: 100%;
+	border: solid transparent;
+	content: "";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.arrow_box:after {
+	border-color: rgba(240, 237, 255, 0);
+	border-right-color: white;
+	border-width: 25px;
+	top: 50%;
+	right: -5.4%;
+	margin-top: -25px;
+}
+.arrow_box:before {
+	border-color: rgba(4, 5, 5, 0);
+	border-right-color: #eee;
+	border-width: 26px;
+	top: 50%;
+	right: -5.3%;
+	margin-top: -26px;
 }

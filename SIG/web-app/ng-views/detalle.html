@@ -1,16 +1,41 @@
 <div>
-	<div class="container-fluid">
-		<div class="row-fluid">
-			<div class="span10">
-				<!--Body content-->
-				<div>{{tarea.asunto}}</div>
-				<ul class="phones">
-					{{tarea}}
-					<li ng-repeat="relacion in tarea._embedded.tareasRelacionadas">{{documento.nombre}}
-						<p>{{tarea.descripcion}}</p> <a ng-href="#{{relacion._links.self.href}}">{{relacion._links.self.href}}</a>
-					</li>
-				</ul>
-
+	<div class="row-fluid container-detalle">
+		<div class="span12 container-titulo">
+			<!--Body content-->
+			<div class="span12 lead titulo-tarea">{{detalle.asunto}}</div>
+			<div class="span12 header-detalles" data-ng-show="detalle">
+				<span class="detalle muted active">Descripción</span>
+				<span class="detalle muted">Usuarios</span>
+				<span class="detalle muted">Seguimientos</span>
+				<span class="detalle muted">Subtareas</span>
+			</div>
+		</div>
+		<div class="span12 body-detalles">
+			<div id="asignados" class="span11 detalle-asignados" data-ng-show="detalle._embedded.asignados">
+				<i class="icon-group"></i>  Asignados:<br>
+				<div>
+					<span class="muted" data-ng-repeat="asignado in detalle._embedded.asignados">{{asignado._embedded.persona.nombres}} {{asignado._embedded.persona.apellidos}}, </span>
+				</div>
+			</div>
+			<div id="seguidores" class="span11 detalle-asignados" data-ng-show="detalle._embedded.seguidores" style="margin-left:0px;">
+				<i class="icon-group"></i>  Seguidores:<br>
+				<div>
+					<span class="muted" data-ng-repeat="seguidor in detalle._embedded.seguidores">{{seguidor._embedded.persona.nombres}} {{seguidor._embedded.persona.apellidos}}, </span>
+				</div>
+			</div>
+			<div id="descripcion" class="span12 detalle-descripcion">{{detalle.descripcion}}</div>
+			
+			<div class="span12 detalle-seguimientos"> 
+				<div class="span11 seguimiento" data-ng-repeat="seguimiento in detalle._embedded.seguimientos">
+					<div class="span8 titulo_seguimiento txt-blue">{{seguimiento.titulo}}</div>
+					<div class="span2 muted fecha_seguimiento pull-right"><small class="">{{seguimiento.fecha | date:mediumDate}}</small></div>
+					<div class="span12 muted"><small>{{seguimiento.descripcion}}</small></div>
+				</div>
+				<div id="seguimientos" class="span11 seguimiento" data-ng-repeat="seguimiento in detalle._embedded.seguimientos">
+						<div class="span8 titulo_seguimiento txt-blue">{{seguimiento.titulo}}</div>
+						<div class="span2 muted fecha_seguimiento pull-right"><small class="">{{seguimiento.fecha | date:mediumDate}}</small></div>
+						<div class="span12 muted"><small>{{seguimiento.descripcion}}</small></div>
+				</div>
 			</div>
 		</div>
 	</div>

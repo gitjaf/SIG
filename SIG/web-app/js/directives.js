@@ -54,33 +54,101 @@ directives.directive("alert", function() {
 	}
 });
 
-directives.directive("collapseLink", function(){
+directives.directive("toggleLink", function($rootScope){
 	return {
 		transclude: true,
-		scope: {obj: '@elementId'},
-		template: '<a data-toggle="collapse" data-ng-href="{{obj}}" data-ng-transclude>{{text}}</a>',
+		scope: {obj: '@elementId', showt: '@showingText', hidet: '@hiddingText',
+		 showi: '@showingIcon', hidei: '@hiddingIcon', showing: '@showing', hideon: '=hideOn', hide:'=hide'},
+		template: '<a data-ng-href="{{obj}}" data-ng-transclude><i class="{{icon}}"></i>{{text}}</a>',
 		restrict: 'E',
 		link: function(scope, element, attrs){
 			var showing = false;
-			scope.text = "Ver mas...";
-			element.on('click', function(e){
-				showing = !showing;
-				if(showing){
-					scope.text = "Ocultar";
-					scope.$apply();
-				} else{
-					scope.text = "Ver mas...";
-					scope.$apply();
+			var obj;
+			var effect;
+
+			scope.$watch('showing', function(){
+				showing = scope.showing;
+				if(attrs.toggle != "collapse"){
+					obj = scope.obj;
+					scope.obj = "";
+					effect = attrs.toggle.split('-');
+
+					if(showing){
+						scope.text = scope.showt;
+						scope.icon = scope.showi;
+					} else {
+						angular.element(obj).addClass('hide');
+						scope.text = scope.hidet;
+						scope.icon = scope.hidei;
+					}
+
+				} else {
+
+					if(showing){
+						angular.element(scope.obj).addClass('in');
+						scope.text = scope.showt;
+						scope.icon = scope.showi;
+						
+					} else {
+						scope.text = scope.hidet;
+						scope.icon = scope.hidei;
+						
+					}
 				}
 			});
+
+			scope.$watch('hideon', function(){
+				if(scope.hideon){
+					if(showing){
+						toggle();
+					}
+				} else {
+					if(!showing){
+						toggle();
+					}
+				}
+			});
+	
+			element.on('click', toggle);
+
+			function toggle(){
+				showing = !showing;
+
+				if(effect !== undefined && effect[1] == 'left'){
+					angular.element(obj).animate({
+     					width: (showing ? 'show' : 'hide')
+    				});
+				} 
+
+				if(effect !== undefined && effect[1] == 'up'){
+					angular.element(obj).animate({
+     					height: (showing ? 'show' : 'hide')
+    				});
+				} 	
+
+				if($rootScope.$$phase == "$digest" || $rootScope.$$phase == "$apply"){
+					change();
+				} else {
+					scope.$apply(change());
+				}
+			}
+
+			function change(){
+				if(showing){
+					scope.hideon = undefined;
+					scope.hide = undefined;
+					scope.text = scope.showt;
+					scope.icon = scope.showi;
+					
+				} else{
+					scope.text = scope.hidet;
+					scope.icon = scope.hidei;
+					
+				}
+			}
 		},
 
 		replace: true
 	}
 
 });
-
-
-
-
-

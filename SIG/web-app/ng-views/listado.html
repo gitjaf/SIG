@@ -16,56 +16,59 @@
 <div class="container-fluid">
 
 	<div class="row-fluid">
-		<div class="filtros">
-			<!-- <ul class="unstyled">
+		<div class="span2 filtros" id="filtros" >
+			<div class="muted"><small>Mostrar tareas:</small></div>
+			<ul class="unstyled">
 				<li data-ng-class="{active: isActive('') == undefined}">
 					<i data-ng-show="isActive('') == undefined" class="icon-chevron-right"></i>
 					<a class="muted" data-ng-click="$emit('filter', '')">Todas</a> <span class="badge bdg-white txt-orange" data-ng-show="isActive('') == undefined"><b>{{tareas.data.total}}</b></span>
 				</li>
 				<li data-ng-class="{active: isActive('Nueva')}">
 					<i data-ng-show="isActive('Nueva')"  class="icon-chevron-right "></i>
-					<a class="muted" data-ng-click="$emit('filter', 'Nueva')">A Iniciar</a> <span class="badge bdg-white txt-orange" data-ng-show="isActive('Nueva')"><b>{{tareas.data.total}}</b></span>
+					<a class="muted" data-ng-click="$emit('filter', 'Nueva')">Propias</a> <span class="badge bdg-white txt-orange" data-ng-show="isActive('Nueva')"><b>{{tareas.data.total}}</b></span>
 				</li>
 				<li data-ng-class="{active: isActive('En Curso')}">
 					<i data-ng-show="isActive('En Curso')" class="icon-chevron-right "></i>
-					<a class="muted" data-ng-click="$emit('filter', 'En Curso')">En Curso</a> <span class="badge bdg-white txt-orange" data-ng-show="isActive('En Curso')"><b>{{tareas.data.total}}</b></span>
+					<a class="muted" data-ng-click="$emit('filter', 'En Curso')">Asignadas</a> <span class="badge bdg-white txt-orange" data-ng-show="isActive('En Curso')"><b>{{tareas.data.total}}</b></span>
 				</li>
 				<li data-ng-class="{active: isActive('Terminada')}">
 					<i data-ng-show="isActive('Terminada')" class="icon-chevron-right "></i>
-					<a class="muted" data-ng-click="$emit('filter', 'Terminada')">Terminadas</a> <span class="badge bdg-white txt-orange" data-ng-show="isActive('Terminada')"><b>{{tareas.data.total}}</b></span>
+					<a class="muted" data-ng-click="$emit('filter', 'Terminada')">Seguidas</a> <span class="badge bdg-white txt-orange" data-ng-show="isActive('Terminada')"><b>{{tareas.data.total}}</b></span>
 				</li>
-				<li data-ng-class="{active: isActive('Cerrada')}">
-					<i data-ng-show="isActive('Cerrada')"  class="icon-chevron-right "></i>
-					<a class="muted" data-ng-click="$emit('filter', 'Cerrada')">Cerradas</a> <span class="badge bdg-white txt-orange" data-ng-show="isActive('Cerrada')"><b>{{tareas.data.total}}</b></span>
-				</li>
-			</ul> -->
-			<div class="span12 offset1">
-						<div class="muted"><small>Ordenar por:</small></div>
-						<div class="offset1" data-ng-class="{activeLink: tareas.data.sortBy == 'asunto' }">
-							<i data-ng-show="tareas.data.sortBy == 'asunto'"  class="icon-chevron-right"></i>
-							<a class="muted" data-ng-click="sort('asunto')">Asunto</a>
-						</div>
-						<div class="offset1" data-ng-class="{activeLink: tareas.data.sortBy == 'fechaInicio' }">
-							<i data-ng-show="tareas.data.sortBy == 'fechaInicio'"  class="icon-chevron-right"></i>
-							<a class="muted" data-ng-click="sort('fechaInicio')">Inicio</a>
-						</div>
-						<div class="offset1" data-ng-class="{activeLink: tareas.data.sortBy == 'fechaVencimiento' }">
-							<i data-ng-show="tareas.data.sortBy == 'fechaVencimiento'"  class="icon-chevron-right"></i>
-							<a class="muted" data-ng-click="sort('fechaVencimiento')">Vencimiento</a>
-						</div>
-						<div class="offset1" data-ng-class="{activeLink: tareas.data.sortBy == 'estado' }">
-							<i data-ng-show="tareas.data.sortBy == 'estado'"  class="icon-chevron-right"></i>
-							<a class="muted" data-ng-click="sort('estado')">Estado</a>
-						</div>
-						<div class="offset1" data-ng-class="{activeLink: tareas.data.sortBy == 'prioridad' }">
-							<i data-ng-show="tareas.data.sortBy == 'prioridad'"  class="icon-chevron-right"></i>
-							<a class="muted" data-ng-click="sort('prioridad')">Prioridad</a>
-						</div>
-					</div>
-
+				
+			</ul>
+			<div class="span10">
+				<div class="muted"><small>Ordenadas por:</small></div>
+				<div class="offset1" data-ng-class="{activeLink: tareas.data.sortBy == 'asunto' }">
+					<i data-ng-show="tareas.data.sortBy == 'asunto'"  class="icon-chevron-right"></i>
+					<a class="muted" data-ng-click="sort('asunto')">Asunto</a>
+				</div>
+				<div class="offset1" data-ng-class="{activeLink: tareas.data.sortBy == 'fechaInicio' }">
+					<i data-ng-show="tareas.data.sortBy == 'fechaInicio'"  class="icon-chevron-right"></i>
+					<a class="muted" data-ng-click="sort('fechaInicio')">Inicio</a>
+				</div>
+				<div class="offset1" data-ng-class="{activeLink: tareas.data.sortBy == 'fechaVencimiento' }">
+					<i data-ng-show="tareas.data.sortBy == 'fechaVencimiento'"  class="icon-chevron-right"></i>
+					<a class="muted" data-ng-click="sort('fechaVencimiento')">Vencimiento</a>
+				</div>
+				<div class="offset1" data-ng-class="{activeLink: tareas.data.sortBy == 'estado' }">
+					<i data-ng-show="tareas.data.sortBy == 'estado'"  class="icon-chevron-right"></i>
+					<a class="muted" data-ng-click="sort('estado')">Estado</a>
+				</div>
+				<div class="offset1" data-ng-class="{activeLink: tareas.data.sortBy == 'prioridad' }">
+					<i data-ng-show="tareas.data.sortBy == 'prioridad'"  class="icon-chevron-right"></i>
+					<a class="muted" data-ng-click="sort('prioridad')">Prioridad</a>
+				</div>
+			</div>
+			
+		</div>
+		<div class="filtros filtros-toggle">
+			<toggle-link id="toggleFiltros" element-id="#filtros" showing-icon="icon-arrow-left" hidding-icon="icon-arrow-right" showing="true" hide-on="showDetalle" data-toggle="slide-left" class="span2 filtros-button muted" hide="detalle"></toggle-link>
 		</div>
 		<div class="span6 container-listado-tareas">
+
 			<div class="row-fluid span12 lead muted header-listado">
+
 				<div class="span12 header-tabs">
 					<ul class="nav nav-tabs">
 						<li data-ng-class="{active: isActive('') == undefined}" ><a href="#home" data-ng-click="$emit('filter', '')" data-toggle="tab">Todas</a></li>
@@ -79,17 +82,17 @@
 				<div class="span12 header-pagination">
 					<pager collection="tareas"  class="span6 pagination pagination-small"/>
 					<div class="span3 pull-right boton-nueva">
-						<a class="btn btn-small pull-right" id="nueva" data-ng-click="nuevaTarea()" data-toggle="modal" data-target="#edit">Nueva</a>
+						<a class="btn btn-small pull-right" id="nueva" data-ng-click="nuevaTarea()" data-toggle="modal" data-target="#edit"><i class="icon-pencil"></i>  Nueva</a>
 					</div>
 				</div>
 			</div>
 			<div class="row-fluid span12 listado-tareas"  >
 				<div class="row-fluid" data-ng-repeat="tarea in tareas._embedded.collection | filter: query | orderBy: sortBy" >
 						
-					<div id="tarea{{tarea.id}}" class="hoverDiv item-tareas" data-ng-mouseenter="showButtons=true" data-ng-mouseleave="showButtons=false">
+					<div id="tarea{{tarea.id}}" class="hoverDiv item-tareas" data-ng-mouseenter="showButtons=true" data-ng-mouseleave="showButtons=false" data-ng-class="{arrow_box: (detalle.id == tarea.id)}">
 						<div class="row-fluid span12 container-listado-titulo">
 							<span id="numero-tarea" class="numero-tarea muted"><small>#{{tarea.id}} </small></span>
-							<span id="titulo-tarea-{{tarea.id}}"  class="listado-titulo has-tooltip txt-blue " data-tooltip data-title="{{tarea.asunto}}">{{tarea.asunto | cut:false:50}}  </span>
+							<span id="titulo-tarea-{{tarea.id}}"  class="listado-titulo has-tooltip muted" data-tooltip data-title="{{tarea.asunto}}"><a href="" data-ng-click="verDetalleTarea(tarea)">{{tarea.asunto | cut:false:35}}</a>  </span>
 						
 							<span data-ng-class="{label : tarea.estado}" class="{{(tarea.estado | lowercase).split(' ').join('')}}">
 								{{tarea.estado}}
@@ -100,28 +103,35 @@
 							<span class="badge" data-ng-show="tarea._embedded.tareasRelacionadas">{{tarea._embedded.tareasRelacionadas.length}}</span>
 							
 						</div>
-						<div class="span12 listado-estado" style="margin-left: 2px;">
-							<span class="muted" data-ng-show="tarea.fechaInicio"><small><i class="icon-calendar"></i> {{tarea.fechaInicio | date:mediumDate}}</small></span>
+						<div class="span12 container-listado-estado" style="margin-left: 2px;">
+							<span class="muted"><small><i class="icon-user"></i> {{tarea._embedded.responsable.username}} | </small></span>
+							<span class="muted" data-ng-show="tarea.fechaInicio"><small><i class="icon-calendar"></i> {{tarea.fechaInicio | date:'dd/MM/yyyy'}}</small></span>
 							<span class="muted" data-ng-hide="tarea.fechaInicio"><small><i class="icon-calendar"></i> Sin Inicio</small></span> 
-							<span class="muted" data-ng-show="tarea.fechaVencimiento"><small> - {{tarea.fechaVencimiento | date:mediumDate}}</small> | </span>
+							<span class="muted" data-ng-show="tarea.fechaVencimiento"><small> - {{tarea.fechaVencimiento | date:'dd/MM/yyyy'}}</small> | </span>
 							<span class="muted" data-ng-hide="tarea.fechaVencimiento"><small> - Sin Vencimiento</small> | </span> 
-							<span class="muted" data-ng-show="tarea._embedded.tipo"><small><i class="icon-tags"></i>  {{tarea._embedded.tipo.nombre}}</small> | </span>
-							<span><small><collapse-link element-id="#desc{{tarea.id}}"></collapse-link></small>
+							<span class="muted" data-ng-show="tarea._embedded.tipo"><small><i class="icon-tag"></i>  {{tarea._embedded.tipo.nombre}}</small> | </span>
+							<span><small><toggle-link element-id="#desc{{tarea.id}}" showing-text="Ocultar" hidding-text="Ver mas..." showing="" data-toggle="collapse"></toggle-link></small>
 							</span>
 							<div class="pull-right" data-ng-show="showButtons" >
 								<div taskbuttons item="tarea" edit="editarTarea(tarea)" addsub="nuevaTarea(tarea)" addseg="nuevoSeguimiento(tarea)"></div>
 							</div>
 
 						</div>
-							
 								
 						<div class="row-fluid collapse listado-descripcion" id="desc{{tarea.id}}">
-							<div class="span11" data-ng-show="tarea._embedded.asignados">
+							
+							<div class="span12 header-detalles">
+								<span class="detalle muted active">Descripción</span>
+								<span class="detalle muted">Asignados</span>
+								<span class="detalle muted">Seguimientos</span>
+								<span class="detalle muted">Subtareas</span>
+							</div>
+							<div id="asignados" class="span11 asignados" data-ng-show="tarea._embedded.asignados">
 									<i class="icon-user"></i>  Asignados: 
 									<span class="muted" data-ng-repeat="asignado in tarea._embedded.asignados">{{asignado._embedded.persona.nombres}} {{asignado._embedded.persona.apellidos}}, </span>
 
 							</div>
-							<div class="span11" data-ng-show="tarea._embedded.seguidores" style="margin-left:0px;">
+							<div id="seguidores" class="span11" data-ng-show="tarea._embedded.seguidores" style="margin-left:0px;">
 									<i class="icon-user"></i>  Seguidores:
 									<span class="muted" data-ng-repeat="seguidor in tarea._embedded.seguidores">{{seguidor._embedded.persona.nombres}} {{seguidor._embedded.persona.apellidos}}, </span>
 							</div>
@@ -132,7 +142,7 @@
 								<div class="span12 muted"><small>{{seguimiento.descripcion}}</small></div>
 							</div>
 							
-							<div class="span9 seguimiento" data-ng-repeat="seguimiento in tarea._embedded.seguimientos">
+							<div id="seguimientos" class="span9 seguimiento" data-ng-repeat="seguimiento in tarea._embedded.seguimientos">
 									<div class="span9 muted titulo_seguimiento">{{seguimiento.titulo}}</div>
 									<div class="span2 muted fecha_seguimiento pull-right"><small>{{seguimiento.fecha | date:mediumDate}}</small></div>
 									<div class="span12 muted"><small>{{seguimiento.descripcion}}</small></div>
@@ -140,13 +150,14 @@
 						</div>
 					</div>
 				</div>
+				<pager collection="tareas"  class="span6 pagination pagination-small footer-listado"/>
 			</div>
 		</div>
+		<div id="detalle" class="span5 container-tarea-detalle" data-ng-show="detalle" data-ng-include src="'./ng-views/detalle.html'" data-ng-controller="DetalleTareaCtrl" >
+			
+		<div>
 	</div>
 </div>
-		
-
-	
 
 	<div data-ui-modal class="form fade slide left" data-ng-model="modal" id="edit">
 		<ng-switch on="form">

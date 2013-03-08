@@ -6,6 +6,19 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	var sortBy = $routeParams.sortBy ? $routeParams.sortBy : "fechaInicio";
 	var query = $routeParams.q ? $routeParams.q : "";
 
+	$scope.safeApply = function(fn) {
+  		var phase = this.$root.$$phase;
+		if(phase == '$apply' || phase == '$digest') {
+		    if(fn && (typeof(fn) === 'function')) {
+		    	fn();
+		    }
+		}else {
+		   	this.$apply(fn);
+		}
+	};
+
+
+
 	if($routeParams.userId){
 		$rootScope.userId = ($rootScope.userId != $routeParams.userId) ? $routeParams.userId : $rootScope.userId;
 		$rootScope.user = Usuario.get({"idUsuario": $rootScope.userId});
@@ -136,6 +149,15 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		}
 	}
 
+	$scope.verDetalleTarea = function(tarea){
+		$scope.showDetalle = true;
+		setTimeout(function(){
+			$scope.safeApply(function(){
+				$scope.detalle = tarea;
+			});
+		}, 300);
+	}
+
 	$scope.nuevoSeguimiento = function(tarea){
 		$scope.form = 'seguimiento';
 		$scope.form_action = "Seguimiento de " + tarea.asunto;
@@ -206,10 +228,12 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 
 	}
 
+
+
 }
 
 function DetalleTareaCtrl($scope, $routeParams, Tarea) {
-	$scope.tarea = Tarea.get({idTarea:$routeParams.tareaId});
+	// $scope.tarea = Tarea.get({idTarea:$routeParams.tareaId});
 }
 
 function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario, Tipo) {
