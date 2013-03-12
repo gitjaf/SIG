@@ -158,6 +158,11 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		}, 300);
 	}
 
+	$scope.ocultarDetalle = function(){
+		$scope.showDetalle = undefined;
+		$scope.detalle = undefined;
+	}
+
 	$scope.nuevoSeguimiento = function(tarea){
 		$scope.form = 'seguimiento';
 		$scope.form_action = "Seguimiento de " + tarea.asunto;

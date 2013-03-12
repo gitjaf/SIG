@@ -1,5 +1,5 @@
 body{
-	background-color: #F1F1F1;
+	background-color: #F5F5F5;
 }
 
 .hoverDiv {
@@ -16,7 +16,7 @@ body{
 .activeLink, .activeLink a{
 	font-weight: bolder;
 	text-transform: uppercase;
-	color: #ff6624;
+	color: #FF9E24;
 	
 	
 }
@@ -109,10 +109,6 @@ body{
 	margin-left: 0px !important;
 }
 
-.container-tarea-detalle{
-
-}
-
 .container-detalle{
 	margin-top: 2%;
 	min-height: 692px;
@@ -143,9 +139,9 @@ body{
 }
 
 .detalle.active{
-	color: #FF6624 !important;
+	color: #FF9E24 !important;
 	font-weight: bold !important;
-	border-bottom: solid 3px #FF6624;
+	border-bottom: solid 3px #FF9E24;
 }
 
 .detalle-asignados{
@@ -160,10 +156,43 @@ body{
 .detalle-descripcion{
 	margin-left: 2%;
 	margin-top: 2%;
+	border-bottom: 1px solid #eee;
+	padding-bottom: 2%;
+	width: 92% !important;
 }
 
 .detalle-seguimientos{
 	margin-top: 2%;
+}
+
+.detalle-estado {
+	margin-left: 2% !important;
+	padding-bottom: 2%;
+	border-bottom: 1px solid #eee;
+	width: 92% !important;
+}
+
+.detalle-estado div{
+	margin-top: 2%;
+
+}
+
+.detalle-titulo{
+	margin-left: 2%;
+}
+
+.detalle-fecha{
+	display: inline-block;
+	width: 55%;
+}
+
+.detalle-tipo{
+	margin-right: 3%;
+}
+
+.detalle-seguidores{
+	padding-bottom: 2%;
+	border-bottom: 1px solid #eee;
 }
 
 .footer-listado{
@@ -243,8 +272,9 @@ body{
 }
 
 .filtros ul li.active{
-	background-color: #ff6624;
+	background-color: #FF9E24;
 	color: white;
+	font-weight: bolder;
 }
 
 .filtros ul li a:hover{
@@ -263,7 +293,7 @@ body{
 }
 
 .seguimiento:hover{
-	background-color: #eaeaea;
+	background-color: #f8f8f8;
 }
 
 .seguimiento:hover .muted{
@@ -473,7 +503,7 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 }
 
 .txt-orange {
-	color: #FF6624;
+	color: #FF9E24;
 }
 
 /*---TYPEAHEAD---*/
@@ -632,7 +662,7 @@ li.ui-animate {
 }
 .arrow_box:before {
 	border-color: rgba(4, 5, 5, 0);
-	border-right-color: #eee;
+	border-right-color: transparent;
 	border-width: 26px;
 	top: 50%;
 	right: -5.3%;
