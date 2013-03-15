@@ -13,18 +13,34 @@ class SeguimientoService {
     	
     	Seguimiento seg = new Seguimiento()
 
-    	seg.titulo = json.titulo
-    	seg.fecha = json.fecha ? Date.parse("dd/MM/yyyy", json.fecha) : null
-    	seg.descripcion = json.descripcion ?: null
-    	seg.responsable = Usuario.get(json.idUsuario as Long)
-
-    	tarea.addToSeguimientos(seg);
-
+    	setValues(seg, json)
+      
+    	tarea.addToSeguimientos(seg)
+        
     	if(tarea.save(flush: true)){
-    		return tarea
+    		return seg
     	}
 
     	return null
+    }
+
+    def updateSeguimiento(JSONObject json, Seguimiento seg){
+        
+        setValues(seg, json)
+
+        if(seg.save(flush: true)){
+            return seg
+        }
+
+        return null
+    }
+
+    protected setValues(Seguimiento seg, JSONObject json){
+        seg.titulo = json.titulo
+        seg.fecha = json.fecha ? Date.parse("dd/MM/yyyy", json.fecha) : null 
+        seg.descripcion = json.descripcion ?: null
+        seg.responsable = Usuario.get(json.idUsuario as Long)
+       
     }
 
 }

@@ -4,24 +4,76 @@ function SeguimientoCtrl($scope, $routeParams, $location, $rootScope, $filter, T
 		$scope.seguimiento.idTarea = tarea.id;
 		$scope.seguimiento.idUsuario = $rootScope.userId;
 
-		$scope.seguimiento.$save(
-			function(seg, putResponseHeaders){
-				console.log(seg)
-				var mensaje = "El seguimiento '" + seg.titulo + "' fue creado con exito",
-				titulo = "Crear Seguimiento: ",
+		$scope.seguimiento.fecha = $filter('date')($scope.seguimiento.fecha, "dd/MM/yyyy");
+
+		if($scope.seguimiento.id){
+			$scope.seguimiento.$update({idTarea: $scope.seguimiento.idTarea,
+			 idSeguimiento: $scope.seguimiento.id, userId: $rootScope.userId }, 
+			 function(seguimiento, putResponseHeaders){
+		 		var mensaje = "El seguimiento '" + seguimiento.titulo + "' fue actualizado con exito",
+				titulo = "Editar Seguimiento: ",
 				duracion = 4000,
 				tipo = 'alert-success';
 
+				var seguimientos = _.reject(tarea._embedded.seguimientos,
+				 	function(value) {
+				  		return (value.id == seguimiento.id);
+					});
+
+				seguimientos.push(seguimiento);
+
+				seguimientos = _.sortBy(seguimientos, 
+					function(value){
+						return -Date.parse(value.fecha);
+					}
+				);
+
+				tarea._embedded.seguimientos = seguimientos;
+
 				$scope.alert(titulo, mensaje, tipo, duracion);	
-		}, 
-			function(response, putResponseHeaders){
-				var mensaje = "Error al intentar crear el seguimiento '" + seg.titulo + "'",
+			 }, 
+			 function(response, putResponseHeaders){
+		 		var mensaje = "Error al intentar editar el seguimiento '" + $scope.seguimiento.titulo + "'",
 				titulo = "Crear Seguimiento: ",
 				duracion = 4000,
 				tipo = 'alert-error';
 
 				$scope.alert(titulo, mensaje, tipo, duracion);	
-		});
+			 }
+
+			);
+		} else {
+
+			$scope.seguimiento.$save(
+				function(seguimiento, putResponseHeaders){
+					var mensaje = "El seguimiento '" + seguimiento.titulo + "' fue creado con exito",
+					titulo = "Crear Seguimiento: ",
+					duracion = 4000,
+					tipo = 'alert-success';
+
+				    tarea._embedded.seguimientos.push(seguimiento);
+
+					tarea._embedded.seguimientos = _.sortBy(tarea._embedded.seguimientos, 
+						function(value){
+							return -Date.parse(value.fecha);
+						}
+					);
+
+					$scope.alert(titulo, mensaje, tipo, duracion);	
+			}, 
+				function(response, putResponseHeaders){
+					var mensaje = "Error al intentar crear el seguimiento '" + $scope.seguimiento.titulo + "'",
+					titulo = "Crear Seguimiento: ",
+					duracion = 4000,
+					tipo = 'alert-error';
+
+					$scope.alert(titulo, mensaje, tipo, duracion);	
+			});
+		}
+
+	}
+
+	$scope.deleteSeguimiento = function(seguimiento, tarea){
 
 
 	}

@@ -56,7 +56,18 @@ class SeguimientoController {
 	}
 
 	def update() {
-		def seguimientoInstance = Seguimiento.get(params.id)
+	
+		def tareaInstance = Tarea.get(request.JSON.idTarea as Long)
+		
+		if (!tareaInstance) {
+			flash.message = message(code: 'default.not.found.message', args: [message(code: 'tarea.label', default: 'Tarea'), params.idTarea])
+			response.status = 404
+			render flash.message
+			return
+		}
+
+		def seguimientoInstance = Seguimiento.get(request.JSON.id as Long)
+
 		if (!seguimientoInstance) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'seguimiento.label', default: 'Seguimiento'), params.id])
 			response.status = 404
@@ -73,14 +84,9 @@ class SeguimientoController {
 			}
 		}
 
-		seguimientoInstance.properties = request.JSON
+		seguimientoInstance = seguimientoService.updateSeguimiento(request.JSON, seguimientoInstance)
 
-		bindData(seguimientoInstance, request.JSON, ['fecha'])
-		seguimientoInstance.fecha = request.JSON.fecha ? new SimpleDateFormat('yyyy-MM-dd').parse(request.JSON.fecha) : null
-
-		seguimientoInstance.responsable = (request.JSON?.idResponsable) ?  Usuario.get(request.JSON?.idResponsable) : seguimientoInstance.responsable
-
-		if (!seguimientoInstance.save(flush: true)) {
+		if (!seguimientoInstance) {
 			response.status = 500
 			render seguimientoInstance as JSON
 			return
@@ -88,7 +94,7 @@ class SeguimientoController {
 
 		flash.message = message(code: 'default.updated.message', args: [message(code: 'seguimiento.label', default: 'Seguimiento'), seguimientoInstance.id])
 		response.status = 200
-		render seguimientoInstance as JSON
+		render halBuilderService.buildModel(seguimientoInstance) as JSON
 	}
 
 	def delete() {

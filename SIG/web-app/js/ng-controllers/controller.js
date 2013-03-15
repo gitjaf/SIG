@@ -96,6 +96,10 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 
 	$scope.save = function(){
 		var tareas = $scope.tareas._embedded.collection;
+
+		$scope.tarea.fechaInicio = $filter('date')($scope.tarea.fechaInicio, "dd/MM/yyyy");
+		$scope.tarea.fechaVencimiento = $filter('date')($scope.tarea.fechaVencimiento, "dd/MM/yyyy");
+
 		if($scope.tarea.id){
 			$scope.tarea.$update({idTarea: $scope.tarea.id, userId: $rootScope.userId},
 			function(tarea, putResponseHeaders){
@@ -122,7 +126,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 			});
 			
 		} else {
-
+			
 			$scope.tarea.$save(function(tarea, putResponseHeaders){
 				if($scope.tareas._embedded.collection) {
 					$scope.tareas._embedded.collection.push(tarea);
@@ -158,17 +162,22 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		}, 300);
 	}
 
+	
 	$scope.ocultarDetalle = function(){
 		$scope.showDetalle = undefined;
 		$scope.detalle = undefined;
 	}
 
-	$scope.nuevoSeguimiento = function(tarea){
+	$scope.editarSeguimiento = function(tarea, seguimiento){
 		$scope.form = 'seguimiento';
 		$scope.form_action = "Seguimiento de " + tarea.asunto;
 		$scope.tarea = tarea;
 		$scope.seguimiento = new Seguimiento();
-
+		if(seguimiento){
+			angular.copy(seguimiento, $scope.seguimiento)
+			$scope.dateSeg = $filter('date')($scope.seguimiento.fecha, "dd/MM/yyyy");;
+		}
+		
 	}
 
 	$scope.alert = function(titulo, mensaje, tipo, duracion){
@@ -195,7 +204,8 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 			"title": prop.title,
 			"content": prop.content,
 			"trigger": prop.trigger,
-			"delay": prop.delay});
+			"delay": prop.delay,
+			"html" : true});
 		if(prop.action){
 			angular.element(prop.element).popover(prop.action);
 		}else{

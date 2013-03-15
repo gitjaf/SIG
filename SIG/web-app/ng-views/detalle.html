@@ -3,7 +3,7 @@
 		<div class="span12 container-titulo">
 			<!--Body content-->
 			<div class="span10 lead titulo-tarea">{{detalle.asunto}}</div>
-			<div class="span1 pull-right muted"><a data-ng-click="ocultarDetalle()"><i class="icon-remove"></i></a></div>
+			<div class="span1 pull-right muted"><a data-ng-click="ocultarDetalle()"><i class="icon-remove icon-large muted"></i></a></div>
 			<div class="span12 header-detalles" data-ng-show="detalle">
 				<span class="detalle muted active">Descripción</span>
 				<span class="detalle muted">Usuarios</span>
@@ -49,11 +49,14 @@
 			
 			<div class="span12 detalle-seguimientos" data-ng-show="detalle._embedded.seguimientos"> 
 				<div class="span12" ><i class="icon-eye-open txt-orange"></i> Seguimientos: </div>
-				<div class="span11 seguimiento" data-ng-repeat="seguimiento in detalle._embedded.seguimientos">
-
-					<div class="span8 titulo_seguimiento txt-blue">{{seguimiento.titulo}}</div>
-					<div class="span2 muted fecha_seguimiento pull-right"><small class="">{{seguimiento.fecha | date:mediumDate}}</small></div>
-					<div class="span12 muted"><small>{{seguimiento.descripcion}}</small></div>
+				<div class="span11 seguimiento" data-ng-repeat="seguimiento in detalle._embedded.seguimientos" data-ng-mouseenter="showButtons=true" data-ng-mouseleave="showButtons=false">
+					<div class="span8">
+						<div class="span12 titulo_seguimiento txt-blue"><a data-ng-click="editarSeguimiento(detalle, seguimiento)" data-toggle="modal" data-target="#edit">{{seguimiento.titulo}}</a></div>
+						<div class="span12 muted"><small>{{seguimiento.descripcion}}</small></div>
+					</div>
+					<div class="span2 muted fecha_seguimiento pull-right"><small class="">{{seguimiento.fecha | date:mediumDate}}</small>
+						<a class="btn btn-mini btn-danger" data-ng-show="showButtons" data-toogle="modal" data-target="#confirm"><i class="icon-trash"></i> Borrar</a>
+					</div>
 				</div>
 			</div>
 			<div class="span12 detalle-seguimientos" data-ng-show="detalle._embedded.tareasRelacionadas"> 

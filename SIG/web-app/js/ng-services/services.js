@@ -30,6 +30,12 @@ services.factory('Tipo', function($resource){
 services.factory('Seguimiento', function($resource){
 	return $resource('/SIG/seguimiento/:idSeguimiento',{},
 	{
-		query: {method: 'GET', params:{q: '@q', userId: '@userId'}, isArray: true}
+		query: {method: 'GET', params:{q: '@q', userId: '@userId'}, isArray: true},
+
+		update: {method: 'PUT', params:{idTarea: '@idTarea', idSeguimiento: '@id',
+		 userId:'@userId'}},
+
+		delete: {method: 'DELETE', params:{idTarea: '@idTarea', idSeguimiento: '@id',
+		 userId:'@userId'}}
 	});
 });
