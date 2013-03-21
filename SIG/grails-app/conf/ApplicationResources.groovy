@@ -12,6 +12,8 @@ modules = {
 		resource url:'js/plugins/angular-ui/build/angular-ui.js', disposition: 'head'
 		resource url:'js/plugins/datepicker/js/bootstrap-datepicker.js', disposition: 'head'
 		resource url:'js/plugins/fixes/typeaheadmap.js', disposition: 'head'
+		resource url:'js/plugins/dialogTwo/lib/jquery.dialog2.js', disposition: 'head'
+		resource url:'js/plugins/dialogTwo/lib/jquery.dialog2.helpers.js', disposition: 'head'
 
 		resource url:'css/custom.css', disposition:'head'
 		resource url:'js/plugins/angular-ui/build/angular-ui.css', disposition:'head'

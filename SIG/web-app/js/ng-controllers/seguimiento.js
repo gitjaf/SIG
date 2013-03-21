@@ -73,11 +73,4 @@ function SeguimientoCtrl($scope, $routeParams, $location, $rootScope, $filter, T
 
 	}
 
-	$scope.deleteSeguimiento = function(seguimiento, tarea){
-
-
-	}
-
-
-
 }

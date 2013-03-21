@@ -462,6 +462,10 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 	filter: alpha(opacity=30);
 }
 
+.dialog2-modal .modal-body{
+	max-height: 100px;
+	height: 100px;
+}
 
 
 /*----DATEPICKER----*/

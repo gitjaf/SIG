@@ -98,16 +98,24 @@ class SeguimientoController {
 	}
 
 	def delete() {
+		def tareaInstance = Tarea.get(params.idTarea)
 		def seguimientoInstance = Seguimiento.get(params.id)
-		if (!seguimientoInstance) {
+		if (!seguimientoInstance ) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'seguimiento.label', default: 'Seguimiento'), params.id])
 			response.status = 404
 			render flash.message
 			return
 		}
 
+		if (!tareaInstance) {
+			flash.message = message(code: 'default.not.found.message', args: [message(code: 'tarea.label', default: 'Tarea'), params.idTarea])
+			response.status = 404
+			render flash.message
+			return
+		}
+
 		try {
-			seguimientoInstance.delete(flush: true)
+			seguimientoService.deleteSeguimiento(tareaInstance, seguimientoInstance)
 			flash.message = message(code: 'default.deleted.message', args: [message(code: 'seguimiento.label', default: 'Seguimiento'), params.id])
 			response.status = 200
 			render flash.message

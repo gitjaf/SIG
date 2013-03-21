@@ -4,6 +4,7 @@ import grails.converters.JSON
 import org.sigma.code.common.*
 import grails.gorm.*
 import org.codehaus.groovy.grails.web.json.JSONObject
+import org.springframework.dao.DataIntegrityViolationException
 
 class SeguimientoService {
 
@@ -33,6 +34,11 @@ class SeguimientoService {
         }
 
         return null
+    }
+
+    def deleteSeguimiento(Tarea t, Seguimiento seg) throws DataIntegrityViolationException{
+        t.removeFromSeguimientos(seg)
+        seg.delete(flush: true)
     }
 
     protected setValues(Seguimiento seg, JSONObject json){

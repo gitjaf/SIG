@@ -173,10 +173,11 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		$scope.form_action = "Seguimiento de " + tarea.asunto;
 		$scope.tarea = tarea;
 		$scope.seguimiento = new Seguimiento();
+		$scope.dateSeg = undefined;
 		if(seguimiento){
 			angular.copy(seguimiento, $scope.seguimiento)
 			$scope.dateSeg = $filter('date')($scope.seguimiento.fecha, "dd/MM/yyyy");;
-		}
+		} 
 		
 	}
 
@@ -216,6 +217,38 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 			}, prop.timeout);
 		}
 	}
+
+
+	$scope.eliminarSeguimiento = function(seguimiento, tarea){
+		var seg = new Seguimiento();
+		angular.copy(seguimiento, seg);
+
+		seg.$delete({idTarea: tarea.id, idSeguimiento: seg.id, userId: $rootScope.userId},
+			function(success, putResponseHeaders){
+				
+				var seguimientos = _.reject(tarea._embedded.seguimientos,
+				 	function(value) {
+				  		return (value.id == seguimiento.id);
+					});
+
+				tarea._embedded.seguimientos = seguimientos;
+
+				var mensaje = "El Seguimiento '" + seguimiento.titulo + "' fue eliminado con exito",
+				titulo = "Eliminar Seguimiento: ",
+				duracion = 4000,
+				tipo = 'alert-success';
+				$scope.alert(titulo, mensaje, tipo, duracion);
+			},
+			function(failure, putResponseHeaders){
+				var mensaje = "Error al eliminar el seguimiento '" + seguimiento.titulo + "'",
+				duracion = 4000,
+				titulo = "Eliminar Seguimiento: ",
+				tipo = 'alert-error';
+
+				$scope.alert(titulo, mensaje, tipo, duracion);	
+			});
+	}
+
 
 	function crearTarea(){
 		$scope.tarea = new Tarea();

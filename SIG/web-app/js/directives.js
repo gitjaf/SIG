@@ -152,3 +152,55 @@ directives.directive("toggleLink", function($rootScope){
 	}
 
 });
+
+directives.directive("confirmDeleteSeguimiento", function() {
+	return {
+		restrict: 'A',
+		replace: true,
+		templateUrl: 'js/templates/modal-confirm.html',
+		link: function(scope, element, attrs){
+
+
+			//Texto e Iconos
+			scope.modalTitle = "Eliminar Seguimiento";
+			scope.modalMessage = "Eliminar un seguimiento es una acción permanente, no se puede deshacer. ¿Confirma que desea eliminar este seguimiento?";
+			scope.labelButton = "Borrar";
+			scope.icon = "icon-trash"; 
+			
+
+			//Estilos
+			element.children('a').addClass(attrs.class);
+			element.removeClass(attrs.class);
+			element.children('a').attr('data-ng-click', attrs.confirm);
+
+			//Eventos
+			element.on("click", function(){
+				angular.element("#modal-confirm").dialog2({
+					id: "confirm-delete-seguimiento",
+					buttons: {
+						No: {
+							click: function(){
+								angular.element('#confirm-delete-seguimiento').dialog2("close");
+							},
+							primary: false,
+							type: "dialog-close"
+						},
+						Si: {
+							click: function(){
+								scope.eliminarSeguimiento(scope.seguimiento, scope.detalle);
+								angular.element('#confirm-delete-seguimiento').dialog2("close");
+							},
+							primary: false,
+							type: "btn-danger"
+						}
+					},
+					closeOnOverlayClick: true, // Should the dialog be closed on overlay click?
+					closeOnEscape: true, // Should the dialog be closed if [ESCAPE] key is pressed?
+					removeOnClose: true, // Should the dialog be removed from the document when it is closed?
+					showCloseHandle: true, // Should a close handle be shown?
+				});
+			});
+		}
+		
+	}
+});
