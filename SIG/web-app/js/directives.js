@@ -20,7 +20,7 @@ directives.directive("pager", function() {
 
 directives.directive("taskbuttons", function() {
 	return {
-		scope: {item: '=item', edit:'&edit', addsub:'&addsub', addseg:'&addseg'},
+		scope: {item: '=item', edit:'&edit', addsub:'&addsub', addseg:'&addseg', del: '&delete'},
 		restrict: 'A',
 		templateUrl: 'js/templates/task-buttons.html'
 		
@@ -156,31 +156,23 @@ directives.directive("toggleLink", function($rootScope){
 directives.directive("confirmDeleteSeguimiento", function() {
 	return {
 		restrict: 'A',
-		replace: true,
-		templateUrl: 'js/templates/modal-confirm.html',
+		transclude: true,
+		scope: true,
+		template: '<div><div id="modal-confirm-seguimiento" style="display: none">'+
+			    		'<h1>Eliminar Seguimiento</h1>' +
+			    		'<p>Eliminar un seguimiento es una acción permanente, '+
+    					'no se puede deshacer. ¿Confirma que desea eliminar este seguimiento?</p>'+
+					'</div></div>',
 		link: function(scope, element, attrs){
-
-
-			//Texto e Iconos
-			scope.modalTitle = "Eliminar Seguimiento";
-			scope.modalMessage = "Eliminar un seguimiento es una acción permanente, no se puede deshacer. ¿Confirma que desea eliminar este seguimiento?";
-			scope.labelButton = "Borrar";
-			scope.icon = "icon-trash"; 
-			
-
-			//Estilos
-			element.children('a').addClass(attrs.class);
-			element.removeClass(attrs.class);
-			element.children('a').attr('data-ng-click', attrs.confirm);
 
 			//Eventos
 			element.on("click", function(){
-				angular.element("#modal-confirm").dialog2({
-					id: "confirm-delete-seguimiento",
+				angular.element("#modal-confirm-seguimiento").dialog2({
+					id: 'confirm-seguimiento',
 					buttons: {
 						No: {
 							click: function(){
-								angular.element('#confirm-delete-seguimiento').dialog2("close");
+								angular.element('#confirm-seguimiento').dialog2("close");
 							},
 							primary: false,
 							type: "dialog-close"
@@ -188,7 +180,52 @@ directives.directive("confirmDeleteSeguimiento", function() {
 						Si: {
 							click: function(){
 								scope.eliminarSeguimiento(scope.seguimiento, scope.detalle);
-								angular.element('#confirm-delete-seguimiento').dialog2("close");
+								angular.element('#confirm-seguimiento').dialog2("close");
+							},
+							primary: false,
+							type: "btn-danger"
+						}
+					},
+					closeOnOverlayClick: true, // Should the dialog be closed on overlay click?
+					closeOnEscape: true, // Should the dialog be closed if [ESCAPE] key is pressed?
+					removeOnClose: true, // Should the dialog be removed from the document when it is closed?
+					showCloseHandle: true, // Should a close handle be shown?
+				});
+			});
+		}
+		
+	}
+});
+
+directives.directive("confirmDeleteTarea", function() {
+	return {
+		restrict: 'A',
+		transclude: true,
+		template: 	'<div id="modal-confirm-tarea" style="display: none">'+
+			    		'<h1>Eliminar Tarea</h1>' +
+			    		'<p>Esta acción eliminara la tarea del listado pero no del sistema.'+
+    					' Podra consultarla accediendo a la papelera.'+
+    					' ¿Confirma que desea enviar esta tarea a la papelera?</p>'+
+					'</div>',
+		link: function(scope, element, attrs){
+			
+			//Eventos
+			element.on("click", function(){
+				angular.element("#modal-confirm-tarea").dialog2({
+					id: "confirm-delete-tarea",
+					buttons: {
+						No: {
+							click: function(){
+								angular.element('#confirm-delete-tarea').dialog2("close");
+							},
+							primary: false,
+							type: "dialog-close"
+						},
+						Si: {
+							click: function(){
+								scope.item.borrado = true;
+								scope.del(scope.item);
+								angular.element('#confirm-delete-tarea').dialog2("close");
 							},
 							primary: false,
 							type: "btn-danger"

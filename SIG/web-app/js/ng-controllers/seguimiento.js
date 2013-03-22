@@ -50,8 +50,11 @@ function SeguimientoCtrl($scope, $routeParams, $location, $rootScope, $filter, T
 					titulo = "Crear Seguimiento: ",
 					duracion = 4000,
 					tipo = 'alert-success';
-
-				    tarea._embedded.seguimientos.push(seguimiento);
+					if(tarea._embedded.seguimientos){
+				    	tarea._embedded.seguimientos.push(seguimiento);
+					} else {
+						tarea._embedded.seguimientos = [seguimiento];
+					}
 
 					tarea._embedded.seguimientos = _.sortBy(tarea._embedded.seguimientos, 
 						function(value){

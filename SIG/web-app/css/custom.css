@@ -7,7 +7,6 @@ body{
 	
 }
 
-
 .hoverDiv:HOVER {
 	background: #F6F4EA;
 	/*background: #fffce2;*/
@@ -17,7 +16,6 @@ body{
 	font-weight: bolder;
 	text-transform: uppercase;
 	color: #FF9E24;
-	
 	
 }
 
@@ -70,7 +68,6 @@ body{
 	background: linear-gradient(to bottom,  rgba(246,246,246,1) 0%,rgba(228,228,228,1) 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f6f6', endColorstr='#e4e4e4',GradientType=0 ); /* IE6-9 */
 
-
 }
 
 .header-listado .header-tabs .nav-tabs{
@@ -119,6 +116,9 @@ body{
 	margin-bottom: 2%;
 	padding-bottom: 2%;
 	background-color: white;
+	
+	-webkit-box-shadow:  4px 4px 6px 2px silver;
+    box-shadow:  4px 4px 6px 2px silver;
 }
 
 .container-detalle .container-titulo{
@@ -128,7 +128,6 @@ body{
 .titulo-tarea{
 	margin-left: 5px !important;
 }
-
 
 .detalle{
 	padding-bottom: 8px;
@@ -347,6 +346,9 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 	background-color: #EED3D7;
 }
 
+.form-header{
+	background-color: #FFB93F;
+}
 
 /*----BOOTSTRAP -----*/
 
@@ -585,6 +587,9 @@ li.ui-animate {
 	border-radius: 4px;
 	margin-top: 10px;
 	background-color: white;
+
+	-webkit-box-shadow:  4px 4px 6px 2px silver;
+    box-shadow:  4px 4px 6px 2px silver;
 }
 
 .row-fluid [class*="span"].container-listado-tareas{

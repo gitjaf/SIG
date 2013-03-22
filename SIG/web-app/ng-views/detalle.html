@@ -55,7 +55,7 @@
 						<div class="span12 muted"><small>{{seguimiento.descripcion}}</small></div>
 					</div>
 					<div class="span2 muted fecha_seguimiento pull-right"><small class="">{{seguimiento.fecha | date:mediumDate}}</small>
-						<div class="btn btn-mini btn-danger" data-ng-show="showButtons"confirm-delete-seguimiento></div>
+						<a class="btn btn-mini btn-danger" data-ng-show="showButtons"confirm-delete-seguimiento data-ng-transclude><i class="icon-trash"></i> Borrar</a>
 					</div>
 				</div>
 			</div>

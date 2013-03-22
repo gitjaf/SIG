@@ -48,7 +48,7 @@ class Tarea {
 		prioridad(nullable: true)
 		tareaSuperior(nullable: true)
 		tareasRelacionadas(nullable: true)
-				
+		borrado(nullable: false, blank: false, required: true)			
 	}
 	
 	public String getAsunto(){

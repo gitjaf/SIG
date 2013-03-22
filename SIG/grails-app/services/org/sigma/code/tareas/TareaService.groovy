@@ -77,7 +77,7 @@ class TareaService {
             tarea.prioridad =~ params?.q 
         }
 
-        tareas = tareas - this.getSubTareas(id as Integer, tareas)
+        tareas = (tareas - this.getSubTareas(id as Integer, tareas)) - this.getTareasBorradas(id as Integer)
 
         def sortBy = params.sortBy ? params.sortBy : "fechaInicio"
 
@@ -87,6 +87,7 @@ class TareaService {
 
         return tareas.sort{it."$sortBy"}
     }
+
 
     Tarea setValues(Tarea tarea, JSONObject json){
 
@@ -105,7 +106,7 @@ class TareaService {
         tarea.tareaSuperior = Tarea.get(json?.idTareaSuperior) 
  
         tarea.tipo = Clasificacion.get(json?.tipo?.id) 
- 
+
         json?.idDocumentos?.each{ id -> tarea.addToDocumentos(Documento.get(id))} 
 
         json?.idSeguimientos?.each{ id -> tarea.addToSeguimientos(Seguimiento.get(id))} 
@@ -116,7 +117,11 @@ class TareaService {
 
         json?.seguidores?.each { usuario -> tarea.addToSeguidores(Usuario.get(usuario.id))}
         
+        tarea.borrado = json.borrado
+
         return tarea
 
     }
+
+
 }

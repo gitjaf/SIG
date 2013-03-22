@@ -1,5 +1,5 @@
 
-<div class="modal-header nueva">
+<div class="modal-header form-header">
 	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 	<h3 class="text-info txt-white">{{form_action}}</h3>
 </div>
@@ -168,7 +168,7 @@
 </div>
 <div class="modal-footer">
 	<a data-dismiss="modal" class="btn" data-ng-click="cleanAll()">Close</a>
-	<a data-dismiss="modal" data-ng-disabled="form.$invalid" class="btn btn-success" data-ng-click="save(); cleanAll();">Guardar</a>
+	<a data-dismiss="modal" data-ng-disabled="form.$invalid" class="btn btn-success" data-ng-click="save(tarea); cleanAll();">Guardar</a>
 </div>
 
 <script type="text/javascript">

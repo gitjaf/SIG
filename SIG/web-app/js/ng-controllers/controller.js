@@ -94,8 +94,11 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		
 	}
 
-	$scope.save = function(){
+	$scope.save = function(tarea){
 		var tareas = $scope.tareas._embedded.collection;
+
+		$scope.tarea = new Tarea();
+		angular.copy(tarea, $scope.tarea);
 
 		$scope.tarea.fechaInicio = $filter('date')($scope.tarea.fechaInicio, "dd/MM/yyyy");
 		$scope.tarea.fechaVencimiento = $filter('date')($scope.tarea.fechaVencimiento, "dd/MM/yyyy");
@@ -105,7 +108,9 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 			function(tarea, putResponseHeaders){
 				removeObject(tareas, tarea, "id");
 				if($scope.tareas._embedded.collection) {
-					$scope.tareas._embedded.collection.push(tarea);
+					if(!tarea.borrado){
+						$scope.tareas._embedded.collection.push(tarea);
+					}
 				} else {
 					$scope.tareas._embedded.collection = [tarea];
 				}
@@ -259,6 +264,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		$scope.tarea.asignados = [];
 		$scope.tarea.seguidores = [];
 		$scope.tarea.responsable = $rootScope.userId;
+		$scope.tarea.borrado = false;
 	}
 
 	function crearSubTarea(tarea){
