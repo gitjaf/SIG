@@ -5,6 +5,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	var items = $routeParams.itemsPerPage ? $routeParams.itemsPerPage : 10;
 	var sortBy = $routeParams.sortBy ? $routeParams.sortBy : "fechaInicio";
 	var query = $routeParams.q ? $routeParams.q : "";
+	var filtro = $routeParams.filtro ? $routeParams.filtro : "todas";
 
 	$scope.safeApply = function(fn) {
   		var phase = this.$root.$$phase;
@@ -24,8 +25,8 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		$rootScope.user = Usuario.get({"idUsuario": $rootScope.userId});
 		
 		$scope.tareas = Tarea.query({"page": page, "itemsPerPage" : items, "sortBy": sortBy,
-	 	"q": query, userId: $rootScope.userId});
-	 	
+	 	"q": query, userId: $rootScope.userId, filtro: filtro});
+	 	 
 	}
 
 	$scope.hover = false;
@@ -48,8 +49,8 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	});
 
 	$scope.isActive = function(item) {
-		if($routeParams.q){
-			return $routeParams.q === item;
+		if(filtro){
+			return filtro === item;
 		}
 		return undefined;
 	}

@@ -5,7 +5,7 @@ services.factory('Tarea', function($resource){
 	return $resource('/SIG/tarea/:idTarea', {}, 
 	{
 		query: {method: 'GET', params:{page: '@page', itemsPerPage: '@itemsPerPage',
-	 		sortBy: '@sortBy', q: '@q', userId:'@userId'}, isArray: false},
+	 		sortBy: '@sortBy', q: '@q', userId:'@userId', filtro: '@filtro'}, isArray: false},
 	 	
 	 	update: {method: 'PUT', params:{idTarea: '@id', userId:'@userId'}}
 	

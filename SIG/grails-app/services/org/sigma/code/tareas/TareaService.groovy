@@ -70,22 +70,79 @@ class TareaService {
         return lista.findAll { tarea -> tarea?.tareaSuperior != null && !(tarea?.asignados.contains(usuario) ^ tarea?.seguidores.contains(usuario))}
     }
 
-    def getTareas(Map params, String id){
-        def tareas = this.getTareas(id as Integer).findAll {Tarea tarea -> 
-            tarea.asunto =~ params?.q ||
-            tarea.estado =~ params?.q ||
-            tarea.prioridad =~ params?.q 
+    def getTareas(Map params, String idUsuario){
+        def usuario = Usuario.get(idUsuario as Integer)
+
+        def query = "from org.sigma.code.tareas.Tarea as t where "
+
+        def borrado = false
+
+        def tareas = []
+
+        def parametros = [usuario: usuario]
+
+        if(usuario){
+            switch(params.filtro) {
+                case "propias":
+                    query += this.getTareasPropias()
+                break
+
+                case "asignadas":
+                    query += this.getTareasAsignadas()
+                break
+
+                case "seguidas":
+                    query += this.getTareasSeguidas()
+                break
+
+                case "papelera":
+                    borrado = true
+                
+                default:
+                    query += this.getTareasTodas()                   
+            }
+
+
+        if (params.q) {
+            query += this.getBusquedaTareas(params.q, parametros)
         }
+                
+        query += " and " + " ( t.borrado = :borrado )"
+        
+        parametros['borrado'] = borrado 
 
-        tareas = (tareas - this.getSubTareas(id as Integer, tareas)) - this.getTareasBorradas(id as Integer)
+        tareas = Tarea.findAll(query,
+            parametros, [sortBy: params?.sortBy])
+        } 
+        
+        return tareas
+    }
 
-        def sortBy = params.sortBy ? params.sortBy : "fechaInicio"
+    def getBusquedaTareas(String busqueda, Map parametros){
+        parametros['search'] = "%" + busqueda + "%" 
+        return " and ( t.asunto like :search or " +
+            " t.estado like :search or " +
+            " t.prioridad like :search ) " 
+    }
 
-        if(sortBy in ["fechaInicio", "fechaVencimiento"]){
-            return tareas.sort(this."$sortBy")
-        }
+    def getTareasPropias(){
+        return " t.responsable = :usuario "
+    }
 
-        return tareas.sort{it."$sortBy"}
+    protected getTareasAsignadas(){
+        return " :usuario in elements(t.asignados) "
+    }
+
+    protected getTareasSeguidas(){
+        return " :usuario in elements(t.seguidores) "
+    }
+
+    protected getTareasTodas(){
+        def query = "( " + this.getTareasPropias() + " or " +
+                    this.getTareasAsignadas() + " or " + 
+                    this.getTareasSeguidas() + " ) "
+        
+        return query
     }
 
 

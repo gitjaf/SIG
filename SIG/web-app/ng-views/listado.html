@@ -19,21 +19,21 @@
 		<div class="span2 filtros" id="filtros" >
 			<div class="muted"><small>Mostrar tareas:</small></div>
 			<ul class="unstyled">
-				<li data-ng-class="{active: isActive('') == undefined}">
-					<i data-ng-show="isActive('') == undefined" class="icon-chevron-right"></i>
-					<a class="muted" data-ng-click="$emit('filter', '')">Todas</a> <span class="badge bdg-white txt-orange" data-ng-show="isActive('') == undefined"><b>{{tareas.data.total}}</b></span>
+				<li data-ng-class="{active: isActive('todas') }">
+					<i data-ng-show="isActive('todas')" class="icon-chevron-right"></i>
+					<a class="muted" data-ng-click="$emit('filter', '')">Todas</a> <span class="badge bdg-white txt-orange" data-ng-show="isActive('todas')"><b>{{tareas.data.total}}</b></span>
 				</li>
-				<li data-ng-class="{active: isActive('Nueva')}">
-					<i data-ng-show="isActive('Nueva')"  class="icon-chevron-right "></i>
-					<a class="muted" data-ng-click="$emit('filter', 'Nueva')">Propias</a> <span class="badge bdg-white txt-orange" data-ng-show="isActive('Nueva')"><b>{{tareas.data.total}}</b></span>
+				<li data-ng-class="{active: isActive('propias')}">
+					<i data-ng-show="isActive('propias')"  class="icon-chevron-right "></i>
+					<a class="muted" data-ng-href="#/{{userId}}/tarea/propias">Propias</a> <span class="badge bdg-white txt-orange" data-ng-show="isActive('propias')"><b>{{tareas.data.total}}</b></span>
 				</li>
-				<li data-ng-class="{active: isActive('En Curso')}">
-					<i data-ng-show="isActive('En Curso')" class="icon-chevron-right "></i>
-					<a class="muted" data-ng-click="$emit('filter', 'En Curso')">Asignadas</a> <span class="badge bdg-white txt-orange" data-ng-show="isActive('En Curso')"><b>{{tareas.data.total}}</b></span>
+				<li data-ng-class="{active: isActive('asignadas')}">
+					<i data-ng-show="isActive('asignadas')" class="icon-chevron-right "></i>
+					<a class="muted" data-ng-href="#/{{userId}}/tarea/asignadas">Asignadas</a> <span class="badge bdg-white txt-orange" data-ng-show="isActive('asignadas')"><b>{{tareas.data.total}}</b></span>
 				</li>
-				<li data-ng-class="{active: isActive('Terminada')}">
-					<i data-ng-show="isActive('Terminada')" class="icon-chevron-right "></i>
-					<a class="muted" data-ng-click="$emit('filter', 'Terminada')">Seguidas</a> <span class="badge bdg-white txt-orange" data-ng-show="isActive('Terminada')"><b>{{tareas.data.total}}</b></span>
+				<li data-ng-class="{active: isActive('seguidas')}">
+					<i data-ng-show="isActive('seguidas')" class="icon-chevron-right "></i>
+					<a class="muted" data-ng-href="#/{{userId}}/tarea/seguidas">Seguidas</a> <span class="badge bdg-white txt-orange" data-ng-show="isActive('seguidas')"><b>{{tareas.data.total}}</b></span>
 				</li>
 				
 			</ul>
