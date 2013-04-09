@@ -26,6 +26,7 @@ class TareaController {
 
     def list() {
     	def list = [:]
+        
         if(params?.userId){
     		list = (halCollectionBuilderService.buildRepresentation(tareaService.getTareas(params, params.userId),
     		 request.getMethod(), params, [prepend:"/${params.userId}", append:""]))

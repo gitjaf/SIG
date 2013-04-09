@@ -116,7 +116,7 @@
 			    			<label>Asignados</label>
 			    			<div class="input-append">
 				    			<input type="text" id="form_asigna" class="span10" placeholder="Buscar y agregar usuario como asignado" >
-				    			<button class="btn" data-ng-click="agregar(usuario, id, tarea.asignados)">
+				    			<button class="btn" data-ng-click="agregar(usuario, id, tarea.asignados, '#form_asigna')">
 				    				<i class="icon-plus"></i>
 				    			</button>
 
@@ -133,7 +133,7 @@
 			    			<div class="input-append">
 				    			<input type="text" id="form_sigue" class="span10" 
 				    				placeholder="Buscar y agregar usuario como seguidor">
-				    			<button class="btn" data-ng-click="agregar(usuario, id, tarea.seguidores)">
+				    			<button class="btn" data-ng-click="agregar(usuario, id, tarea.seguidores, '#form_sigue')">
 				    				<i class="icon-plus"></i>
 				    			</button>
 			    			</div>

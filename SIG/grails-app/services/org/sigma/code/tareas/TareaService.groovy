@@ -65,12 +65,12 @@ class TareaService {
         return this.getTareas(id).findAll { tarea -> tarea?.borrado == true }
     }
 
-    def getSubTareas(int id, lista){
-        def usuario = Usuario.get(id)      
-        return lista.findAll { tarea -> tarea?.tareaSuperior != null && !(tarea?.asignados.contains(usuario) ^ tarea?.seguidores.contains(usuario))}
-    }
 
     def getTareas(Map params, String idUsuario){
+        if(params.tareaSuperior){
+            return this.getSubTareas(params.tareaSuperior as Integer, params?.sortBy)
+        }
+
         def usuario = Usuario.get(idUsuario as Integer)
 
         def query = "from org.sigma.code.tareas.Tarea as t where "
@@ -107,22 +107,21 @@ class TareaService {
             query += this.getBusquedaTareas(params.q, parametros)
         }
                 
-        query += " and " + " ( t.borrado = :borrado )"
+        query += " and ( t.borrado = :borrado ) and t.tareaSuperior = null order by t.${params.sortBy}"
         
         parametros['borrado'] = borrado 
-
-        tareas = Tarea.findAll(query,
-            parametros, [sortBy: params?.sortBy])
-        } 
         
+        tareas = Tarea.findAll(query, parametros)
+        } 
+
         return tareas
     }
 
     def getBusquedaTareas(String busqueda, Map parametros){
         parametros['search'] = "%" + busqueda + "%" 
-        return " and ( t.asunto like :search or " +
-            " t.estado like :search or " +
-            " t.prioridad like :search ) " 
+        return " and ( lower(t.asunto) like lower(:search) or " +
+            " lower(t.estado) like lower(:search) or " +
+            " lower(t.prioridad) like lower(:search) ) " 
     }
 
     def getTareasPropias(){
@@ -146,7 +145,12 @@ class TareaService {
     }
 
 
-    Tarea setValues(Tarea tarea, JSONObject json){
+    protected getSubTareas(int id, String orden){
+        def tarea = Tarea.get(id)      
+        return Tarea.findAllByTareaSuperior(tarea, [sortBy: orden])
+    }
+
+    protected Tarea setValues(Tarea tarea, JSONObject json){
 
         tarea.asunto = json.asunto
 

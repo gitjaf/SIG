@@ -1,11 +1,19 @@
 function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Usuario,
  Tarea, Tipo, Seguimiento, $document) {
 	
-	var page = $routeParams.page ? $routeParams.page : 0;
-	var items = $routeParams.itemsPerPage ? $routeParams.itemsPerPage : 10;
-	var sortBy = $routeParams.sortBy ? $routeParams.sortBy : "fechaInicio";
-	var query = $routeParams.q ? $routeParams.q : "";
-	var filtro = $routeParams.filtro ? $routeParams.filtro : "todas";
+	// var page = $routeParams.page ? $routeParams.page : 0;
+	// var items = $routeParams.itemsPerPage ? $routeParams.itemsPerPage : 10;
+	// var sortBy = $routeParams.sortBy ? $routeParams.sortBy : "fechaInicio";
+	// var query = $routeParams.q ? $routeParams.q : "";
+	// var filtro = $routeParams.filtro ? $routeParams.filtro : "todas";
+	// var idTarea = $routeParams.idTarea ? $routeParams.idTarea : "";
+
+	$rootScope.page = $routeParams.page ? $routeParams.page : 0;
+	$rootScope.items = $routeParams.itemsPerPage ? $routeParams.itemsPerPage : 10;
+	$rootScope.sortBy = $routeParams.sortBy ? $routeParams.sortBy : "fechaInicio";
+	$rootScope.query = $routeParams.q ? $routeParams.q : "";
+	$rootScope.filtro = $routeParams.filtro ? $routeParams.filtro : "todas";
+	$rootScope.idTarea = $routeParams.idTarea ? $routeParams.idTarea : "";
 
 	$scope.safeApply = function(fn) {
   		var phase = this.$root.$$phase;
@@ -18,41 +26,133 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		}
 	};
 
-
-
 	if($routeParams.userId){
 		$rootScope.userId = ($rootScope.userId != $routeParams.userId) ? $routeParams.userId : $rootScope.userId;
 		$rootScope.user = Usuario.get({"idUsuario": $rootScope.userId});
 		
-		$scope.tareas = Tarea.query({"page": page, "itemsPerPage" : items, "sortBy": sortBy,
-	 	"q": query, userId: $rootScope.userId, filtro: filtro});
-	 	 
+		$scope.tareas = Tarea.query({
+			"page": $rootScope.page,
+			"itemsPerPage" : $rootScope.items,
+			"sortBy": $rootScope.sortBy,
+			"q": $rootScope.query,
+			userId: $rootScope.userId,
+			filtro: $rootScope.filtro,
+			tareaSuperior: $rootScope.idTarea
+		});
+		
 	}
 
-	$scope.hover = false;
-	$scope.query = query;
-	$scope.sortBy = sortBy;
+	// $scope.hover = false;
+	// $scope.query = $rootScope.query;
+	// $scope.sortBy = $rootScope.sortBy;
 
 	$scope.sort = function(field) {
-		$location.search("sortBy", field);
+		// $location.search("sortBy", field);
+		$scope.tareas = Tarea.query({
+			"page": $rootScope.page,
+			"itemsPerPage" : $rootScope.items,
+			"sortBy": field,
+			"q": $rootScope.query,
+			userId: $rootScope.userId,
+			filtro: $rootScope.filtro,
+			tareaSuperior: $rootScope.idTarea
+		});
+		$rootScope.sortBy = field;
 	}
 
 	$scope.search = function(query){
-		$location.search("q", query);
-		$location.search("page","0");
+		$rootScope.navigation = undefined;
+		$routeParams.idTarea = "";
+		$rootScope.idTarea = "";
+		// $location.search("q", query);
+		// $location.search("page","0");
+		$scope.tareas = Tarea.query({
+			"page": 0,
+			"itemsPerPage" : $rootScope.items,
+			"sortBy": $rootScope.sortBy,
+			"q": query,
+			userId: $rootScope.userId,
+			filtro: "todas",
+			tareaSuperior: ""
+		});
+		$rootScope.query = query;
+
+	}
+
+	$scope.changeFilter = function(filterName){
+		// var loc = $rootScope.userId + "/tarea" ; 
+		// if(filterName){
+		// 	loc = $rootScope.userId + "/" + filterName + "/tarea";
+		// }
+		// $location.url(loc);
+		$scope.tareas = Tarea.query({
+			"page": 0,
+			"itemsPerPage" : $rootScope.items,
+			"sortBy": $rootScope.sortBy,
+			"q": "",
+			userId: $rootScope.userId,
+			filtro: filterName,
+			tareaSuperior: ""
+		});
+		$rootScope.filtro = filterName;
+		$rootScope.navigation = undefined;
+		$rootScope.query = "";
+		$scope.query = "";
 	}
 
 	$scope.$on('filter', function(event, filter){
-		var q = "/tarea" + (filter != '' ? ("?q=" + filter) : '')
-		$location.url($rootScope.userId + q);
+		// var q = "/tarea" + (filter != '' ? ("?q=" + filter) : '')
+		// $location.url($rootScope.userId + q);
+		$scope.tareas = Tarea.query({
+			"page": 0,
+			"itemsPerPage" : $rootScope.items,
+			"sortBy": $rootScope.sortBy,
+			"q": filter,
+			userId: $rootScope.userId,
+			filtro: $rootScope.filtro,
+			tareaSuperior: $rootScope.idTarea
+		});
+		$rootScope.query = filter;
 		
 	});
 
 	$scope.isActive = function(item) {
-		if(filtro){
-			return filtro === item;
+		if($rootScope.filtro){
+			return $rootScope.filtro === item;
 		}
 		return undefined;
+	}
+
+	$scope.isActiveQuery =function(q){
+		if($rootScope.query){
+			return $rootScope.query === q;
+		}
+		return undefined;
+	}
+
+	$scope.addCrumb = function(tarea){
+		if(!$rootScope.navigation){
+			$rootScope.navigation = [];
+		}
+		_($rootScope.navigation).each( function(obj, key, list) {
+			if(obj.id == tarea.id){
+				list.splice(key);
+			}
+		});
+
+		$rootScope.navigation.push(tarea);
+		// $location.url(tarea._links.self.href);
+		// $routeParams.page = 0;
+		$scope.tareas = Tarea.query({
+			"page": 0,
+			"itemsPerPage" : $rootScope.items,
+			"sortBy": $rootScope.sortBy,
+			"q": $rootScope.query,
+			userId: $rootScope.userId,
+			filtro: $rootScope.filtro,
+			tareaSuperior: tarea.id
+		});
+		$rootScope.idTarea = tarea.id;
 	}
 
 	$scope.nuevaTarea = function(tarea){
@@ -312,17 +412,30 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 		$scope.id = v;
 	}
 
-	$scope.agregar = function(usuario, id, collection) {
+	$scope.agregar = function(usuario, id, collection, elemento) {
 		var fields = ["#form_asigna", "#form_sigue"]
-		if(!duplicate){
-			if(usuario !== undefined && id !== undefined){
-				var duplicate = $scope.checkForDuplicate("id", id, $scope.tarea.asignados) || $scope.checkForDuplicate("id", id, $scope.tarea.seguidores);
+		if(usuario !== undefined && id !== undefined){
+		var duplicate = $scope.checkForDuplicate("id", id, $scope.tarea.asignados) 
+				|| $scope.checkForDuplicate("id", id, $scope.tarea.seguidores);
+			if(!duplicate){
 				collection.push(($filter('filter')($scope.usuarios, function(u){
 					return (u.id == id);
 				}))[0]);
 				$scope.clean(fields);
 				$scope.usuario = undefined;
 				$scope.id = undefined;
+			} else{
+				console.log($scope);
+				$scope.message({
+					"element": elemento,
+					"title" : 'Asignar un usuario', 
+					"content" : 'El usuario ya esta asignado en otro rol',
+					"timeout" : 3000,
+					"error" : true,
+					"trigger" : "manual",
+					"delay" : 1000
+					
+			});
 			}
 		}
 	}
@@ -455,6 +568,8 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 	}
 
 	function isAdmin(id){
+		//Por ahora el unico administrador es el usuario con id 1
+		//TODO implementar un criterio para distinguir administradores de usuarios
 		return id == 1;
 	}
 

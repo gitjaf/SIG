@@ -3,7 +3,7 @@ var directives = angular.module('sig.directives', []);
 directives.directive("tooltip", function () {
     return function (scope, element, attrs) {
 		scope.$watch("tareas", function(){
-			element.tooltip({"delay": {"show": 500, "hide": 0}});
+			element.tooltip({"placement":"right","delay": {"show": 500, "hide": 0}});
 		})
 	}
 });

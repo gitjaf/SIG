@@ -88,6 +88,12 @@ body{
 	color: #555555;
 }
 
+.breadcrumb{
+	background-color: white;
+	padding-bottom: 0px;
+	padding-top: 0px;
+}
+
 .header-detalles{
 	margin-left: 0px !important;
 	border-bottom: solid 1px #ddd;
@@ -123,6 +129,9 @@ body{
 
 .container-detalle .container-titulo{
 	background-color: white;
+	margin-left: 0px !important;
+	border-bottom: solid 1px #ddd;
+	
 }
 
 .titulo-tarea{
@@ -318,6 +327,7 @@ body{
 	padding-left: 4px;
 	padding-top: 6px;
 	margin-left: 2px !important;
+	min-height: 32px !important;
 }
 
 .listado-descripcion{
@@ -598,12 +608,14 @@ li.ui-animate {
 
 .listado-tareas{
 	margin-left: 0px !important;
+	;
 }
 
 .item-tareas{
 	border-bottom: solid 1px #e5e5e5;
 	padding-top: 3px;
 	padding-bottom: 3px;
+	min-height: 55px;
 }
 
 .listado-titulo{

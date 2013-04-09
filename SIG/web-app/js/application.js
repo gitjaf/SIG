@@ -13,7 +13,8 @@ config(['$routeProvider', function($routeProvider) {
 	$routeProvider.
 	when('/:userId/tarea', {templateUrl: './ng-views/listado.html', controller: ListaTareaCtrl}).
 	when('/:userId/edit', {templateUrl: './ng-views/form.html', controller: FormTareaCtrl}).
-	when('/:userId/tarea/:filtro', {templateUrl: './ng-views/listado.html', controller: ListaTareaCtrl}).
+	when('/:userId/:filtro/tarea/', {templateUrl: './ng-views/listado.html', controller: ListaTareaCtrl}).
+    when('/:userId/tarea/:idTarea', {templateUrl: './ng-views/listado.html', controller: ListaTareaCtrl}).
 	otherwise({redirectTo: function(params, path, search){
 		return (path + "tarea");
 	}});
