@@ -47,53 +47,55 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	// $scope.sortBy = $rootScope.sortBy;
 
 	$scope.sort = function(field) {
-		// $location.search("sortBy", field);
-		$scope.tareas = Tarea.query({
-			"page": $rootScope.page,
-			"itemsPerPage" : $rootScope.items,
-			"sortBy": field,
-			"q": $rootScope.query,
-			userId: $rootScope.userId,
-			filtro: $rootScope.filtro,
-			tareaSuperior: $rootScope.idTarea
-		});
+		$location.search("sortBy", field);
+		// $scope.tareas = Tarea.query({
+		// 	"page": $rootScope.page,
+		// 	"itemsPerPage" : $rootScope.items,
+		// 	"sortBy": field,
+		// 	"q": $rootScope.query,
+		// 	userId: $rootScope.userId,
+		// 	filtro: $rootScope.filtro,
+		// 	tareaSuperior: $rootScope.idTarea
+		// });
 		$rootScope.sortBy = field;
 	}
 
 	$scope.search = function(query){
-		$rootScope.navigation = undefined;
-		$routeParams.idTarea = "";
-		$rootScope.idTarea = "";
-		// $location.search("q", query);
-		// $location.search("page","0");
-		$scope.tareas = Tarea.query({
-			"page": 0,
-			"itemsPerPage" : $rootScope.items,
-			"sortBy": $rootScope.sortBy,
-			"q": query,
-			userId: $rootScope.userId,
-			filtro: "todas",
-			tareaSuperior: ""
-		});
+		// $rootScope.navigation = undefined;
+		// $routeParams.idTarea = "";
+		// $rootScope.idTarea = "";
 		$rootScope.query = query;
+		$location.search({q: $rootScope.query, page: 0});
+		
+		// $scope.tareas = Tarea.query({
+		// 	"page": 0,
+		// 	"itemsPerPage" : $rootScope.items,
+		// 	"sortBy": $rootScope.sortBy,
+		// 	"q": query,
+		// 	userId: $rootScope.userId,
+		// 	filtro: "todas",
+		// 	tareaSuperior: ""
+		// });
 
 	}
 
+
+
 	$scope.changeFilter = function(filterName){
-		// var loc = $rootScope.userId + "/tarea" ; 
-		// if(filterName){
-		// 	loc = $rootScope.userId + "/" + filterName + "/tarea";
-		// }
-		// $location.url(loc);
-		$scope.tareas = Tarea.query({
-			"page": 0,
-			"itemsPerPage" : $rootScope.items,
-			"sortBy": $rootScope.sortBy,
-			"q": "",
-			userId: $rootScope.userId,
-			filtro: filterName,
-			tareaSuperior: ""
-		});
+		var loc = $rootScope.userId + "/tarea" ; 
+		if(filterName){
+			loc = $rootScope.userId + "/" + filterName + "/tarea";
+		}
+		$location.url(loc);
+		// $scope.tareas = Tarea.query({
+		// 	"page": 0,
+		// 	"itemsPerPage" : $rootScope.items,
+		// 	"sortBy": $rootScope.sortBy,
+		// 	"q": "",
+		// 	userId: $rootScope.userId,
+		// 	filtro: filterName,
+		// 	tareaSuperior: ""
+		// });
 		$rootScope.filtro = filterName;
 		$rootScope.navigation = undefined;
 		$rootScope.query = "";
@@ -103,16 +105,24 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	$scope.$on('filter', function(event, filter){
 		// var q = "/tarea" + (filter != '' ? ("?q=" + filter) : '')
 		// $location.url($rootScope.userId + q);
-		$scope.tareas = Tarea.query({
-			"page": 0,
-			"itemsPerPage" : $rootScope.items,
-			"sortBy": $rootScope.sortBy,
-			"q": filter,
-			userId: $rootScope.userId,
-			filtro: $rootScope.filtro,
-			tareaSuperior: $rootScope.idTarea
-		});
-		$rootScope.query = filter;
+		if(filter != ''){
+			$location.search({q: filter});
+			
+		} else{
+			$location.url($rootScope.userId + '/tarea' + '/' + $rootScope.idTarea);
+		}
+
+		// $scope.tareas = Tarea.query({
+		// 	"page": 0,
+		// 	"itemsPerPage" : $rootScope.items,
+		// 	"sortBy": $rootScope.sortBy,
+		// 	"q": filter,
+		// 	userId: $rootScope.userId,
+		// 	filtro: $rootScope.filtro,
+		// 	tareaSuperior: $rootScope.idTarea
+		// });
+		// $rootScope.query = filter;
+		// $scope.query = filter;
 		
 	});
 
@@ -141,17 +151,18 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		});
 
 		$rootScope.navigation.push(tarea);
-		// $location.url(tarea._links.self.href);
-		// $routeParams.page = 0;
-		$scope.tareas = Tarea.query({
-			"page": 0,
-			"itemsPerPage" : $rootScope.items,
-			"sortBy": $rootScope.sortBy,
-			"q": $rootScope.query,
-			userId: $rootScope.userId,
-			filtro: $rootScope.filtro,
-			tareaSuperior: tarea.id
-		});
+		$location.url(tarea._links.self.href);
+		$routeParams.page = 0;
+		// $scope.tareas = Tarea.query({
+		// 	"page": 0,
+		// 	"itemsPerPage" : $rootScope.items,
+		// 	"sortBy": $rootScope.sortBy,
+		// 	"q": $rootScope.query,
+		// 	userId: $rootScope.userId,
+		// 	filtro: $rootScope.filtro,
+		// 	tareaSuperior: tarea.id
+		// });
+
 		$rootScope.idTarea = tarea.id;
 	}
 
@@ -211,6 +222,8 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 				if($scope.tareas._embedded.collection) {
 					if(!tarea.borrado){
 						$scope.tareas._embedded.collection.push(tarea);
+					} else {
+						$scope.tareas.data.total = $scope.tareas.data.total - 1;
 					}
 				} else {
 					$scope.tareas._embedded.collection = [tarea];
@@ -234,12 +247,21 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		} else {
 			
 			$scope.tarea.$save(function(tarea, putResponseHeaders){
-				if($scope.tareas._embedded.collection) {
-					$scope.tareas._embedded.collection.push(tarea);
+				if(_($scope.tareas._embedded.collection).isEmpty()) {
+					$scope.tareas = Tarea.query({
+										"page": $rootScope.page,
+										"itemsPerPage" : $rootScope.items,
+										"sortBy": $rootScope.sortBy,
+										"q": $rootScope.query,
+										userId: $rootScope.userId,
+										filtro: $rootScope.filtro,
+										tareaSuperior: $rootScope.idTarea
+									});
 				} else {
-					$scope.tareas= [tarea];
+					$scope.tareas._embedded.collection.push(tarea);
+					$scope.tareas.data.total = $scope.tareas.data.total + 1;
 				} 
-				$scope.tareas.data.total = $scope.tareas.data.total + 1;
+
 				
 				var mensaje = "La tarea '" + tarea.asunto + "' fue creada con exito",
 				titulo = "Crear Tarea: ",

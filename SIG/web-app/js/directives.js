@@ -3,18 +3,24 @@ var directives = angular.module('sig.directives', []);
 directives.directive("tooltip", function () {
     return function (scope, element, attrs) {
 		scope.$watch("tareas", function(){
-			element.tooltip({"placement":"right","delay": {"show": 500, "hide": 0}});
+			element.tooltip({"delay": {"show": 1000}});
 		})
 	}
 });
 
-directives.directive("pager", function() {
+directives.directive("pager", function($location) {
     return {
     	replace: true,
     	transclude: true,
     	scope: {collection: '=collection'},
 		templateUrl: 'js/templates/pager.html',
-		restrict: 'E'
+		restrict: 'E',
+		link: function(scope, element, attrs){
+			scope.changePage = function(href){
+				$location.url(href);
+			}
+		}
+
 	}
 });
 
@@ -224,7 +230,7 @@ directives.directive("confirmDeleteTarea", function() {
 						Si: {
 							click: function(){
 								scope.item.borrado = true;
-								scope.del(scope.item);
+								scope.del(scope.item);//del es una funcion wrapper definida en la directiva taskbuttons
 								angular.element('#confirm-delete-tarea').dialog2("close");
 							},
 							primary: false,

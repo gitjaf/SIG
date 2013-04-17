@@ -87,6 +87,7 @@
 					<div class="span11" data-ng-show="navigation">
 						<span><small>Viendo Subtareas de:</small></span>
 						<ul class="breadcrumb">
+							<li><a data-ng-click="changeFilter('todas')"><i class="icon-arrow-left"></i></a> <span class="divider">/</span></li>
 							 <li data-ng-repeat="crumb in navigation"><a data-ng-click="addCrumb(crumb)">#{{crumb.id}}</a> <span class="divider">/</span></li>
 						</ul>
 					</div>
@@ -95,10 +96,10 @@
 			<div class="row-fluid span12 listado-tareas" >
 				<div class="row-fluid" data-ng-repeat="tarea in tareas._embedded.collection | filter: query | orderBy: sortBy" >
 						
-					<div id="tarea{{tarea.id}}" class="hoverDiv item-tareas" data-ng-mouseenter="showButtons=true" data-ng-mouseleave="showButtons=false" data-ng-class="{arrow_box: (detalle.id == tarea.id)}">
+					<div id="tarea{{tarea.id}}" data-tooltip data-title="{{tarea.asunto}}" class="hoverDiv item-tareas" data-ng-mouseenter="showButtons=true" data-ng-mouseleave="showButtons=false" data-ng-class="{arrow_box: (detalle.id == tarea.id)}">
 						<div class="row-fluid span12 container-listado-titulo">
 							<span id="numero-tarea" class="numero-tarea muted"><small>#{{tarea.id}}</small></span>
-							<span id="titulo-tarea-{{tarea.id}}" class="listado-titulo has-tooltip muted" data-tooltip data-title="{{tarea.asunto}}"><a href="" data-ng-click="verDetalleTarea(tarea)">{{tarea.asunto | cut:false:35}}</a></span>
+							<span id="titulo-tarea-{{tarea.id}}" class="listado-titulo has-tooltip muted" ><a href="" data-ng-click="verDetalleTarea(tarea)">{{tarea.asunto | cut:false:40}}</a></span>
 						
 							<span data-ng-class="{label : tarea.estado}" class="{{(tarea.estado | lowercase).split(' ').join('')}}">
 								{{tarea.estado}}
@@ -106,7 +107,7 @@
 							<span data-ng-class="{label : tarea.prioridad}" class="{{(tarea.prioridad | lowercase).split(' ').join('')}}">
 								{{tarea.prioridad}}
 							</span>
-							<span class="badge" data-ng-show="tarea._embedded.tareasRelacionadas"><a class="txt-white" data-ng-click="addCrumb(tarea)" >{{tarea._embedded.tareasRelacionadas.length}}</a></span>
+							
 							
 						</div>
 						<div class="span12 container-listado-estado" style="margin-left: 2px;">
@@ -115,8 +116,8 @@
 							<span class="muted" data-ng-hide="tarea.fechaInicio"><small><i class="icon-calendar"></i> Sin Inicio</small></span> 
 							<span class="muted" data-ng-show="tarea.fechaVencimiento"><small> - {{tarea.fechaVencimiento | date:'dd/MM/yyyy'}}</small></span>
 							<span class="muted" data-ng-hide="tarea.fechaVencimiento"><small> - Sin Vencimiento</small> </span> 
-							<span class="muted" data-ng-show="tarea._embedded.tipo"> | <small><i class="icon-tag"></i>  {{tarea._embedded.tipo.nombre}}</small> </span>
-
+							<span class="muted" data-ng-show="tarea._embedded.tipo"><small> | <i class="icon-tag"></i>  {{tarea._embedded.tipo.nombre}}</small> </span>
+							<span data-ng-show="tarea._embedded.tareasRelacionadas"><small class="muted"> | <i class="icon-arrow-down"></i> <a class="" data-ng-click="addCrumb(tarea)">{{tarea._embedded.tareasRelacionadas.length}} Subtareas </a></small></span>
 							<div class="pull-right" data-ng-show="showButtons" >
 								<div taskbuttons item="tarea" edit="editarTarea(tarea)" addsub="nuevaTarea(tarea)" addseg="editarSeguimiento(tarea)" delete="save(tarea)"></div>
 							</div>
