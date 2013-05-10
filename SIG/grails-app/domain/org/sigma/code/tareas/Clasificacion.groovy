@@ -8,7 +8,7 @@ class Clasificacion {
     Date lastUpdated
     Boolean borrado = false
  
-    static belongsTo = Tarea
+    
     
     static constraints = {
         nombre(nullable: false, blank: false, required: true)

@@ -4,6 +4,7 @@ import grails.converters.JSON
 import org.sigma.code.common.*
 import grails.gorm.*
 import org.codehaus.groovy.grails.web.json.JSONObject
+import org.springframework.dao.DataIntegrityViolationException
 
 class TareaService {
 
@@ -37,7 +38,7 @@ class TareaService {
     }
 
     Tarea updateTarea(Tarea tarea, JSONObject json){
-        
+                
         tarea = this.setValues(tarea, json)
 
         if(!tarea.save(flush: true)){
@@ -46,6 +47,47 @@ class TareaService {
 
         return tarea
     }
+
+    def deleteTarea(Tarea tarea){
+        try {
+            clearValues(tarea)
+            tarea.discard()
+            Tarea.withTransaction { status ->
+                Tarea t = Tarea.load(tarea.id)
+                t.delete()
+                status.flush()
+            }
+            return 200
+        }
+        catch (DataIntegrityViolationException e) {
+            return 500
+        }
+    }
+
+    def vaciarPapelera(String id){
+        def usuario = Usuario.get(id as Integer)
+        def tareas = Tarea.executeQuery("from Tarea t where t.responsable = :usuario and t.borrado = true", [usuario: usuario])
+
+        def respuesta = [:]
+                
+        tareas.each{ it ->
+            def t = Tarea.get(it.id)
+            clearValues(t)
+        }
+
+        tareas*.discard()
+        Tarea.withTransaction { status ->
+            tareas.each{
+                Tarea tarea = Tarea.load(it.id)
+                tarea.delete()
+            }
+            status.flush()
+        }
+
+        respuesta.status = 200
+        return respuesta
+    }
+
 
     def getTareas(int id){
 
@@ -77,6 +119,8 @@ class TareaService {
 
         def borrado = false
 
+        def superior = " and t.tareaSuperior is null "
+
         def tareas = []
 
         def parametros = [usuario: usuario]
@@ -97,23 +141,30 @@ class TareaService {
 
                 case "papelera":
                     borrado = true
-                
+                    superior = ""
+
                 default:
                     query += this.getTareasTodas()                   
             }
 
 
-        if (params.q) {
-            query += this.getBusquedaTareas(params.q, parametros)
-        }
-                
-        query += " and ( t.borrado = :borrado ) and t.tareaSuperior = null order by t.${params.sortBy}"
-        
-        parametros['borrado'] = borrado 
-        
-        tareas = Tarea.findAll(query, parametros)
+            if (params.q) {
+                query += this.getBusquedaTareas(params.q, parametros)
+            }
+                    
+            query += " and ( t.borrado = :borrado ) " + superior +  " order by t.${params.sortBy}"
+            
+            parametros['borrado'] = borrado 
+                      
+            tareas = Tarea.executeQuery(query, parametros)
+
         } 
 
+        if(!superior){
+            tareas = tareas.findAll{ it -> 
+                !it.tareaSuperior || it.tareaSuperior.borrado == false
+            }
+        }
         return tareas
     }
 
@@ -163,8 +214,8 @@ class TareaService {
         tarea.fechaInicio = json.fechaInicio ? Date.parse("dd/MM/yyyy", json.fechaInicio) : null 
         
         tarea.fechaVencimiento = json.fechaVencimiento ? Date.parse("dd/MM/yyyy", json.fechaVencimiento) : null 
-
-        tarea.tareaSuperior = Tarea.get(json?.idTareaSuperior) 
+       
+        tarea.tareaSuperior = json.restaurada ? tarea.tareaSuperior : Tarea.get(json?.idTareaSuperior) 
  
         tarea.tipo = Clasificacion.get(json?.tipo?.id) 
 
@@ -174,15 +225,67 @@ class TareaService {
 
         json?.idTareasRelacionadas?.each{ id -> tarea.addToTareasRelacionadas(Tarea.get(id))}
 
+        if(tarea.asignados){
+            def asignados = Usuario.executeQuery("from Usuario u where :tarea in elements(u.asignadas)", [tarea: tarea])
+            asignados*.removeFromAsignadas(tarea)
+            if(tarea.asignados != null){tarea.asignados.clear()}
+        }
         json?.asignados?.each { usuario -> tarea.addToAsignados(Usuario.get(usuario.id))}
-
+        
+        if(tarea.seguidores){
+            def seguidores = Usuario.executeQuery("from Usuario u where :tarea in elements(u.seguidas)", [tarea: tarea])
+            seguidores*.removeFromSeguidas(tarea)
+            if(tarea.seguidores != null){tarea.seguidores.clear()}
+        }        
         json?.seguidores?.each { usuario -> tarea.addToSeguidores(Usuario.get(usuario.id))}
         
-        tarea.borrado = json.borrado
-
+        if(tarea.borrado != json?.borrado as Boolean){
+            borradoRecursivo(tarea, json.borrado as Boolean)
+        }
+        
         return tarea
 
     }
 
+    /*
+    * Este metodo se ejecuta cuando se esta a punto de eliminar una o mas tareas.
+    * Elimina todas las relaciones de la tarea antes de que pueda ser eliminada evitando
+    * las excepciones por referencias de foreign keys.
+    */
+    protected clearValues(Tarea tarea){
+        
+        if(tarea.tareaSuperior){ 
+            tarea.tareaSuperior.removeFromTareasRelacionadas(tarea)
+        }
+        tarea.responsable.removeFromCreadas(tarea)
 
+        def asignados = Usuario.executeQuery("from Usuario u where :tarea in elements(u.asignadas)",[tarea: tarea])
+        asignados.each{it.removeFromAsignadas(tarea)
+            it.save(flush: true)
+        }
+        tarea.asignados.clear()
+        
+        def seguidores = Usuario.executeQuery("from Usuario u where :tarea in elements(u.seguidas)",[tarea: tarea])
+        seguidores.each{it.removeFromSeguidas(tarea)
+            it.save(flush: true)
+        }
+        tarea.seguidores.clear()
+
+        tarea.tipo = null
+        tarea.tareasRelacionadas.each{it.tareaSuperior = null}
+        tarea.tareasRelacionadas.clear()
+        tarea.save(flush: true)
+
+    }
+
+    /*
+    * Este metodo realiza un cambio recursivo de la variable logica encargada
+    * de marcar una tarea como eliminada en la papelera o activa.
+    */
+    protected borradoRecursivo(Tarea tarea, Boolean borrado){
+        tarea.borrado = borrado
+        tarea.tareasRelacionadas.each{
+            borradoRecursivo(it, borrado)
+        }
+    }
 }

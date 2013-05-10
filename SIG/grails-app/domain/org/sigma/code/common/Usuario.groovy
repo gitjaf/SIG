@@ -10,6 +10,9 @@ class Usuario {
 	static hasMany = [creadas : Tarea, asignadas : Tarea, seguidas : Tarea]
 		
 	static constraints = {
+		creadas(cascade: 'all-delete-orphan')
+		asignadas(cascade: 'all-delete-orphan')
+		seguidas(cascade: 'all-delete-orphan')
 	}
 	
 	static mapping ={

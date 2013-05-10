@@ -1,10 +1,16 @@
-<div class="btn-group task-buttons">
-	<a class="btn btn-small drop" data-toggle="dropdown"><i class="icon-plus"></i></a>
-	<ul class="dropdown-menu" >
-		<li><a data-ng-click="addsub(item)" data-toggle="modal" data-target="#edit"><i class="icon-tasks"></i> Agregar Subtarea</a></li>
-		<li><a data-ng-click="addseg(item)" data-toggle="modal" data-target="#edit"><i class="icon-eye-open"></i> Agregar Seguimiento</a></li>
-		<!-- <li><a href="">Agregar Documento</a></li> -->
-	</ul>
+<div class="btn-group task-buttons" data-ng-hide="alt">
+	<a class="btn btn-small drop"  data-toggle="dropdown"><i class="icon-plus"></i></a>
+		<ul class="dropdown-menu" >
+			<li ><a  data-ng-click="addsub(item)" data-toggle="modal" data-target="#edit"><i class="icon-tasks"></i> Agregar Subtarea</a></li>
+				<li ><a  data-ng-click="addseg(item)" data-toggle="modal" data-target="#edit"><i class="icon-eye-open"></i> Agregar Seguimiento</a></li>
+				<!-- <li><a href="">Agregar Documento</a></li> -->
+		</ul>
+	
 	<a class="btn btn-small" data-ng-click="edit(item)" data-toggle="modal" data-target="#edit"><i class="icon-pencil"></i></a>
 	<a class="btn btn-small btn-danger" confirm-delete-tarea data-ng-transclude><i class="icon-trash"></i></a>
+</div>
+
+<div class="btn-group task-buttons" data-ng-show="alt">
+	<a class="btn btn-small" data-ng-show="raiz" data-ng-click="undo(item)"><i class="icon-reply"></i> Restaurar</a>
+	<a class="btn btn-small btn-danger" confirm-delete-tarea data-ng-transclude><i class="icon-trash"></i> Eliminar</a>
 </div>

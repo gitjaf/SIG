@@ -1,7 +1,10 @@
 <div class="floating" alert title="titulo" message="mensaje" showon="showAlert" type="alertType" style="display: none;"></div>
 <div class="row-fluid header">
 	<div class="span12">
-		<div class="span2 muted lead "><h3 class="module-name">SIG Tareas</h3></div>
+		<div class="span2 muted">
+			<div class="span12 module-name lead"><b>SIG Tareas</b></div>
+			<div class="span12 module-version"> <small>Version: {{tareas.data.version}}</small></div>
+		</div>
 		<div class="input-append span5 hidden-phone buscador">
 			<input data-ng-model="query" type="search" placeholder="Buscar Tareas" class="span12">
 			<button class="btn" data-ng-click="search(query)">&nbsp;<i class="icon-search"></i>&nbsp;</button><br>
@@ -34,6 +37,10 @@
 				<li data-ng-class="{active: isActive('seguidas')}">
 					<i data-ng-show="isActive('seguidas')" class="icon-chevron-right "></i>
 					<a class="muted" data-ng-click="changeFilter('seguidas')">Seguidas</a> <span class="badge bdg-white txt-orange" data-ng-show="isActive('seguidas')"><b>{{tareas.data.total}}</b></span>
+				</li>
+				<li data-ng-class="{active: isActive('papelera')}">
+					<i data-ng-show="isActive('papelera')" class="icon-chevron-right "></i>
+					<a class="muted" data-ng-click="changeFilter('papelera')">Papelera</a> <span class="badge bdg-white txt-orange" data-ng-show="isActive('papelera')"><b>{{tareas.data.total}}</b></span>
 				</li>
 				
 			</ul>
@@ -71,23 +78,28 @@
 
 				<div class="span12 header-tabs">
 					<ul class="nav nav-tabs">
-						<li data-ng-class="{active: isActiveQuery('') == undefined }" ><a href="#home" data-ng-click="$emit('filter', '')" data-toggle="tab">Todas</a></li>
-					    <li data-ng-class="{active: isActiveQuery('Nueva')}"><a href="#profile" data-ng-click="$emit('filter', 'Nueva')" data-toggle="tab">A Iniciar</a></li>
-					    <li data-ng-class="{active: isActiveQuery('En Curso')}"><a href="#profile" data-ng-click="$emit('filter', 'En Curso')" data-toggle="tab">En Curso</a></li>
-					    <li data-ng-class="{active: isActiveQuery('Terminada')}"><a href="#messages" data-ng-click="$emit('filter', 'Terminada')" data-toggle="tab">Terminadas</a></li>
-					    <li  data-ng-class="{active: isActiveQuery('Cerrada')}"><a href="#settings" data-ng-click="$emit('filter', 'Cerrada')" data-toggle="tab">Cerradas</a></li>
+						<li data-ng-class="{active: isActiveQuery('') == undefined }" ><a data-ng-click="$emit('filter', '')" data-toggle="tab">Todas</a></li>
+					    <li data-ng-class="{active: isActiveQuery('Nueva')}"><a data-ng-click="$emit('filter', 'Nueva')" data-toggle="tab">A Iniciar</a></li>
+					    <li data-ng-class="{active: isActiveQuery('En Curso')}"><a data-ng-click="$emit('filter', 'En Curso')" data-toggle="tab">En Curso</a></li>
+					    <li data-ng-class="{active: isActiveQuery('Terminada')}"><a data-ng-click="$emit('filter', 'Terminada')" data-toggle="tab">Terminadas</a></li>
+					    <li  data-ng-class="{active: isActiveQuery('Cerrada')}"><a data-ng-click="$emit('filter', 'Cerrada')" data-toggle="tab">Cerradas</a></li>
 		    	    </ul>
 				
 				</div>
 				<div class="span12 header-pagination">
 					<pager collection="tareas"  class="span6 pagination pagination-small"/>
-					<div class="span3 pull-right boton-nueva">
-						<a class="btn btn-small pull-right" id="nueva" data-ng-click="nuevaTarea()" data-toggle="modal" data-target="#edit"><i class="icon-pencil"></i>  Nueva</a>
-					</div>
+					<ng-switch on="filtro">
+						<div ng-switch-when="papelera" class="span3 pull-right boton-nueva">
+							<a class="btn btn-small btn-danger pull-right" id="vaciar" confirm-vaciar-papelera data-ng-transclude ><i class="icon-trash"></i>  Vaciar</a>
+						</div>
+						<div ng-switch-default class="span3 pull-right boton-nueva">
+							<a class="btn btn-small pull-right" id="nueva" data-ng-click="nuevaTarea(tareaSuperior)" data-toggle="modal" data-target="#edit"><i class="icon-plus"></i>  Nueva</a>
+						</div>
+					</ng-switch>
 					<div class="span11" data-ng-show="navigation">
 						<span><small>Viendo Subtareas de:</small></span>
 						<ul class="breadcrumb">
-							<li><a data-ng-click="changeFilter('todas')"><i class="icon-arrow-left"></i></a> <span class="divider">/</span></li>
+							<li><a data-ng-click="changeFilter(filtro)"><i class="icon-reply"></i></a> <span class="divider">/</span></li>
 							 <li data-ng-repeat="crumb in navigation"><a data-ng-click="addCrumb(crumb)">#{{crumb.id}}</a> <span class="divider">/</span></li>
 						</ul>
 					</div>
@@ -95,20 +107,16 @@
 			</div>
 			<div class="row-fluid span12 listado-tareas" >
 				<div class="row-fluid" data-ng-repeat="tarea in tareas._embedded.collection | filter: query | orderBy: sortBy" >
-						
 					<div id="tarea{{tarea.id}}" data-tooltip data-title="{{tarea.asunto}}" class="hoverDiv item-tareas" data-ng-mouseenter="showButtons=true" data-ng-mouseleave="showButtons=false" data-ng-class="{arrow_box: (detalle.id == tarea.id)}">
 						<div class="row-fluid span12 container-listado-titulo">
 							<span id="numero-tarea" class="numero-tarea muted"><small>#{{tarea.id}}</small></span>
 							<span id="titulo-tarea-{{tarea.id}}" class="listado-titulo has-tooltip muted" ><a href="" data-ng-click="verDetalleTarea(tarea)">{{tarea.asunto | cut:false:40}}</a></span>
-						
 							<span data-ng-class="{label : tarea.estado}" class="{{(tarea.estado | lowercase).split(' ').join('')}}">
 								{{tarea.estado}}
 							</span>
 							<span data-ng-class="{label : tarea.prioridad}" class="{{(tarea.prioridad | lowercase).split(' ').join('')}}">
 								{{tarea.prioridad}}
 							</span>
-							
-							
 						</div>
 						<div class="span12 container-listado-estado" style="margin-left: 2px;">
 							<span class="muted"><small><i class="icon-user"></i> {{tarea._embedded.responsable.username}} | </small></span>
@@ -117,14 +125,16 @@
 							<span class="muted" data-ng-show="tarea.fechaVencimiento"><small> - {{tarea.fechaVencimiento | date:'dd/MM/yyyy'}}</small></span>
 							<span class="muted" data-ng-hide="tarea.fechaVencimiento"><small> - Sin Vencimiento</small> </span> 
 							<span class="muted" data-ng-show="tarea._embedded.tipo"><small> | <i class="icon-tag"></i>  {{tarea._embedded.tipo.nombre}}</small> </span>
-							<span data-ng-show="tarea._embedded.tareasRelacionadas"><small class="muted"> | <i class="icon-arrow-down"></i> <a class="" data-ng-click="addCrumb(tarea)">{{tarea._embedded.tareasRelacionadas.length}} Subtareas </a></small></span>
-							<div class="pull-right" data-ng-show="showButtons" >
-								<div taskbuttons item="tarea" edit="editarTarea(tarea)" addsub="nuevaTarea(tarea)" addseg="editarSeguimiento(tarea)" delete="save(tarea)"></div>
-							</div>
-
+							<a link-subtareas filtro="filtro" tarea="tarea"></a>
+							<ng-switch on="filtro">
+								<div ng-switch-when="papelera" class="pull-right" data-ng-show="showButtons" >
+									<div taskbuttons item="tarea" alt="true" raiz="{{raiz}}" undo="restaurar(tarea)" delete="borrar(tarea)"></div>
+								</div>
+								<div ng-switch-default class="pull-right" data-ng-show="showButtons" >
+									<div taskbuttons alt="false" item="tarea" edit="editarTarea(tarea)" addsub="nuevaTarea(tarea)" addseg="editarSeguimiento(tarea)" delete="save(tarea)"></div>
+								</div>
+							</ng-switch>
 						</div>
-								
-						
 					</div>
 				</div>
 				<pager collection="tareas"  class="span6 pagination pagination-small footer-listado"/>

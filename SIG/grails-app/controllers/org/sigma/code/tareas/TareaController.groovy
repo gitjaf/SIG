@@ -26,17 +26,20 @@ class TareaController {
 
     def list() {
     	def list = [:]
+        def version = grailsApplication.metadata['app.version']
         
         if(params?.userId){
-    		list = (halCollectionBuilderService.buildRepresentation(tareaService.getTareas(params, params.userId),
-    		 request.getMethod(), params, [prepend:"/${params.userId}", append:""]))
-    		response.status = 200
-			
-    	} else {
-    		response.status = 401
-    	}
-
-		render list as JSON
+            list = (halCollectionBuilderService.buildRepresentation(tareaService.getTareas(params, params.userId),
+             request.getMethod(), params, [prepend:"/${params.userId}", append:""]))
+            response.status = 200
+            
+        } else {
+            response.status = 401
+        }
+        
+        list.data += [version: version]
+        
+        render list as JSON
     }
     
     def save() {
@@ -104,17 +107,18 @@ class TareaController {
             return
         }
 
-        try {
-            tareaInstance.delete(flush: true)
-			flash.message = message(code: 'default.deleted.message', args: [message(code: 'tarea.label', default: 'Tarea'), params.id])
-            response.status = 200
-			render flash.message
-        }
-        catch (DataIntegrityViolationException e) {
-			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'tarea.label', default: 'Tarea'), params.id])
-            response.status = 500
-			render flash.message
-        }
+        response.status = tareaService.deleteTarea(tareaInstance)
+        render 'ok';
+        
+    }
+
+    def vaciarPapelera() {
+
+        def respuesta = tareaService.vaciarPapelera(params.userId)
+
+        response.status = respuesta.status
+
+        render respuesta
     }
 	
 }

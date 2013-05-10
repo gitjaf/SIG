@@ -47,7 +47,7 @@ class Tarea {
 		estado(nullable: true)
 		prioridad(nullable: true)
 		tareaSuperior(nullable: true)
-		tareasRelacionadas(nullable: true)
+		tareasRelacionadas(nullable: true, cascade: 'all-delete-orphan')
 		borrado(nullable: false, blank: false, required: true)			
 	}
 	

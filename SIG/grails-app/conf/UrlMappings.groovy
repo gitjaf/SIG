@@ -3,7 +3,7 @@ class UrlMappings {
 	static mappings = {
 		
 		"/$controller"{
-			action = [GET: "list", POST: "save"]
+			action = [GET: "list", POST: "save", DELETE: "vaciarPapelera"]
 		}
 		
 		"/$controller/$id"{

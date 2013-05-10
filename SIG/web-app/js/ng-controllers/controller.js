@@ -1,12 +1,5 @@
 function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Usuario,
  Tarea, Tipo, Seguimiento, $document) {
-	
-	// var page = $routeParams.page ? $routeParams.page : 0;
-	// var items = $routeParams.itemsPerPage ? $routeParams.itemsPerPage : 10;
-	// var sortBy = $routeParams.sortBy ? $routeParams.sortBy : "fechaInicio";
-	// var query = $routeParams.q ? $routeParams.q : "";
-	// var filtro = $routeParams.filtro ? $routeParams.filtro : "todas";
-	// var idTarea = $routeParams.idTarea ? $routeParams.idTarea : "";
 
 	$rootScope.page = $routeParams.page ? $routeParams.page : 0;
 	$rootScope.items = $routeParams.itemsPerPage ? $routeParams.itemsPerPage : 10;
@@ -14,7 +7,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	$rootScope.query = $routeParams.q ? $routeParams.q : "";
 	$rootScope.filtro = $routeParams.filtro ? $routeParams.filtro : "todas";
 	$rootScope.idTarea = $routeParams.idTarea ? $routeParams.idTarea : "";
-
+	
 	$scope.safeApply = function(fn) {
   		var phase = this.$root.$$phase;
 		if(phase == '$apply' || phase == '$digest') {
@@ -29,102 +22,51 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	if($routeParams.userId){
 		$rootScope.userId = ($rootScope.userId != $routeParams.userId) ? $routeParams.userId : $rootScope.userId;
 		$rootScope.user = Usuario.get({"idUsuario": $rootScope.userId});
-		
-		$scope.tareas = Tarea.query({
-			"page": $rootScope.page,
-			"itemsPerPage" : $rootScope.items,
-			"sortBy": $rootScope.sortBy,
-			"q": $rootScope.query,
-			userId: $rootScope.userId,
-			filtro: $rootScope.filtro,
-			tareaSuperior: $rootScope.idTarea
-		});
-		
+		refresh();
+			
 	}
 
-	// $scope.hover = false;
-	// $scope.query = $rootScope.query;
-	// $scope.sortBy = $rootScope.sortBy;
+	$scope.$on('refresh', function(event){
+		refresh();
+	});
 
 	$scope.sort = function(field) {
 		$location.search("sortBy", field);
-		// $scope.tareas = Tarea.query({
-		// 	"page": $rootScope.page,
-		// 	"itemsPerPage" : $rootScope.items,
-		// 	"sortBy": field,
-		// 	"q": $rootScope.query,
-		// 	userId: $rootScope.userId,
-		// 	filtro: $rootScope.filtro,
-		// 	tareaSuperior: $rootScope.idTarea
-		// });
 		$rootScope.sortBy = field;
 	}
 
 	$scope.search = function(query){
-		// $rootScope.navigation = undefined;
-		// $routeParams.idTarea = "";
-		// $rootScope.idTarea = "";
 		$rootScope.query = query;
 		$location.search({q: $rootScope.query, page: 0});
-		
-		// $scope.tareas = Tarea.query({
-		// 	"page": 0,
-		// 	"itemsPerPage" : $rootScope.items,
-		// 	"sortBy": $rootScope.sortBy,
-		// 	"q": query,
-		// 	userId: $rootScope.userId,
-		// 	filtro: "todas",
-		// 	tareaSuperior: ""
-		// });
-
 	}
-
-
 
 	$scope.changeFilter = function(filterName){
 		var loc = $rootScope.userId + "/tarea" ; 
 		if(filterName){
-			loc = $rootScope.userId + "/" + filterName + "/tarea";
+			loc +=  "/" + filterName;
 		}
 		$location.url(loc);
-		// $scope.tareas = Tarea.query({
-		// 	"page": 0,
-		// 	"itemsPerPage" : $rootScope.items,
-		// 	"sortBy": $rootScope.sortBy,
-		// 	"q": "",
-		// 	userId: $rootScope.userId,
-		// 	filtro: filterName,
-		// 	tareaSuperior: ""
-		// });
+
 		$rootScope.filtro = filterName;
 		$rootScope.navigation = undefined;
 		$rootScope.query = "";
 		$scope.query = "";
+		$rootScope.tareaSuperior = undefined;
+		$rootScope.idTarea = undefined;
 	}
 
 	$scope.$on('filter', function(event, filter){
-		// var q = "/tarea" + (filter != '' ? ("?q=" + filter) : '')
-		// $location.url($rootScope.userId + q);
 		if(filter != ''){
 			$location.search({q: filter});
-			
 		} else{
 			$location.url($rootScope.userId + '/tarea' + '/' + $rootScope.idTarea);
 		}
-
-		// $scope.tareas = Tarea.query({
-		// 	"page": 0,
-		// 	"itemsPerPage" : $rootScope.items,
-		// 	"sortBy": $rootScope.sortBy,
-		// 	"q": filter,
-		// 	userId: $rootScope.userId,
-		// 	filtro: $rootScope.filtro,
-		// 	tareaSuperior: $rootScope.idTarea
-		// });
-		// $rootScope.query = filter;
-		// $scope.query = filter;
-		
+		$rootScope.raiz = true;
 	});
+
+	$scope.$on('addCrumb', function(event, args){
+		$scope.addCrumb(args.tarea);
+	})
 
 	$scope.isActive = function(item) {
 		if($rootScope.filtro){
@@ -149,21 +91,12 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 				list.splice(key);
 			}
 		});
-
+		$rootScope.raiz = undefined;
 		$rootScope.navigation.push(tarea);
-		$location.url(tarea._links.self.href);
+		$location.url(tarea._links.self.href+"/"+$rootScope.filtro);
 		$routeParams.page = 0;
-		// $scope.tareas = Tarea.query({
-		// 	"page": 0,
-		// 	"itemsPerPage" : $rootScope.items,
-		// 	"sortBy": $rootScope.sortBy,
-		// 	"q": $rootScope.query,
-		// 	userId: $rootScope.userId,
-		// 	filtro: $rootScope.filtro,
-		// 	tareaSuperior: tarea.id
-		// });
-
 		$rootScope.idTarea = tarea.id;
+		$rootScope.tareaSuperior = tarea;
 	}
 
 	$scope.nuevaTarea = function(tarea){
@@ -172,13 +105,17 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		$scope.showTiempo = false;
 		$scope.showAsigna = false;
 		$scope.showDesc = false;
+
 		if(!tarea){
+			$rootScope.idTarea = "";
 			crearTarea();
 		}else {
 			crearTarea();
 			crearSubTarea(tarea);
 		}
-		
+		angular.element('#edit').on('shown', function(){
+			angular.element('#form_asunto').focus();
+		})
 	}
 
 	$scope.editarTarea = function(t){
@@ -196,6 +133,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		$scope.dateVence = $scope.tarea.fechaVencimiento
 		$scope.showTiempo = !(_.isEmpty($scope.tarea.fechaInicio) && _.isEmpty($scope.tarea.fechaVencimiento));
 
+		$scope.tarea.idTareaSuperior = $rootScope.idTarea;
 		$scope.tarea.asignados = getProperty("asignados", $scope.tarea);
 		$scope.tarea.seguidores = getProperty("seguidores", $scope.tarea);
 		$scope.showAsigna = !(_.isEmpty($scope.tarea.asignados) && _.isEmpty($scope.tarea.seguidores));
@@ -207,11 +145,16 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	}
 
 	$scope.save = function(tarea){
+
 		var tareas = $scope.tareas._embedded.collection;
+		
+		var idTareaSuperior = $rootScope.idTarea;
+		
+		var restaurada = tarea.restaurada; 
 
 		$scope.tarea = new Tarea();
 		angular.copy(tarea, $scope.tarea);
-
+		$scope.tarea.idTareaSuperior = idTareaSuperior;
 		$scope.tarea.fechaInicio = $filter('date')($scope.tarea.fechaInicio, "dd/MM/yyyy");
 		$scope.tarea.fechaVencimiento = $filter('date')($scope.tarea.fechaVencimiento, "dd/MM/yyyy");
 
@@ -220,7 +163,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 			function(tarea, putResponseHeaders){
 				removeObject(tareas, tarea, "id");
 				if($scope.tareas._embedded.collection) {
-					if(!tarea.borrado){
+					if(!tarea.borrado && !restaurada){
 						$scope.tareas._embedded.collection.push(tarea);
 					} else {
 						$scope.tareas.data.total = $scope.tareas.data.total - 1;
@@ -228,7 +171,6 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 				} else {
 					$scope.tareas._embedded.collection = [tarea];
 				}
-				
 				var mensaje = "La tarea '" + tarea.asunto + "' fue editada con exito",
 				titulo = "Editar Tarea: ",
 				duracion = 4000,
@@ -243,9 +185,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 
 				$scope.alert(titulo, mensaje, tipo, duracion);	
 			});
-			
 		} else {
-			
 			$scope.tarea.$save(function(tarea, putResponseHeaders){
 				if(_($scope.tareas._embedded.collection).isEmpty()) {
 					$scope.tareas = Tarea.query({
@@ -258,10 +198,25 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 										tareaSuperior: $rootScope.idTarea
 									});
 				} else {
-					$scope.tareas._embedded.collection.push(tarea);
-					$scope.tareas.data.total = $scope.tareas.data.total + 1;
-				} 
+					var tareaSuperior;
+					if(idTareaSuperior){
+						 tareaSuperior = _($scope.tareas._embedded.collection).find( function(value) {
+						  return value.id == idTareaSuperior;
+						});
+					} 
 
+					if(tareaSuperior){
+						if(tareaSuperior._embedded.tareasRelacionadas){
+							tareaSuperior._embedded.tareasRelacionadas.push(tarea);
+						}else {
+							tareaSuperior._embedded.tareasRelacionadas = [tarea];
+						}
+						$scope.$broadcast('subtareaAgregada');
+					} else {
+						$scope.tareas._embedded.collection.push(tarea);
+						$scope.tareas.data.total = $scope.tareas.data.total + 1;
+					}
+				} 
 				
 				var mensaje = "La tarea '" + tarea.asunto + "' fue creada con exito",
 				titulo = "Crear Tarea: ",
@@ -279,6 +234,61 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 				$scope.alert(titulo, mensaje, tipo, duracion);
 			});
 		}
+	}
+
+	$scope.borrar = function(tarea){
+		var tareas = $scope.tareas._embedded.collection;
+
+		$scope.tarea = new Tarea();
+		angular.copy(tarea, $scope.tarea);
+
+		$scope.tarea.$delete({idTarea: $scope.tarea.id, userId: $rootScope.userId},
+			function(response, putResponseHeaders){
+				removeObject(tareas, tarea, "id");
+				$scope.tareas.data.total = $scope.tareas.data.total - 1;
+				
+				var mensaje = "La tarea '" + tarea.asunto + "' fue eliminada con exito del sistema",
+				titulo = "Eliminar Tarea Permanentemente: ",
+				duracion = 4000,
+				tipo = 'alert-success';
+				$scope.alert(titulo, mensaje, tipo, duracion);
+				
+			}, function(response, putResponseHeaders){
+				var mensaje = "Error al intentar eliminar la tarea '" + $scope.tarea.asunto + "'",
+				duracion = 4000,
+				titulo = "Eliminar Tarea Permanentemente: ",
+				tipo = 'alert-error';
+
+				$scope.alert(titulo, mensaje, tipo, duracion);	
+			});
+	}
+
+	$scope.vaciarPapelera = function(){
+		$scope.tareas.$vaciarPapelera({userId: $rootScope.userId},
+			function(response, putResponseHeaders){
+				var mensaje = "La papelera se vacio con exito",
+				titulo = "Vaciar Papelera: ",
+				duracion = 4000,
+				tipo = 'alert-success';
+				
+				$scope.alert(titulo, mensaje, tipo, duracion);
+				$scope.tareas._embedded.collection = [];		
+			},
+			function(response, putResponseHeaders){
+				var mensaje = "Error al intentar vaciar la papelera",
+				duracion = 4000,
+				titulo = "Vaciar Papelera: ",
+				tipo = 'alert-error';
+							
+				$scope.alert(titulo, mensaje, tipo, duracion);	
+			});
+
+	}
+
+	$scope.restaurar = function(tarea){
+		tarea.borrado = false;
+		tarea.restaurada = true;
+		$scope.save(tarea);
 	}
 
 	$scope.verDetalleTarea = function(tarea){
@@ -391,9 +401,21 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	}
 
 	function crearSubTarea(tarea){
+
 		$scope.tarea.idTareaSuperior = tarea.id;
+		$rootScope.idTarea = tarea.id
+
+		$scope.tarea.fechaInicio = $filter('date')(tarea.fechaInicio, "dd/MM/yyyy");
+		$scope.tarea.fechaVencimiento = $filter('date')(tarea.fechaVencimiento, "dd/MM/yyyy");
+		$scope.dateInicia = $scope.tarea.fechaInicio;
+		$scope.dateVence = $scope.tarea.fechaVencimiento;
+		$scope.showTiempo = !(_.isEmpty($scope.tarea.fechaInicio) && _.isEmpty($scope.tarea.fechaVencimiento));
+		$scope.tarea.tipo = getProperty("tipo", tarea);
+		$scope.showTipo = !(_.isEmpty($scope.tarea.tipo));
+		$rootScope.showDeleteTipo = true;
+
 		$scope.form_action = "Sub-Tarea de " + tarea.asunto;
-		
+
 	}
 
 	function getProperty(property, object){
@@ -402,6 +424,19 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		} else {
 			return [];
 		}
+
+	}
+
+	function refresh(){
+		$scope.tareas = Tarea.query({
+			"page": $rootScope.page,
+			"itemsPerPage" : $rootScope.items,
+			"sortBy": $rootScope.sortBy,
+			"q": $rootScope.query,
+			userId: $rootScope.userId,
+			filtro: $rootScope.filtro,
+			tareaSuperior: $rootScope.idTarea
+		});
 
 	}
 
@@ -426,6 +461,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 	$scope.tipos = Tipo.query({q: '', userId: ''});
 	
 	$scope.showAddTipo = false;
+	$scope.showEditTipo = false;
 	$scope.showDeleteTipo = false;
 	
 		
@@ -447,7 +483,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 				$scope.usuario = undefined;
 				$scope.id = undefined;
 			} else{
-				console.log($scope);
+				
 				$scope.message({
 					"element": elemento,
 					"title" : 'Asignar un usuario', 
@@ -470,6 +506,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 		$scope.clean(formElements);
 		$scope.nuevaTarea();
 		$scope.showAddTipo = false;
+		$scope.showEditTipo = false;
 		$scope.showDeleteTipo = false;
 	}
 
@@ -495,6 +532,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 				
 		if(isAdmin($rootScope.userId)){
 			$scope.showAddTipo = false;
+			$scope.showEditTipo = false;
 			$scope.showDeleteTipo = true;
 		}
 	}
@@ -508,9 +546,11 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 	$scope.checkTipo = function(tipo){
 		if(isValidTipo(tipo.nombre)){
 			$scope.showAddTipo = !$scope.checkForDuplicate("nombre", tipo.nombre, $scope.tipos);
+			$scope.showEditTipo = !$scope.checkForDuplicate("nombre", tipo.nombre, $scope.tipos);
 			$scope.showDeleteTipo = $scope.checkForDuplicate("nombre", tipo.nombre, $scope.tipos);
 		}else {
 			$scope.showAddTipo = false;
+			$scope.showEditTipo = false;
 			$scope.showDeleteTipo = false;
 		}
 	}
@@ -544,16 +584,51 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 	
 	}
 
+	$scope.editTipo = function(tipo){
+		var t = new Tipo(tipo);
+
+		t.$update({idTipo: tipo.id, userId: $rootScope.userId},
+			
+			function(t, putResponseHeaders){
+				$scope.message({
+					"element" : '#form_tipo',
+					"title" : 'Editar Clasificación',
+					"content" : 'Clasificación editada con éxito',
+					"timeout" : 3000,
+					"error" : false,
+					"delay" : 1000,
+					"trigger" : "manual"
+				});	
+				removeTipo(tipo);
+				addTipo(t);
+				if($rootScope.tareaSuperior){
+					$rootScope.tareaSuperior._embedded.tipo = t;
+				}
+				$scope.$emit('refresh');
+				
+			},
+
+			function(response, putResponseHeaders){
+				$scope.message({
+					"element" : '#form_tipo',
+					"title" : 'Editar Clasificación',
+					"content" : 'Error al intentar editar una clasificación',
+					"timeout" :  3000,
+					"error" : true,
+					"delay" : 1000,
+					"trigger" : "manual"
+				});
+			}
+		);
+
+		$scope.checkTipo($scope.tarea.tipo);
+	}
+
 	$scope.deleteTipo = function(tipo){
 		var t = new Tipo(tipo);
-		for (var i = 0; i < $scope.tipos.length; i++) {
-			if($scope.tipos[i].id == tipo.id){
-				$scope.tipos.splice(i, 1);
-				$scope.tarea.tipo.nombre = "";
-			}
-		};
-
+		
 		t.$delete({idTipo: tipo.id}, function(t, putResponseHeaders){
+			removeTipo(tipo);
 			$scope.message({
 				"element" : '#form_tipo',
 				"title" : 'Eliminar Clasificación',
@@ -565,6 +640,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 			});
 
 		}, function(response, putResponseHeaders){
+			
 			$scope.message({
 				"element" : '#form_tipo',
 				"title" : 'Eliminar Clasificación',
@@ -602,9 +678,16 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 	function addTipo(tipo){
 		$scope.tipos.push(tipo);
 		$scope.tarea.tipo = angular.copy(tipo);
-		
 	}
 	
+	function removeTipo(tipo){
+		for (var i = 0; i < $scope.tipos.length; i++) {
+			if($scope.tipos[i].id == tipo.id){
+				$scope.tipos.splice(i, 1);
+				$scope.tarea.tipo.nombre = "";
+			}
+		};
+	}
 
 }
 
@@ -622,4 +705,5 @@ function removeObject(collection, object, property){
 		}
 	};
 }
+
 

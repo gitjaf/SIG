@@ -26,7 +26,7 @@ directives.directive("pager", function($location) {
 
 directives.directive("taskbuttons", function() {
 	return {
-		scope: {item: '=item', edit:'&edit', addsub:'&addsub', addseg:'&addseg', del: '&delete'},
+		scope: {item: '=item', alt:'@alt', edit:'&edit', raiz:'@raiz', addsub:'&addsub', addseg:'&addseg', undo: '&undo', del: '&delete' },
 		restrict: 'A',
 		templateUrl: 'js/templates/task-buttons.html'
 		
@@ -208,13 +208,22 @@ directives.directive("confirmDeleteTarea", function() {
 		restrict: 'A',
 		transclude: true,
 		template: 	'<div id="modal-confirm-tarea" style="display: none">'+
-			    		'<h1>Eliminar Tarea</h1>' +
-			    		'<p>Esta acción eliminara la tarea del listado pero no del sistema.'+
-    					' Podra consultarla accediendo a la papelera.'+
-    					' ¿Confirma que desea enviar esta tarea a la papelera?</p>'+
+			    		'<h1>{{d2Titulo}}</h1>' +
+			    		'<p>{{d2Warn}}</p>'+
 					'</div>',
 		link: function(scope, element, attrs){
-			
+			if(scope.item.borrado){
+				scope.d2Titulo = 'Eliminar Tarea Permanentemente';
+				scope.d2Warn = 'Esta acción eliminara la tarea y sus subtareas del sistema permanentemente.'+
+    					' Los cambios no podran deshacerse.'+
+    					' ¿Confirma que desea realizar esta eliminación?';
+			} else {
+				scope.d2Titulo = 'Eliminar Tarea';
+				scope.d2Warn = 'Esta acción eliminara la tarea y sus subtareas del listado pero no del sistema.'+
+    					' Podra consultarla accediendo a la papelera.'+
+    					' ¿Confirma que desea enviar esta tarea a la papelera?';
+			}
+
 			//Eventos
 			element.on("click", function(){
 				angular.element("#modal-confirm-tarea").dialog2({
@@ -231,6 +240,7 @@ directives.directive("confirmDeleteTarea", function() {
 							click: function(){
 								scope.item.borrado = true;
 								scope.del(scope.item);//del es una funcion wrapper definida en la directiva taskbuttons
+								
 								angular.element('#confirm-delete-tarea').dialog2("close");
 							},
 							primary: false,
@@ -242,6 +252,91 @@ directives.directive("confirmDeleteTarea", function() {
 					removeOnClose: true, // Should the dialog be removed from the document when it is closed?
 					showCloseHandle: true, // Should a close handle be shown?
 				});
+			});
+		}
+		
+	}
+});
+
+directives.directive("confirmVaciarPapelera", function() {
+	return {
+		restrict: 'A',
+		transclude: true,
+		template: 	'<div id="modal-confirm-papelera" style="display: none">'+
+			    		'<h1>Vaciar Papelera</h1>' +
+			    		'<p>Esta a punto de eliminar todas las tareas que estan en la papelera permanentemente. '+
+			    		'Esta acción es irreversible.</p>'+
+			    		'<p>¿Confirma que desea eliminar todas las tareas?</p>'+
+					'</div>',
+		link: function(scope, element, attrs){
+			//Eventos
+			element.on("click", function(){
+				angular.element("#modal-confirm-papelera").dialog2({
+					id: "confirm-vaciar-papelera",
+					buttons: {
+						No: {
+							click: function(){
+								angular.element('#confirm-vaciar-papelera').dialog2("close");
+							},
+							primary: false,
+							type: "dialog-close"
+						},
+						Si: {
+							click: function(){
+								// _(scope.tareas._embedded.collection).each( function( value, key, list ) {
+								// 	scope.borrar(value);
+								// });
+								scope.vaciarPapelera();
+								angular.element('#confirm-vaciar-papelera').dialog2("close");
+								
+							},
+							primary: false,
+							type: "btn-danger"
+						}
+					},
+					closeOnOverlayClick: true, // Should the dialog be closed on overlay click?
+					closeOnEscape: true, // Should the dialog be closed if [ESCAPE] key is pressed?
+					removeOnClose: true, // Should the dialog be removed from the document when it is closed?
+					showCloseHandle: true, // Should a close handle be shown?
+				});
+			});
+
+		}
+		
+	}
+});
+
+directives.directive("linkSubtareas", function() {
+	return {
+		restrict: 'A',
+		replace: true,
+		scope: {filtro:'=filtro', tarea: '=tarea'},
+		template: 	'<span class="muted" data-ng-show="cantidad" ><small> | <i class="icon-arrow-down"></i> <a>{{texto}}</a></small></span>',
+		link: function(scope, element, attrs){
+			updateValues();
+			scope.$on("subtareaAgregada", function(){
+				updateValues();
+			});
+		
+			function updateValues(){
+				var texto = " Subtarea";
+				var borrado = (scope.filtro == 'papelera');
+
+				var coleccion = _(scope.tarea._embedded.tareasRelacionadas).filter( function(value) {
+					return value.borrado == borrado;
+				});
+				
+				var cantidad = coleccion.length;
+				
+				if(cantidad > 1){texto += 's'}
+				scope.cantidad = cantidad;
+				element.find('a').text(cantidad + texto);
+				
+			}
+			
+
+			element.on("click", function(){
+				scope.$emit('addCrumb', {tarea: scope.tarea})
 			});
 		}
 		

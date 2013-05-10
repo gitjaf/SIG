@@ -33,6 +33,7 @@
 				    			<input id="form_tipo" type="text" class="input-xlarge" data-ng-model="tarea.tipo.nombre" data-ng-change="checkTipo(tarea.tipo)" placeholder="Clasificación de la tarea">
 				    		</div>
 				    		<div class="span1" data-ng-show="showAddTipo"><button id="save_tipo" class="btn btn-success" data-ng-click="saveTipo(tarea.tipo.nombre)"><i class="icon-plus icon-white"></i></button></div>
+				    		<div class="span1" data-ng-show="showEditTipo"><button id="delete_tipo" class="btn btn-warning" data-ng-click="editTipo(tarea.tipo)"><i class="icon-pencil icon-white"></i></button></div>
 				    		<div class="span1" data-ng-show="showDeleteTipo"><button id="delete_tipo" class="btn btn-danger" data-ng-click="deleteTipo(tarea.tipo)"><i class="icon-trash icon-white"></i></button></div>
 				    		
 			    		</div>

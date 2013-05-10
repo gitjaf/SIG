@@ -15,6 +15,19 @@ class ClasificacionService {
     	return tipo
     }
 
+    def editarClasificacion(JSONObject json){
+        Clasificacion tipo = Clasificacion.get(json.idTipo as Integer)
+
+        tipo.nombre = json.nombre
+
+        if(!tipo.save(flush: true)){
+            return null
+        }
+
+        return tipo
+
+    }
+
     def borrarClasificacion(int id){
 
     	def clasificacionInstance = Clasificacion.get(id)

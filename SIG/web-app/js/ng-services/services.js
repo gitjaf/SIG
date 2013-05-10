@@ -1,5 +1,4 @@
 var services = angular.module('sig.services', ['ngResource'])
-	
 
 services.factory('Tarea', function($resource){
 	return $resource('/SIG/tarea/:idTarea', {}, 
@@ -7,8 +6,11 @@ services.factory('Tarea', function($resource){
 		query: {method: 'GET', params:{page: '@page', itemsPerPage: '@itemsPerPage',
 	 		sortBy: '@sortBy', q: '@q', userId:'@userId', filtro: '@filtro'}, isArray: false},
 	 	
-	 	update: {method: 'PUT', params:{idTarea: '@id', userId:'@userId'}}
-	
+	 	update: {method: 'PUT', params:{idTarea: '@id', userId:'@userId'}},
+
+	 	delete: {method: 'DELETE', params:{idTarea: '@id', userId: '@userId'}},
+		
+		vaciarPapelera: {method: 'DELETE', params:{userId: '@userId'}}
 	});
 });
 
@@ -23,7 +25,9 @@ services.factory('Usuario', function($resource){
 services.factory('Tipo', function($resource){
 	return $resource('/SIG/clasificacion/:idTipo', {},
 			{
-				query: {method: 'GET', params:{q: '@q', userId: '@userId'}, isArray: true}
+				query: {method: 'GET', params:{q: '@q', userId: '@userId'}, isArray: true},
+				
+				update: {method: 'PUT', params:{idTipo: '@idTipo', userId: '@userId'}}
 			});
 });
 
