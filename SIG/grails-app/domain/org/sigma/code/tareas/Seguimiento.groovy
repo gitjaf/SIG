@@ -23,7 +23,7 @@ class Seguimiento implements Comparable{
     static belongsTo = Tarea
     
     static mapping = {
-        table 'sig_grv_tar_seguimiento'
+        table 'sig_seguimientos'
 		descripcion type:'text'
     }
 

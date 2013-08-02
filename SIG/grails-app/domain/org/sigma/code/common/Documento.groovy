@@ -23,7 +23,7 @@ class Documento {
 	static belongsTo =  Tarea
 	
 	static mapping = {
-		table 'sig_grv_tar_documento'
+		table 'sig_documentos'
 		
 	}
 }

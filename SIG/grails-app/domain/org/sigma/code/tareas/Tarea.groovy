@@ -57,12 +57,12 @@ class Tarea {
 	
 	
 	static mapping = {
-		table 'sig_grv_tar_tarea'
+		table 'sig_tareas'
    
-		asignados column: 'id_tarea', joinTable: 'sig_grv_tar_usuario_asignadas'
-		seguidores column: 'id_tarea', joinTable: 'sig_grv_tar_usuario_seguidas'
-		documentos column: 'id_tarea', joinTable: 'sig_grv_tar_tareas_documentos'
-		seguimientos column: 'id_tarea', joinTable: 'sig_grv_tar_tareas_seguimientos'
+		asignados column: 'id_tarea', joinTable: 'sig_usuario_tareas_asignadas'
+		seguidores column: 'id_tarea', joinTable: 'sig_usuario_tareas_seguidas'
+		documentos column: 'id_tarea', joinTable: 'sig_tareas_documentos'
+		seguimientos column: 'id_tarea', joinTable: 'sig_tareas_seguimientos'
 		descripcion type: 'text'
 		
 		tipo lazy: false

@@ -6,16 +6,22 @@ grails.project.target.level = 1.6
 grails.project.source.level = 1.6
 //grails.project.war.file = "target/${appName}-${appVersion}.war"
 
+//Agregado por el error del la JDK1.7u25
+grails.project.fork = false
+
 // Useful to test plugins you are developing.
 grails.plugin.location.hal = "/home/julian/Documentos/Trabajo/git/grails-plugins/HAL/HAL/HAL"
 grails.plugin.location.halCollections = "/home/julian/Documentos/Trabajo/git/grails-plugins/HAL-Collections/HAL-Collections/HAL-Collections"
+
 
 grails.project.dependency.resolution = {
     // inherit Grails' default dependencies
     inherits("global") {
         // specify dependency exclusions here; for example, uncomment this to disable ehcache:
         // excludes 'ehcache'
+        
     }
+
     log "error" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     checksums true // Whether to verify checksums on resolve
 
@@ -37,9 +43,10 @@ grails.project.dependency.resolution = {
     }
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
+      
 
-        // runtime 'mysql:mysql-connector-java:5.1.20'
-        runtime 'postgresql:postgresql:9.0-801.jdbc4'
+        runtime 'mysql:mysql-connector-java:5.1.20'
+        // runtime 'postgresql:postgresql:9.0-801.jdbc4'
     }
 
     plugins {

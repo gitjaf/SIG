@@ -17,7 +17,7 @@ class Clasificacion {
     }
     
     static mapping = {
-        table 'sig_grv_tar_clasificacion'
+        table 'sig_tipos_tarea'
     }
     
     String toString(){

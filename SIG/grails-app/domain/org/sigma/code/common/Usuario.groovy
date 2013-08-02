@@ -5,6 +5,7 @@ import org.sigma.code.tareas.Tarea
 class Usuario {
 	int id
 	String username
+	String password
 	Persona persona
 	
 	static hasMany = [creadas : Tarea, asignadas : Tarea, seguidas : Tarea]
@@ -22,9 +23,9 @@ class Usuario {
 		id column: 'id'
 		username column: 'username'
 		persona column: 'id_persona', joinTable: 'sig_persona', lazy: false
-		creadas column: 'id_usuario', joinTable: 'sig_grv_tar_usuario_creadas'
-		asignadas column: 'id_usuario', joinTable: 'sig_grv_tar_usuario_asignadas'
-		seguidas column: 'id_usuario', joinTable: 'sig_grv_tar_usuario_seguidas'
+		creadas column: 'id_usuario', joinTable: 'sig_usuario_tareas_creadas'
+		asignadas column: 'id_usuario', joinTable: 'sig_usuario_tareas_asignadas'
+		seguidas column: 'id_usuario', joinTable: 'sig_usuario_tareas_seguidas'
 	}
 	
 	def halRepresenter = [title: username, embedded: ["persona"]]

@@ -1,6 +1,6 @@
 function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Usuario,
  Tarea, Tipo, Seguimiento, $document) {
-
+	
 	$rootScope.page = $routeParams.page ? $routeParams.page : 0;
 	$rootScope.items = $routeParams.itemsPerPage ? $routeParams.itemsPerPage : 10;
 	$rootScope.sortBy = $routeParams.sortBy ? $routeParams.sortBy : "fechaInicio";
@@ -29,6 +29,32 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	$scope.$on('refresh', function(event){
 		refresh();
 	});
+
+	$scope.changeDateEvent = function(elementID){
+		var t = $scope.tarea;
+
+		if(!(compararFechas(t.fechaInicio, t.fechaVencimiento))){
+			scope.invalidDate = true;
+			scope.message({
+				"element": elementID,
+				"title" : 'Fecha No Valida', 
+				"content" : 'La tarea no puede vencer o revisarse antes de iniciar',
+				"timeout" : 3000,
+				"error" : true,
+				"trigger" : "manual",
+				"delay" : 1000,
+				"unique": 1,
+				"action" :'show'
+			});
+		} else {
+			scope.invalidDate = false;
+			scope.message({
+				"element" : elementID,
+				"action" : "destroy"
+			});
+		}
+
+	}
 
 	$scope.sort = function(field) {
 		$location.search("sortBy", field);
@@ -129,8 +155,9 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 
 		$scope.tarea.fechaInicio = $filter('date')($scope.tarea.fechaInicio, "dd/MM/yyyy");
 		$scope.tarea.fechaVencimiento = $filter('date')($scope.tarea.fechaVencimiento, "dd/MM/yyyy");
-		$scope.dateInicia = $scope.tarea.fechaInicio
-		$scope.dateVence = $scope.tarea.fechaVencimiento
+		angular.copy($scope.tarea.fechaInicio, $scope.dateInicia);
+		angular.copy($scope.tarea.fechaVencimiento, $scope.dateVence);
+
 		$scope.showTiempo = !(_.isEmpty($scope.tarea.fechaInicio) && _.isEmpty($scope.tarea.fechaVencimiento));
 
 		$scope.tarea.idTareaSuperior = $rootScope.idTarea;
@@ -155,9 +182,10 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		$scope.tarea = new Tarea();
 		angular.copy(tarea, $scope.tarea);
 		$scope.tarea.idTareaSuperior = idTareaSuperior;
-		$scope.tarea.fechaInicio = $filter('date')($scope.tarea.fechaInicio, "dd/MM/yyyy");
-		$scope.tarea.fechaVencimiento = $filter('date')($scope.tarea.fechaVencimiento, "dd/MM/yyyy");
-
+				
+		$scope.tarea.fechaInicio = $filter('date')(tarea.fechaInicio, "dd/MM/yyyy");
+		$scope.tarea.fechaVencimiento = $filter('date')(tarea.fechaVencimiento, "dd/MM/yyyy");
+		
 		if($scope.tarea.id){
 			$scope.tarea.$update({idTarea: $scope.tarea.id, userId: $rootScope.userId},
 			function(tarea, putResponseHeaders){
@@ -344,6 +372,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 			"content": prop.content,
 			"trigger": prop.trigger,
 			"delay": prop.delay,
+			"unique": prop.unique,
 			"html" : true});
 		if(prop.action){
 			angular.element(prop.element).popover(prop.action);
@@ -440,8 +469,19 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 
 	}
 
+	function compararFechas(fechaMenor, fechaMayor){
+		fechaMenor = ($filter('date')(fechaMenor, "dd/MM/yyyy"));
+		fechaMayor = ($filter('date')(fechaMayor, "dd/MM/yyyy"));
+
+		if(fechaMenor == undefined || fechaMayor == undefined){
+			return true;
+		}
+		
+		return (fechaMenor <= fechaMayor);
+	}
 
 
+	
 }
 
 function DetalleTareaCtrl($scope, $routeParams, Tarea) {
@@ -456,6 +496,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 	var sort = "apellidos"
 	var q = ""
 
+
 	$scope.usuarios = Usuario.query({"page": page, "itemsPerPage": items, "sortBy": sort, "q": q});
 
 	$scope.tipos = Tipo.query({q: '', userId: ''});
@@ -463,6 +504,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 	$scope.showAddTipo = false;
 	$scope.showEditTipo = false;
 	$scope.showDeleteTipo = false;
+	
 	
 		
 	$scope.selectUser = function(k, v){
@@ -529,7 +571,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 
 	$scope.selectTipo = function(tipo){
 		$scope.tarea.tipo = angular.copy(tipo);
-				
+		
 		if(isAdmin($rootScope.userId)){
 			$scope.showAddTipo = false;
 			$scope.showEditTipo = false;

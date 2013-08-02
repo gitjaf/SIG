@@ -9,15 +9,17 @@ modules = {
 		resource url:'js/directives.js', disposition: 'head'
 		
 		resource url:'js/plugins/angular-underscore/angular-underscore.js', disposition: 'head'
+		resource url:'js/plugins/angular-strap/angular-strap.js', disposition: 'head'
 		resource url:'js/plugins/angular-ui/build/angular-ui.js', disposition: 'head'
-		resource url:'js/plugins/datepicker/js/bootstrap-datepicker.js', disposition: 'head'
+		resource url:'js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js', disposition: 'head'
+		resource url:'js/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js', disposition: 'head'
 		resource url:'js/plugins/fixes/typeaheadmap.js', disposition: 'head'
 		resource url:'js/plugins/dialogTwo/lib/jquery.dialog2.js', disposition: 'head'
 		resource url:'js/plugins/dialogTwo/lib/jquery.dialog2.helpers.js', disposition: 'head'
 
 		resource url:'css/custom.css', disposition:'head'
 		resource url:'js/plugins/angular-ui/build/angular-ui.css', disposition:'head'
-		resource url:'js/plugins/datepicker/css/datepicker.css', disposition:'head'
+		resource url:'js/plugins/bootstrap-datepicker/css/datepicker.css', disposition:'head'
 		resource url:'css/typeaheadmap.css', disposition: 'head'
 
 		

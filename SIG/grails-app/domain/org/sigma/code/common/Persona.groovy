@@ -13,7 +13,7 @@ class Persona {
 //   static belongsTo = [usuario : Usuario] 
     
     static mapping ={
-        table 'sig_persona'
+        table 'sig_personas'
         version false
         
         id column: 'id_persona'

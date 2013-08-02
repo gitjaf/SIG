@@ -3,13 +3,14 @@
 // in the classpath in ConfigSlurper format
 
 grails.config.locations = [ "classpath:${appName}-config.groovy",
-                            "file:${userHome}/.grails/${appName}-config.groovy",
-                            "file:${userHome}/.grails/${appName}-server-config.groovy"]
+                            // "file:${userHome}/.grails/${appName}-config.groovy",
+                            "file:${userHome}/.grails/${appName}-server-config.groovy"
+                          ]
 
 // if (System.properties["${appName}.config.location"]) {
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
-
+grails.app.context = '/'
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
 grails.mime.use.accept.header = false
@@ -58,8 +59,6 @@ grails.exceptionresolver.params.exclude = ['password']
 
 // configure auto-caching of queries by default (if false you can cache individual queries with 'cache: true')
 grails.hibernate.cache.queries = false
-
-
 
 
 environments {

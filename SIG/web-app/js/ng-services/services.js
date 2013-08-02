@@ -1,7 +1,7 @@
 var services = angular.module('sig.services', ['ngResource'])
 
 services.factory('Tarea', function($resource){
-	return $resource('/SIG/tarea/:idTarea', {}, 
+	return $resource('/tarea/:idTarea', {}, 
 	{
 		query: {method: 'GET', params:{page: '@page', itemsPerPage: '@itemsPerPage',
 	 		sortBy: '@sortBy', q: '@q', userId:'@userId', filtro: '@filtro'}, isArray: false},
@@ -15,7 +15,7 @@ services.factory('Tarea', function($resource){
 });
 
 services.factory('Usuario', function($resource){
-	return $resource('/SIG/usuario/:idUsuario', {},
+	return $resource('/usuario/:idUsuario', {},
 		{
 			query: {method: 'GET', params: {page: '@page', itemsPerPage: '@itemsPerPage',
 	 			sortBy: '@sortBy', q: '@q'}, isArray: true}
@@ -23,7 +23,7 @@ services.factory('Usuario', function($resource){
 });
 
 services.factory('Tipo', function($resource){
-	return $resource('/SIG/clasificacion/:idTipo', {},
+	return $resource('/clasificacion/:idTipo', {},
 			{
 				query: {method: 'GET', params:{q: '@q', userId: '@userId'}, isArray: true},
 				
@@ -32,7 +32,7 @@ services.factory('Tipo', function($resource){
 });
 
 services.factory('Seguimiento', function($resource){
-	return $resource('/SIG/seguimiento/:idSeguimiento',{},
+	return $resource('/seguimiento/:idSeguimiento',{},
 	{
 		query: {method: 'GET', params:{q: '@q', userId: '@userId'}, isArray: true},
 

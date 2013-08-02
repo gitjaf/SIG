@@ -51,10 +51,10 @@
 			    </div>
 			    <div class="row-fluid" data-ng-class="{in: showTiempo, collapse: !showTiempo}" ui-toggle="showTiempo" id="tiempo">
 			    	<div class="span12">
-				    	<div class="span2 span2-5">
+				    	<div class="span2 span2-5" data-ng-class="{invalid: invalidDate}">
 				    		<label>Inicia</label>
 				    		<div id="dp_inicio" class="input-append span10" >
-				    			<input id="form_inicio" type="text" class="span12" placeholder="Inicia el" data-ng-model="dateInicia" data-date-format="dd/mm/yyyy" readonly>
+				    			<input id="form_inicio" type="text" class="span12" placeholder="Inicia el" ng-model="tarea.fechaInicio" data-date-format="dd/mm/yyyy" bs-datepicker data-language="es" data-unique="1" data-ng-change="changeDateEvent('#form_inicio')">
 				    			<span class="add-on" data-ng-click="clearDate('#form_inicio', 'fechaInicio')"><i class="icon-trash"></i></span>
 				    			
 				    		</div>
@@ -62,7 +62,7 @@
 				    	<div class="span2 span2-5" data-ng-class="{invalid: invalidDate}">
 				    		<label>Vence</label>
 				    		<div id="dp_vence" class="input-append span10" >
-				    			<input id="form_vence" type="text" class="span12" placeholder="Vence el" data-ng-model="dateVence" data-date-format="dd/mm/yyyy" readonly>
+				    			<input id="form_vence" type="text" class="span12" placeholder="Vence el" data-ng-model="tarea.fechaVencimiento" data-unique="1" data-date-format="dd/mm/yyyy" bs-datepicker data-language="es" data-ng-change="changeDateEvent('#form_vence')">
 				    			<span id="add_on_vence"class="add-on"  data-ng-click="clearDate('#form_vence', 'fechaVencimiento')"><i class="icon-trash"></i></span>
 				    			
 				    		</div>
@@ -175,55 +175,55 @@
 <script type="text/javascript">
 	var scope = angular.element('#form_asigna').scope();
 
-	jQuery('#form_inicio').datepicker('place').on('changeDate', function(ev){
-		if(scope.tarea.fechaVencimiento < ev.date.valueOf()){
-			scope.invalidDate = true;
-			scope.message({
-				"element":'#add_on_vence',
-				"title" : 'Fecha No Valida', 
-				"content" : 'La tarea vence antes de iniciar',
-				"timeout" : 3000,
-				"error" : true,
-				"trigger" : "manual",
-				"delay" : 1000,
-				"action" :'show'
-			});
-			scope.$apply();
-		} else {
-			scope.invalidDate = false;
-			scope.message({
-				"element":'#add_on_vence',
-				"action" :'destroy'
-			});
-			scope.$apply();
-		}
-		scope.tarea.fechaInicio = ev.date.valueOf();
-	})
+	// jQuery('#form_inicio').datepicker('place').on('changeDate', function(ev){
+	// 	if(scope.tarea.fechaVencimiento < ev.date.valueOf()){
+	// 		scope.invalidDate = true;
+	// 		scope.message({
+	// 			"element":'#add_on_vence',
+	// 			"title" : 'Fecha No Valida', 
+	// 			"content" : 'La tarea vence antes de iniciar',
+	// 			"timeout" : 3000,
+	// 			"error" : true,
+	// 			"trigger" : "manual",
+	// 			"delay" : 1000,
+	// 			"action" :'show'
+	// 		});
+	// 		scope.$apply();
+	// 	} else {
+	// 		scope.invalidDate = false;
+	// 		scope.message({
+	// 			"element":'#add_on_vence',
+	// 			"action" :'destroy'
+	// 		});
+	// 		scope.$apply();
+	// 	}
+	// 	scope.tarea.fechaInicio = ev.date.valueOf();
+	// })
 
-	jQuery('#form_vence').datepicker('place').on('changeDate', function(ev){
-		if(scope.tarea.fechaInicio > ev.date.valueOf()){
-			scope.invalidDate = true;
-			scope.message({
-				"element":'#add_on_vence',
-				"title" : 'Fecha No Valida', 
-				"content" : 'La tarea vence antes de iniciar',
-				"timeout" : 3000,
-				"error" : true,
-				"trigger" : "manual",
-				"delay" : 1000,
-				"action" :'show'
-			});
-			scope.$apply();
-		} else {
-			scope.invalidDate = false;
-			scope.message({
-				"element":'#add_on_vence',
-				"action" :'destroy'
-			});
-			scope.$apply();
-		}
-		scope.tarea.fechaVencimiento = ev.date.valueOf();
-	})
+	// jQuery('#form_vence').datepicker('place').on('changeDate', function(ev){
+	// 	if(scope.tarea.fechaInicio > ev.date.valueOf()){
+	// 		scope.invalidDate = true;
+	// 		scope.message({
+	// 			"element":'#add_on_vence',
+	// 			"title" : 'Fecha No Valida', 
+	// 			"content" : 'La tarea vence antes de iniciar',
+	// 			"timeout" : 3000,
+	// 			"error" : true,
+	// 			"trigger" : "manual",
+	// 			"delay" : 1000,
+	// 			"action" :'show'
+	// 		});
+	// 		scope.$apply();
+	// 	} else {
+	// 		scope.invalidDate = false;
+	// 		scope.message({
+	// 			"element":'#add_on_vence',
+	// 			"action" :'destroy'
+	// 		});
+	// 		scope.$apply();
+	// 	}
+	// 	scope.tarea.fechaVencimiento = ev.date.valueOf();
+	// })
 
 	jQuery('#form_asigna').typeaheadmap({
 		"source": scope.usuarios,
