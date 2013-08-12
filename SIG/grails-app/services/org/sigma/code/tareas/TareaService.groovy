@@ -212,6 +212,8 @@ class TareaService {
         tarea.descripcion = json.descripcion
         
         tarea.fechaInicio = json.fechaInicio ? Date.parse("dd/MM/yyyy", json.fechaInicio) : null 
+
+        tarea.fechaRevision = json.fechaRevision ? Date.parse("dd/MM/yyyy", json.fechaRevision) : null
         
         tarea.fechaVencimiento = json.fechaVencimiento ? Date.parse("dd/MM/yyyy", json.fechaVencimiento) : null 
        

@@ -1,5 +1,5 @@
 function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Usuario,
- Tarea, Tipo, Seguimiento, $document) {
+ Tarea, Tipo, Seguimiento, Resource, $document) {
 	
 	$rootScope.page = $routeParams.page ? $routeParams.page : 0;
 	$rootScope.items = $routeParams.itemsPerPage ? $routeParams.itemsPerPage : 10;
@@ -30,31 +30,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		refresh();
 	});
 
-	$scope.changeDateEvent = function(elementID){
-		var t = $scope.tarea;
-
-		if(!(compararFechas(t.fechaInicio, t.fechaVencimiento))){
-			scope.invalidDate = true;
-			scope.message({
-				"element": elementID,
-				"title" : 'Fecha No Valida', 
-				"content" : 'La tarea no puede vencer o revisarse antes de iniciar',
-				"timeout" : 3000,
-				"error" : true,
-				"trigger" : "manual",
-				"delay" : 1000,
-				"unique": 1,
-				"action" :'show'
-			});
-		} else {
-			scope.invalidDate = false;
-			scope.message({
-				"element" : elementID,
-				"action" : "destroy"
-			});
-		}
-
-	}
+	
 
 	$scope.sort = function(field) {
 		$location.search("sortBy", field);
@@ -154,6 +130,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		$scope.showTipo = !(_.isEmpty($scope.tarea.tipo));
 
 		$scope.tarea.fechaInicio = $filter('date')($scope.tarea.fechaInicio, "dd/MM/yyyy");
+		$scope.tarea.fechaRevision = $filter('date')($scope.tarea.fechaRevision, "dd/MM/yyyy");
 		$scope.tarea.fechaVencimiento = $filter('date')($scope.tarea.fechaVencimiento, "dd/MM/yyyy");
 		angular.copy($scope.tarea.fechaInicio, $scope.dateInicia);
 		angular.copy($scope.tarea.fechaVencimiento, $scope.dateVence);
@@ -184,9 +161,11 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		$scope.tarea.idTareaSuperior = idTareaSuperior;
 				
 		$scope.tarea.fechaInicio = $filter('date')(tarea.fechaInicio, "dd/MM/yyyy");
+		$scope.tarea.fechaRevision = $filter('date')($scope.tarea.fechaRevision, "dd/MM/yyyy");
 		$scope.tarea.fechaVencimiento = $filter('date')(tarea.fechaVencimiento, "dd/MM/yyyy");
 		
 		if($scope.tarea.id){
+			console.log($scope.tarea);
 			$scope.tarea.$update({idTarea: $scope.tarea.id, userId: $rootScope.userId},
 			function(tarea, putResponseHeaders){
 				removeObject(tareas, tarea, "id");
@@ -369,6 +348,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 
 		angular.element(prop.element).popover({
 			"title": prop.title,
+			"placement": prop.position,
 			"content": prop.content,
 			"trigger": prop.trigger,
 			"delay": prop.delay,
@@ -416,6 +396,62 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 			});
 	}
 
+	$scope.changeDateEvent = function(elementID){
+		var t = $scope.tarea;
+		
+		destroyDateWarnings('#fechaInicio');
+		destroyDateWarnings('#fechaRevision');
+		destroyDateWarnings('#fechaVencimiento');
+		
+		if(!(compararFechas(t.fechaInicio, t.fechaVencimiento))){
+			scope.invalidDate = true;
+			scope.message({
+				"element": '#fechaVencimiento',
+				"title" : 'Fecha No Valida', 
+				"position": 'top',
+				"content" : 'La tarea no puede vencer o revisarse antes de iniciar',
+				"timeout" : 3000,
+				"error" : true,
+				"trigger" : "manual",
+				"delay" : 1000,
+				"unique": 1,
+				"action" :'show'
+			});
+		} 
+		
+		if(!(compararFechas(t.fechaRevision, t.fechaVencimiento))){
+			scope.invalidDate = true;
+			scope.message({
+				"element": "#fechaVencimiento",
+				"title" : 'Fecha No Valida', 
+				"position": 'top',
+				"content" : 'La tarea no puede vencer o revisarse antes de iniciar',
+				"timeout" : 3000,
+				"error" : true,
+				"trigger" : "manual",
+				"delay" : 1000,
+				"unique": 1,
+				"action" :'show'
+			});
+		}
+
+		if(!(compararFechas(t.fechaInicio, t.fechaRevision))){
+			scope.invalidDate = true;
+			scope.message({
+				"element": "#fechaRevision",
+				"title" : 'Fecha No Valida',
+				"position": 'bottom', 
+				"content" : 'La tarea no puede vencer o revisarse antes de iniciar',
+				"timeout" : 3000,
+				"error" : true,
+				"trigger" : "manual",
+				"delay" : 1000,
+				"unique": 1,
+				"action" :'show'
+			});
+		} 
+
+	}
 
 	function crearTarea(){
 		$scope.tarea = new Tarea();
@@ -457,7 +493,9 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	}
 
 	function refresh(){
-		$scope.tareas = Tarea.query({
+		var url = '/tarea';
+
+		$scope.tareas = Resource.getResource(url).query({
 			"page": $rootScope.page,
 			"itemsPerPage" : $rootScope.items,
 			"sortBy": $rootScope.sortBy,
@@ -465,21 +503,60 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 			userId: $rootScope.userId,
 			filtro: $rootScope.filtro,
 			tareaSuperior: $rootScope.idTarea
-		});
+			});
+
+		// $resource(url, {}, 
+		// 	{
+		// 		query: {method: 'GET', params:{page: '@page', itemsPerPage: '@itemsPerPage',
+		// 	 		sortBy: '@sortBy', q: '@q', userId:'@userId', filtro: '@filtro'}, isArray: false},
+			 	
+		// 	 	update: {method: 'PUT', params:{idTarea: '@id', userId:'@userId'}},
+
+		// 	 	delete: {method: 'DELETE', params:{idTarea: '@id', userId: '@userId'}},
+				
+		// 		vaciarPapelera: {method: 'DELETE', params:{userId: '@userId'}}
+		// 	}).query({
+		// 		"page": $rootScope.page,
+		// 		"itemsPerPage" : $rootScope.items,
+		// 		"sortBy": $rootScope.sortBy,
+		// 		"q": $rootScope.query,
+		// 		userId: $rootScope.userId,
+		// 		filtro: $rootScope.filtro,
+		// 		tareaSuperior: $rootScope.idTarea
+		// 	});
+
+
+
+		// $scope.tareas = Tarea.query({
+		// 	"page": $rootScope.page,
+		// 	"itemsPerPage" : $rootScope.items,
+		// 	"sortBy": $rootScope.sortBy,
+		// 	"q": $rootScope.query,
+		// 	userId: $rootScope.userId,
+		// 	filtro: $rootScope.filtro,
+		// 	tareaSuperior: $rootScope.idTarea
+		// });
 
 	}
 
 	function compararFechas(fechaMenor, fechaMayor){
 		fechaMenor = ($filter('date')(fechaMenor, "dd/MM/yyyy"));
 		fechaMayor = ($filter('date')(fechaMayor, "dd/MM/yyyy"));
-
+		console.log(fechaMenor," - ", fechaMayor);
 		if(fechaMenor == undefined || fechaMayor == undefined){
 			return true;
 		}
-		
+		console.log(fechaMenor <= fechaMayor);
 		return (fechaMenor <= fechaMayor);
 	}
 
+	function destroyDateWarnings(elementID){
+		scope.message({
+			element: elementID,
+			action: 'destroy'
+		});
+		scope.invalidDate = false;
+	}
 
 	
 }

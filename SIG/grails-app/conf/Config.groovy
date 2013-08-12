@@ -3,7 +3,7 @@
 // in the classpath in ConfigSlurper format
 
 grails.config.locations = [ "classpath:${appName}-config.groovy",
-                            // "file:${userHome}/.grails/${appName}-config.groovy",
+                            "file:${userHome}/.grails/${appName}-config.groovy",
                             "file:${userHome}/.grails/${appName}-server-config.groovy"
                           ]
 

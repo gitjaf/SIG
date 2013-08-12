@@ -20,6 +20,7 @@ class Tarea {
 	String descripcion
 	Date fechaInicio
 	Date fechaVencimiento
+	Date fechaRevision
 	String estado
 	String prioridad
 	Tarea tareaSuperior
@@ -43,6 +44,7 @@ class Tarea {
 		descripcion(nullable: true, blank: true)
 		fechaInicio(nullable: true, blank: false)
 		fechaVencimiento(nullable: true, blank: false)
+		fechaRevision(nullable: true, blank: false)
 		tipo(nullable: true, blank: false)
 		estado(nullable: true)
 		prioridad(nullable: true)

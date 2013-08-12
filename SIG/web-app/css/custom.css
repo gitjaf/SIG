@@ -660,7 +660,7 @@ li.ui-animate {
 
 }
 
-.row-fluid.span12.
+
 
 .cliptext{
 	overflow: hidden;
@@ -709,4 +709,8 @@ li.ui-animate {
 	top: 50%;
 	right: -5.3%;
 	margin-top: -26px;
+}
+
+.row-fluid [class*="span"].no-margin-left{
+	margin-left: 0px !important;
 }

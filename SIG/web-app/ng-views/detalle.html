@@ -10,7 +10,9 @@
 				<span class="detalle muted">Seguimientos</span>
 				<span class="detalle muted">Subtareas</span>
 			</div> -->
+		
 		</div>
+
 		<div class="span12 detalle-estado">
 			<div >
 				<span class="detalle-fecha"><i class="icon-calendar txt-orange"></i> Inicia: 
@@ -21,18 +23,22 @@
 
 			</div>
 			<div >
-				<span class="detalle-fecha"><i class="icon-calendar txt-orange"></i> Vence: {{detalle.fechaVencimiento |date: 'fullDate'}} <small class="muted" data-ng-hide="detalle.fechaVencimiento">Sin Vencimiento</small></span>
+				<span class="detalle-fecha"><i class="icon-calendar txt-orange"></i> Revisión: {{detalle.fechaRevision |date: 'fullDate'}} <small class="muted" data-ng-hide="detalle.fechaRevision">Sin Revisión</small></span>
 				<span class="detalle-titulo"><i class="icon-flag txt-orange"></i> Prioridad: </span>
 				<span data-ng-class="{label : detalle.prioridad}" class="{{(detalle.prioridad | lowercase).split(' ').join('')}} detalle-label">{{detalle.prioridad}}
 				</span>
 
 			</div>
-			<div>
+			<div >
+				<span class="detalle-fecha"><i class="icon-calendar txt-orange"></i> Vence: {{detalle.fechaVencimiento |date: 'fullDate'}} <small class="muted" data-ng-hide="detalle.fechaVencimiento">Sin Vencimiento</small></span>
 				<span class="detalle-tipo"><i class="icon-tag txt-orange"></i> Clasificada: {{detalle._embedded.tipo.nombre}}</span>
-				<span class="detalle-responsable pull-right"><i class="icon-user txt-orange"></i> Creada por: {{detalle._embedded.responsable._embedded.persona.nombres}} {{detalle._embedded.responsable._embedded.persona.apellidos}} </span>
 			</div>
+			
 		</div>
 		<div class="span12 body-detalles">
+			<div id="creador" class="span11 detalle-asignados">
+				<span class="detalle-responsable"><i class="icon-user txt-orange"></i> Creada por: {{detalle._embedded.responsable._embedded.persona.nombres}} {{detalle._embedded.responsable._embedded.persona.apellidos}} </span>
+			</div>
 			<div id="asignados" class="span11 detalle-asignados" data-ng-show="detalle._embedded.asignados">
 				<i class="icon-group txt-orange"></i>  Asignados:<br>
 				<div>

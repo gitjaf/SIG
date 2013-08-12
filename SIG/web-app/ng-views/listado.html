@@ -120,9 +120,11 @@
 						</div>
 						<div class="span12 container-listado-estado" style="margin-left: 2px;">
 							<span class="muted"><small><i class="icon-user"></i> {{tarea._embedded.responsable.username}} | </small></span>
-							<span class="muted" data-ng-show="tarea.fechaInicio"><small><i class="icon-calendar"></i> {{tarea.fechaInicio | date:'dd/MM/yyyy'}}</small></span>
-							<span class="muted" data-ng-hide="tarea.fechaInicio"><small><i class="icon-calendar"></i> Sin Inicio</small></span> 
-							<span class="muted" data-ng-show="tarea.fechaVencimiento"><small> - {{tarea.fechaVencimiento | date:'dd/MM/yyyy'}}</small></span>
+							<span class="muted" data-ng-show="tarea.fechaInicio"><small><i class="icon-calendar"></i> I: {{tarea.fechaInicio | date:'dd/MM/yyyy'}}</small></span>
+							<span class="muted" data-ng-hide="tarea.fechaInicio"><small><i class="icon-calendar"></i> Sin Inicio</small></span>
+							<span class="muted" data-ng-show="tarea.fechaVencimiento"><small> - R: {{tarea.fechaRevision | date:'dd/MM/yyyy'}}</small></span>
+							<span class="muted" data-ng-hide="tarea.fechaVencimiento"><small> - Sin Revision</small> </span> 
+							<span class="muted" data-ng-show="tarea.fechaVencimiento"><small> - V: {{tarea.fechaVencimiento | date:'dd/MM/yyyy'}}</small></span>
 							<span class="muted" data-ng-hide="tarea.fechaVencimiento"><small> - Sin Vencimiento</small> </span> 
 							<span class="muted" data-ng-show="tarea._embedded.tipo"><small> | <i class="icon-tag"></i>  {{tarea._embedded.tipo.nombre}}</small> </span>
 							<a link-subtareas filtro="filtro" tarea="tarea"></a>
