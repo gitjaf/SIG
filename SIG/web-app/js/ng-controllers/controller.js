@@ -1,3 +1,14 @@
+function AppCtrl($rootScope, $location, $routeParams, AuthService){
+	AuthService.authenticate($rootScope, $location);
+}
+
+function LoginCtrl($scope, $rootScope, $routeParams, $location, Usuario) {
+	
+	$scope.login = function(){
+		$location.url('/1/tarea');
+	}
+}
+
 function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Usuario,
  Tarea, Tipo, Seguimiento, Resource, $document) {
 	

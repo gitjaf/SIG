@@ -1,5 +1,32 @@
 var services = angular.module('sig.services', ['ngResource'])
 
+services.factory('AuthService', function(UsuarioService){
+	return{
+		authenticate: function(rootScope, location){
+			rootScope.$on('$routeChangeStart', function(event, currRoute, prevRoute){
+								
+				if(!prevRoute){
+					location.url("/login");
+				} else{
+					if(!currRoute.access.isFree && !UsuarioService.isLogged()){
+						location.url("/login");
+					} 
+				}
+				
+
+			});
+		}
+	}
+})
+
+services.factory('UsuarioService', function(){
+	return{
+		isLogged: function(){
+			return true;
+		}
+	}
+});
+
 services.factory('Resource', function($resource){
 	
 	return {

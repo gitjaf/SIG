@@ -11,12 +11,49 @@ if (typeof jQuery !== 'undefined') {
 angular.module('sig', ['sig.services', 'sig.directives', 'ui', 'angular-underscore', '$strap']).
 config(['$routeProvider', function($routeProvider) {
 	$routeProvider.
-	when('/:userId/tarea', {templateUrl: './ng-views/listado.html', controller: ListaTareaCtrl}).
-	when('/:userId/edit', {templateUrl: './ng-views/form.html', controller: FormTareaCtrl}).
-	when('/:userId/tarea/:filtro', {templateUrl: './ng-views/listado.html', controller: ListaTareaCtrl}).
-    when('/:userId/tarea/:idTarea', {templateUrl: './ng-views/listado.html', controller: ListaTareaCtrl}).
-    when('/:userId/tarea/:idTarea/:filtro', {templateUrl: './ng-views/listado.html', controller: ListaTareaCtrl}).
-	otherwise({redirectTo: function(params, path, search){
+	when('/login', {
+        templateUrl: './ng-views/login.html',
+        controller: LoginCtrl,
+        access: {
+            isFree: true
+        }
+    }).
+    
+    when('/:userId/tarea', {
+        templateUrl: './ng-views/listado.html',
+        controller: ListaTareaCtrl,
+        access: {
+            isFree: false
+        }
+        
+    }).
+    // when('/:userId/edit', {templateUrl: './ng-views/form.html', controller: FormTareaCtrl}).
+	
+    when('/:userId/tarea/:filtro', {
+        templateUrl: './ng-views/listado.html', 
+        controller: ListaTareaCtrl,
+        access: {
+            isFree: false
+        }
+    }).
+    
+    when('/:userId/tarea/:idTarea', {
+        templateUrl: './ng-views/listado.html', 
+        controller: ListaTareaCtrl,
+        access: {
+            isFree: false
+        }
+    }).
+    
+    when('/:userId/tarea/:idTarea/:filtro', {
+        templateUrl: './ng-views/listado.html', 
+        controller: ListaTareaCtrl,
+        access: {
+            isFree: false
+        }
+    }).
+	
+    otherwise({redirectTo: function(params, path, search){
 		return (path + "tarea");
 	}});
 }]);

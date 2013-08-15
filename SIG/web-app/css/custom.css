@@ -1,5 +1,32 @@
 body{
 	background-color: #F5F5F5;
+	font-family: Lato;
+}
+
+.form-login{
+	position: relative;
+	margin-top: 12%;
+}
+
+.login{
+	background-color: white;
+	border-radius: 5px;
+	-webkit-box-shadow:  4px 4px 6px 2px silver;
+    box-shadow:  4px 4px 6px 2px silver;
+}
+
+.login-title{
+	text-align: center;
+}
+
+.login .form-actions{
+	background-color: white;
+	margin: 0px;
+	border-radius: 5px;
+}
+
+.login .alert{
+	border-radius: 0px;
 }
 
 .hoverDiv {
