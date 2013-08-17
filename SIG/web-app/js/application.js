@@ -19,7 +19,7 @@ config(['$routeProvider', function($routeProvider) {
         }
     }).
     
-    when('/:userId/tarea', {
+    when('/tarea', {
         templateUrl: './ng-views/listado.html',
         controller: ListaTareaCtrl,
         access: {
@@ -29,7 +29,7 @@ config(['$routeProvider', function($routeProvider) {
     }).
     // when('/:userId/edit', {templateUrl: './ng-views/form.html', controller: FormTareaCtrl}).
 	
-    when('/:userId/tarea/:filtro', {
+    when('/tarea/:filtro', {
         templateUrl: './ng-views/listado.html', 
         controller: ListaTareaCtrl,
         access: {
@@ -37,7 +37,7 @@ config(['$routeProvider', function($routeProvider) {
         }
     }).
     
-    when('/:userId/tarea/:idTarea', {
+    when('/tarea/:idTarea', {
         templateUrl: './ng-views/listado.html', 
         controller: ListaTareaCtrl,
         access: {
@@ -45,7 +45,7 @@ config(['$routeProvider', function($routeProvider) {
         }
     }).
     
-    when('/:userId/tarea/:idTarea/:filtro', {
+    when('/tarea/:idTarea/:filtro', {
         templateUrl: './ng-views/listado.html', 
         controller: ListaTareaCtrl,
         access: {
@@ -54,7 +54,7 @@ config(['$routeProvider', function($routeProvider) {
     }).
 	
     otherwise({redirectTo: function(params, path, search){
-		return (path + "tarea");
+        return (path + "tarea");
 	}});
 }]);
 

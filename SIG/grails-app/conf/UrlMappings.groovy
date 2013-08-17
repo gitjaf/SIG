@@ -2,6 +2,10 @@ class UrlMappings {
 
 	static mappings = {
 		
+		"/login"(controller: "login"){
+			action = [GET: "getStatus", POST: "login"]
+		}
+
 		"/$controller"{
 			action = [GET: "list", POST: "save", DELETE: "vaciarPapelera"]
 		}
@@ -11,6 +15,7 @@ class UrlMappings {
 		}
 		
 		"/"(view:'/index')
+
 		"500"(view:'/error')
 	}
 }

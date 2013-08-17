@@ -2,15 +2,35 @@ function AppCtrl($rootScope, $location, $routeParams, AuthService){
 	AuthService.authenticate($rootScope, $location);
 }
 
-function LoginCtrl($scope, $rootScope, $routeParams, $location, Usuario) {
+function LoginCtrl($scope, $rootScope, $routeParams, $location, AppService) {
 	
 	$scope.login = function(){
-		$location.url('/1/tarea');
+		if(AppService.data.isLogged){
+
+		}
+
+		var loginData = {url: "/login"}
+		var loginResource =	AppService.sdo(loginData)
+		loginResource.login(
+			{
+			 "username": $scope.username,
+			 "password": $scope.password
+			},
+			function(usuario, putResponseHeaders){
+				AppService.data.isLogged = true;
+				AppService.data.usuario = usuario;
+				console.log(usuario);
+				$location.url("/tarea")
+			},
+			function(response, putResponseHeaders){
+				$scope.loginError = true;
+			}
+			);
 	}
 }
 
 function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Usuario,
- Tarea, Tipo, Seguimiento, Resource, $document) {
+ Tarea, Tipo, Seguimiento, Resource, $document, AppService) {
 	
 	$rootScope.page = $routeParams.page ? $routeParams.page : 0;
 	$rootScope.items = $routeParams.itemsPerPage ? $routeParams.itemsPerPage : 10;
@@ -30,8 +50,8 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		}
 	};
 
-	if($routeParams.userId){
-		$rootScope.userId = ($rootScope.userId != $routeParams.userId) ? $routeParams.userId : $rootScope.userId;
+	if(AppService.data.isLogged){
+		$rootScope.userId = AppService.data.usuario.id;
 		$rootScope.user = Usuario.get({"idUsuario": $rootScope.userId});
 		refresh();
 			
@@ -54,7 +74,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	}
 
 	$scope.changeFilter = function(filterName){
-		var loc = $rootScope.userId + "/tarea" ; 
+		var loc = "/tarea" ; 
 		if(filterName){
 			loc +=  "/" + filterName;
 		}
@@ -72,7 +92,11 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		if(filter != ''){
 			$location.search({q: filter});
 		} else{
-			$location.url($rootScope.userId + '/tarea' + '/' + $rootScope.idTarea);
+			var url = '/tarea';
+			if($rootScope.idTarea){
+				url = url + '/' + $rootScope.idTarea
+			}
+			$location.url(url);
 		}
 		$rootScope.raiz = true;
 	});

@@ -91,3 +91,8 @@ log4j = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 }
+
+grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.sigma.code.common.Usuario'
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.sigma.code.common.RolUsuario'
+grails.plugins.springsecurity.authority.className = 'org.sigma.code.common.Rol'
+

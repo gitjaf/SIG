@@ -1,6 +1,6 @@
 var services = angular.module('sig.services', ['ngResource'])
 
-services.factory('AuthService', function(UsuarioService){
+services.factory('AuthService', function(AppService){
 	return{
 		authenticate: function(rootScope, location){
 			rootScope.$on('$routeChangeStart', function(event, currRoute, prevRoute){
@@ -8,7 +8,7 @@ services.factory('AuthService', function(UsuarioService){
 				if(!prevRoute){
 					location.url("/login");
 				} else{
-					if(!currRoute.access.isFree && !UsuarioService.isLogged()){
+					if(!currRoute.access.isFree && !AppService.data.isLogged){
 						location.url("/login");
 					} 
 				}
@@ -19,10 +19,28 @@ services.factory('AuthService', function(UsuarioService){
 	}
 })
 
-services.factory('UsuarioService', function(){
+services.factory('AppService', function($resource){
 	return{
-		isLogged: function(){
-			return true;
+		
+		data: {
+			isLogged: false,
+			usuario: {}
+		},
+
+		sdo: function(data) {
+			return	$resource(data.url, {}, {
+				login: {
+					method: 'POST',
+					params: {
+						username: '@username',
+						password: '@password'
+					}
+				},
+
+				logout: {
+
+				}
+			})
 		}
 	}
 });
