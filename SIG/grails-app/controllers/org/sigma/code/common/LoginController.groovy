@@ -32,26 +32,42 @@ class LoginController {
 		def username = request.JSON?.username
 		def password = request.JSON?.password
 		
-		password = springSecurityService.encodePassword(password)
 		
-		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
 		Usuario details = Usuario.findByUsername(username);
-    	token.setDetails(details);
-    	
-    	try {
-    		Authentication auth = authenticationManager.authenticate(token);
-      		SecurityContextHolder.getContext().setAuthentication(auth);
+		if(!details.accountExpired && !details.accountLocked){
 
-      		request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
-      		response.status = 200
-      		
-      		render halBuilderService.buildModel(details) as JSON
-    	}
-    	catch(BadCredentialsException bce) {
+			if(!details.enabled && details.password == password){
+				details.password = springSecurityService.encodePassword(password)
+				details.enabled = true
+				details.save(flush: true)
+				def rol = Rol.findByAuthority('ROLE_USER')
+				if(!details.authorities.contains(rol)){
+					RolUsuario.create details, rol
+				}
+			}
+			password = springSecurityService.encodePassword(password)
+
+			UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+			token.setDetails(details);
+			
+			try {
+				Authentication auth = authenticationManager.authenticate(token);
+		  		SecurityContextHolder.getContext().setAuthentication(auth);
+
+		  		request.getSession().setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
+		  		response.status = 200
+		  		
+		  		render halBuilderService.buildModel(details) as JSON
+			}
+			catch(BadCredentialsException bce) {
+				response.status = 401
+				render false
+			}
+
+    	} else {
     		response.status = 401
-    		render false
+    		render "Cuenta Bloqueada"
     	}
-    	
 	}
 
 	def getStatus() {

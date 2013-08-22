@@ -1,13 +1,12 @@
 
 package org.sigma.code.tareas
 
-import org.codehaus.groovy.grails.web.mapping.LinkGenerator;
-import org.h2.command.ddl.CreateLinkedTable;
-import org.sigma.code.plugins.HalBuilderService;
+import org.codehaus.groovy.grails.web.mapping.LinkGenerator
+import org.h2.command.ddl.CreateLinkedTable
+import org.sigma.code.plugins.HalBuilderService
 import org.springframework.dao.DataIntegrityViolationException
 import grails.converters.JSON
-
-
+import grails.plugins.springsecurity.Secured
 import java.text.SimpleDateFormat
 
 class TareaController {
@@ -20,10 +19,7 @@ class TareaController {
 		
     static allowedMethods = [show: ["GET", "POST"], save: "POST", update: "PUT", delete: "DELETE"]
 
-    def index() {
-        render(action: "list", params: params)
-    }
-
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def list() {
     	def list = [:]
         def version = grailsApplication.metadata['app.version']
@@ -42,6 +38,7 @@ class TareaController {
         render list as JSON
     }
     
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def save() {
         def tareaInstance = tareaService.saveTarea(request.JSON)
 		        
@@ -55,6 +52,7 @@ class TareaController {
         render halBuilderService.buildModel(tareaInstance) as JSON
     }
 
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def show() {
         def tareaInstance = halBuilderService.buildModel(Tarea.get(params.id))
 		
@@ -68,6 +66,7 @@ class TareaController {
         render tareaInstance as JSON
     }
 
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def update() {
         def tareaInstance = Tarea.get(params.id as Long)
         if (!tareaInstance) {
@@ -98,6 +97,7 @@ class TareaController {
         render halBuilderService.buildModel(tareaInstance) as JSON
     }
 
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def delete() {
         def tareaInstance = Tarea.get(params.id)
         if (!tareaInstance) {
@@ -112,6 +112,7 @@ class TareaController {
         
     }
 
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def vaciarPapelera() {
 
         def respuesta = tareaService.vaciarPapelera(params.userId)

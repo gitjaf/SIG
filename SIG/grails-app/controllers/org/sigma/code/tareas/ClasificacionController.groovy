@@ -3,7 +3,7 @@ package org.sigma.code.tareas
 
 
 import grails.converters.JSON
-
+import grails.plugins.springsecurity.Secured
 import java.text.SimpleDateFormat
 
 class ClasificacionController {
@@ -14,10 +14,7 @@ class ClasificacionController {
 
     def clasificacionService
 
-    def index() {
-        redirect(action: "list", params: params)
-    }
-
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		
@@ -28,6 +25,7 @@ class ClasificacionController {
 		render clasificacionInstanceList as JSON
     }
     
+    @Secured(['ROLE_ADMIN'])
     def save() {
         def clasificacionInstance = clasificacionService.crearClasificacion(request.JSON)
 		
@@ -44,6 +42,7 @@ class ClasificacionController {
 		render clasificacionInstance as JSON
     }
 
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def show() {
         def clasificacionInstance = Clasificacion.get(params.id)
         if (!clasificacionInstance) {
@@ -56,6 +55,7 @@ class ClasificacionController {
         render clasificacionInstance as JSON
     }
 
+    @Secured(['ROLE_ADMIN'])
     def update() {
         def clasificacionInstance = Clasificacion.get(params.id)
         if (!clasificacionInstance) {
@@ -87,6 +87,7 @@ class ClasificacionController {
         render clasificacionInstance as JSON
     }
 
+    @Secured(['ROLE_ADMIN'])
     def delete() {
        
         response.status = clasificacionService.borrarClasificacion(params.id as Integer)

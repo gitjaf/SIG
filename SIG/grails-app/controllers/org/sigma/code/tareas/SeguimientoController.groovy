@@ -5,6 +5,7 @@ import org.springframework.dao.DataIntegrityViolationException
 import grails.converters.JSON
 import org.sigma.code.common.*
 import java.text.SimpleDateFormat
+import grails.plugins.springsecurity.Secured
 
 class SeguimientoController {
 
@@ -15,10 +16,7 @@ class SeguimientoController {
 
 	static allowedMethods = [show: ["GET", "POST"], save: "POST", update: "PUT", delete: "DELETE"]
 
-	def index() {
-		redirect(action: "list", params: params)
-	}
-
+	@Secured(['ROLE_ADMIN', 'ROLE_USER'])
 	def list() {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
 
@@ -29,6 +27,7 @@ class SeguimientoController {
 		render seguimientoInstanceList as JSON
 	}
 
+	@Secured(['ROLE_ADMIN', 'ROLE_USER'])
 	def save() {
 		
 		def seguimientoInstance = seguimientoService.saveSeguimiento(request.JSON)
@@ -43,6 +42,7 @@ class SeguimientoController {
 		render (halBuilderService.buildModel(seguimientoInstance) as JSON)
 	}
 
+	@Secured(['ROLE_ADMIN', 'ROLE_USER'])
 	def show() {
 		def seguimientoInstance = Seguimiento.get(params.id)
 		if (!seguimientoInstance) {
@@ -55,6 +55,7 @@ class SeguimientoController {
 		render seguimientoInstance as JSON
 	}
 
+	@Secured(['ROLE_ADMIN', 'ROLE_USER'])
 	def update() {
 	
 		def tareaInstance = Tarea.get(request.JSON.idTarea as Long)
@@ -97,6 +98,7 @@ class SeguimientoController {
 		render halBuilderService.buildModel(seguimientoInstance) as JSON
 	}
 
+	@Secured(['ROLE_ADMIN', 'ROLE_USER'])
 	def delete() {
 		def tareaInstance = Tarea.get(params.idTarea)
 		def seguimientoInstance = Seguimiento.get(params.id)

@@ -3,17 +3,14 @@ package org.sigma.code.common
 
 import org.springframework.dao.DataIntegrityViolationException
 import grails.converters.JSON
-
+import grails.plugins.springsecurity.Secured
 import java.text.SimpleDateFormat
 
 class DocumentoController {
 
     static allowedMethods = [show: ["GET", "POST"], save: "POST", update: "PUT", delete: "DELETE"]
 
-    def index() {
-        redirect(action: "list", params: params)
-    }
-
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def list() {
         params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		
@@ -24,6 +21,7 @@ class DocumentoController {
 		render documentoInstanceList as JSON
     }
     
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def save() {
         def documentoInstance = new Documento(request.JSON)
 		        
@@ -37,6 +35,7 @@ class DocumentoController {
 		render documentoInstance as JSON
     }
 
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def show() {
         def documentoInstance = Documento.get(params.id)
         if (!documentoInstance) {
@@ -49,6 +48,7 @@ class DocumentoController {
         render documentoInstance as JSON
     }
 
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def update() {
         def documentoInstance = Documento.get(params.id)
         if (!documentoInstance) {
@@ -81,6 +81,7 @@ class DocumentoController {
         render documentoInstance as JSON
     }
 
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def delete() {
         def documentoInstance = Documento.get(params.id)
         if (!documentoInstance) {

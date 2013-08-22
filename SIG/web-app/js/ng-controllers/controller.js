@@ -317,7 +317,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	}
 
 	$scope.vaciarPapelera = function(){
-		$scope.tareas.$vaciarPapelera({userId: $rootScope.userId},
+		$scope.tareas.$deleteAll({userId: $rootScope.userId},
 			function(response, putResponseHeaders){
 				var mensaje = "La papelera se vacio con exito",
 				titulo = "Vaciar Papelera: ",
