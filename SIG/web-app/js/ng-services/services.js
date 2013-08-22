@@ -1,30 +1,42 @@
 var services = angular.module('sig.services', ['ngResource'])
 
-services.factory('AuthService', function(AppService){
-	return{
-		authenticate: function(rootScope, location){
-			rootScope.$on('$routeChangeStart', function(event, currRoute, prevRoute){
-								
-				if(!prevRoute){
-					location.url("/login");
-				} else{
-					if(!currRoute.access.isFree && !AppService.data.isLogged){
-						location.url("/login");
-					} 
-				}
-				
 
-			});
-		}
-	}
-})
-
-services.factory('AppService', function($resource){
-	return{
+services.factory('AuthService', function($resource, $rootScope, $location){
+	var authService = {
 		
 		data: {
 			isLogged: false,
-			usuario: {}
+			usuario: undefined
+		},
+
+		authenticate: function(){
+			$rootScope.$on('$routeChangeStart', function(event, currRoute, prevRoute){
+				var data = {url: "/login"};
+				
+				if(!currRoute.access.isFree) {
+					authService.checkCredentials(data);
+				}
+
+			});
+		},
+
+		checkCredentials: function(data){
+
+			authService.sdo(data).isLogged({},
+				function(usuario, putResponseHeaders){
+					authService.data.isLogged = true;
+					authService.data.usuario = usuario;
+					$rootScope.user = usuario;
+					$rootScope.userId = usuario.id
+					$rootScope.$broadcast("refresh");
+				},
+				
+				function(response, putResponseHeaders){
+					$rootScope.user = undefined;
+					$rootScope.userId = undefined;
+					$location.url(data.url);
+				}
+			);
 		},
 
 		sdo: function(data) {
@@ -38,12 +50,20 @@ services.factory('AppService', function($resource){
 				},
 
 				logout: {
+					method: 'GET',
+					params: {}
+				},
 
+				isLogged: {
+					method: 'GET',
+					params: {}
 				}
 			})
 		}
 	}
+	return authService;
 });
+
 
 services.factory('Resource', function($resource){
 	

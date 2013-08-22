@@ -1,36 +1,37 @@
 function AppCtrl($rootScope, $location, $routeParams, AuthService){
-	AuthService.authenticate($rootScope, $location);
+	AuthService.authenticate();
+
 }
 
-function LoginCtrl($scope, $rootScope, $routeParams, $location, AppService) {
+function LoginCtrl($scope, $rootScope, $routeParams, $location, AuthService) {
 	
 	$scope.login = function(){
-		if(AppService.data.isLogged){
-
-		}
-
 		var loginData = {url: "/login"}
-		var loginResource =	AppService.sdo(loginData)
+		var loginResource =	AuthService.sdo(loginData)
+		
 		loginResource.login(
 			{
 			 "username": $scope.username,
 			 "password": $scope.password
 			},
+
 			function(usuario, putResponseHeaders){
-				AppService.data.isLogged = true;
-				AppService.data.usuario = usuario;
-				console.log(usuario);
+				AuthService.data.isLogged = true;
+				AuthService.data.usuario = usuario;
+				$rootScope.user = usuario;
+				$rootScope.userId = usuario.id;
 				$location.url("/tarea")
 			},
+
 			function(response, putResponseHeaders){
 				$scope.loginError = true;
 			}
-			);
+		);
 	}
 }
 
 function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Usuario,
- Tarea, Tipo, Seguimiento, Resource, $document, AppService) {
+ Tarea, Tipo, Seguimiento, Resource, $document, AuthService) {
 	
 	$rootScope.page = $routeParams.page ? $routeParams.page : 0;
 	$rootScope.items = $routeParams.itemsPerPage ? $routeParams.itemsPerPage : 10;
@@ -38,6 +39,10 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	$rootScope.query = $routeParams.q ? $routeParams.q : "";
 	$rootScope.filtro = $routeParams.filtro ? $routeParams.filtro : "todas";
 	$rootScope.idTarea = $routeParams.idTarea ? $routeParams.idTarea : "";
+	$scope.userActions = [{
+		"text": "Salir",
+		"click": "logout()"
+	}];
 	
 	$scope.safeApply = function(fn) {
   		var phase = this.$root.$$phase;
@@ -50,18 +55,24 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		}
 	};
 
-	if(AppService.data.isLogged){
-		$rootScope.userId = AppService.data.usuario.id;
-		$rootScope.user = Usuario.get({"idUsuario": $rootScope.userId});
-		refresh();
-			
+	$scope.logout = function(){
+		var data = {url: "/logout"}
+		var loginData = {url: "/login"}
+		AuthService.sdo(data).logout({},
+			function(response, putResponseHeaders) {
+				AuthService.checkCredentials(loginData);
+			},
+
+			function(response, putResponseHeaders) {
+				$location.url(loginData.url);
+			}
+		);
+		
 	}
 
 	$scope.$on('refresh', function(event){
 		refresh();
 	});
-
-	
 
 	$scope.sort = function(field) {
 		$location.search("sortBy", field);
@@ -200,7 +211,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		$scope.tarea.fechaVencimiento = $filter('date')(tarea.fechaVencimiento, "dd/MM/yyyy");
 		
 		if($scope.tarea.id){
-			console.log($scope.tarea);
+			
 			$scope.tarea.$update({idTarea: $scope.tarea.id, userId: $rootScope.userId},
 			function(tarea, putResponseHeaders){
 				removeObject(tareas, tarea, "id");
@@ -577,11 +588,11 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	function compararFechas(fechaMenor, fechaMayor){
 		fechaMenor = ($filter('date')(fechaMenor, "dd/MM/yyyy"));
 		fechaMayor = ($filter('date')(fechaMayor, "dd/MM/yyyy"));
-		console.log(fechaMenor," - ", fechaMayor);
+		
 		if(fechaMenor == undefined || fechaMayor == undefined){
 			return true;
 		}
-		console.log(fechaMenor <= fechaMayor);
+		
 		return (fechaMenor <= fechaMayor);
 	}
 

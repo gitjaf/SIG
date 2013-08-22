@@ -9,9 +9,9 @@
 			<input data-ng-model="query" type="search" placeholder="Buscar Tareas" class="span12">
 			<button class="btn" data-ng-click="search(query)">&nbsp;<i class="icon-search"></i>&nbsp;</button><br>
 		</div>
-		<div class="span2 pull-right header-usuario">
-			<i class="icon-user icon-2x"></i><br>
-			 <a>{{user._embedded.persona.nombres}} {{user._embedded.persona.apellidos}}</a>
+		<div id="user-actions" class="span2 pull-right header-usuario">
+			
+			 <a bs-dropdown="userActions"><i class="icon-user icon-2x"></i><br>{{user._embedded.persona.nombres}} {{user._embedded.persona.apellidos}}</a>
 			 
 		</div>
 	</div>

@@ -741,3 +741,9 @@ li.ui-animate {
 .row-fluid [class*="span"].no-margin-left{
 	margin-left: 0px !important;
 }
+
+
+#user-actions ul{
+	top: 62px;
+	margin-right: 20px;
+}

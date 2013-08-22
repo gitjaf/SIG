@@ -37,7 +37,7 @@ class LoginController {
 		UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
 		Usuario details = Usuario.findByUsername(username);
     	token.setDetails(details);
-    	println token.properties;
+    	
     	try {
     		Authentication auth = authenticationManager.authenticate(token);
       		SecurityContextHolder.getContext().setAuthentication(auth);

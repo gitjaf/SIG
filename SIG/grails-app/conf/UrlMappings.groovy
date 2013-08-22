@@ -6,6 +6,10 @@ class UrlMappings {
 			action = [GET: "getStatus", POST: "login"]
 		}
 
+		"/logout"(controller: "logout"){
+			action = [GET: "logout"]
+		}
+
 		"/$controller"{
 			action = [GET: "list", POST: "save", DELETE: "vaciarPapelera"]
 		}
