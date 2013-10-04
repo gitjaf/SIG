@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException
 import grails.converters.JSON
 import grails.plugins.springsecurity.Secured
 import java.text.SimpleDateFormat
+import org.codehaus.groovy.grails.commons.GrailsDomainClass
 
 class TareaController {
 
@@ -17,16 +18,17 @@ class TareaController {
 
 	def tareaService
 		
-    static allowedMethods = [show: ["GET", "POST"], save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [list: "GET", show: "GET", find:"POST", save: "PUT", update: "PUT", delete: "DELETE"]
 
+    
     @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def list() {
-    	def list = [:]
-        def version = grailsApplication.metadata['app.version']
-        
+    	       
+        def list = halBuilderService.buildModel(new Tarea())
+
         if(params?.userId){
             list = (halCollectionBuilderService.buildRepresentation(tareaService.getTareas(params, params.userId),
-             request.getMethod(), params, [prepend:"/${params.userId}", append:""]))
+                request.getMethod(), params))
             response.status = 200
             
         } else {
@@ -39,6 +41,39 @@ class TareaController {
     }
     
     @Secured(['ROLE_ADMIN', 'ROLE_USER'])
+    def find() {
+        def list = [:]
+        def version = grailsApplication.metadata['app.version']
+        def json = request?.JSON
+        if(json?.userId){
+            list = (halCollectionBuilderService.buildRepresentation(tareaService.getTareas(json, json.userId as String),
+                Tarea, json))
+            response.status = 200
+            
+        } else {
+            response.status = 401
+        }
+        
+        list.data += [version: version]
+        
+        render list as JSON
+    }
+
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
+    def show() {
+        def tareaInstance = halBuilderService.buildModel(Tarea.get(params.id))
+        
+        if (!tareaInstance) {
+            flash.message = message(code: 'default.not.found.message', args: [message(code: 'tarea.label', default: 'Tarea'), params.id])
+            response.status = 404
+            render flash.message
+            return
+        }
+        response.status = 200
+        render tareaInstance as JSON
+    }
+
+    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def save() {
         def tareaInstance = tareaService.saveTarea(request.JSON)
 		        
@@ -50,20 +85,6 @@ class TareaController {
 		flash.message = message(code: 'default.created.message', args: [message(code: 'tarea.label', default: 'Tarea'), tareaInstance.id])
         response.status = 201
         render halBuilderService.buildModel(tareaInstance) as JSON
-    }
-
-    @Secured(['ROLE_ADMIN', 'ROLE_USER'])
-    def show() {
-        def tareaInstance = halBuilderService.buildModel(Tarea.get(params.id))
-		
-        if (!tareaInstance) {
-			flash.message = message(code: 'default.not.found.message', args: [message(code: 'tarea.label', default: 'Tarea'), params.id])
-            response.status = 404
-			render flash.message
-            return
-        }
-		response.status = 200
-        render tareaInstance as JSON
     }
 
     @Secured(['ROLE_ADMIN', 'ROLE_USER'])

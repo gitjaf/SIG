@@ -76,6 +76,18 @@ services.factory('Resource', function($resource){
 
 			return $resource(url, params,
 				{
+					fetch: {
+						method: 'GET'
+					},
+
+					find: {
+						method: 'POST', 
+					},
+
+					create:{
+						method: 'PUT', 
+					},
+
 					query: {
 						method: 'GET', 
 						params: {
@@ -92,7 +104,6 @@ services.factory('Resource', function($resource){
 					update: {
 						method: 'PUT',
 						params: {
-							id: '@id',
 							userId: '@userId'
 						}
 					},
@@ -100,8 +111,7 @@ services.factory('Resource', function($resource){
 					delete: {
 						method: 'DELETE',
 						params: {
-							id: '@id',
-							userId: '@userId'
+							idTarea: '@idTarea',
 						}
 					},
 

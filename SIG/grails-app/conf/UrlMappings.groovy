@@ -2,24 +2,35 @@ class UrlMappings {
 
 	static mappings = {
 		
-		"/login"(controller: "login"){
+		name signin: "/login"(controller: "login"){
 			action = [GET: "getStatus", POST: "login"]
 		}
 
-		"/logout"(controller: "logout"){
+		name signout: "/logout"(controller: "logout"){
 			action = [GET: "logout"]
 		}
 
-		"/$controller"{
-			action = [GET: "list", POST: "save", DELETE: "vaciarPapelera"]
+		name resources: "/$controller"{
+			action = [GET: "list", POST: "find", PUT: "save", DELETE: "vaciarPapelera"]
 		}
 		
-		"/$controller/$id"{
+		name resource: "/$controller/$id"{
 			action = [GET: "show", DELETE: "delete", PUT: "update"]
 		}
-		
+	
+
 		"/"(view:'/index')
 
 		"500"(view:'/error')
+
+
+		//Agregado para app-info
+		"/admin/manage/$action?"(controller: "adminManage")
+		"/adminManage/$action?"(controller: "errors", action: "urlMapping")
+ 
+		"403"(controller: "errors", action: "accessDenied")
+		"404"(controller: "errors", action: "notFound")
+		"405"(controller: "errors", action: "notAllowed")
+		"500"(controller: "errors", action: "error")
 	}
 }

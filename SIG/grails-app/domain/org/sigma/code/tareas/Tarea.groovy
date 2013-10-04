@@ -5,6 +5,8 @@ import groovy.transform.ToString;
 import org.sigma.code.common.Documento
 import org.sigma.code.common.Usuario
 
+
+
 class Tarea {
 	public final static ESTADO_CERRADA = "Cerrada"
 	public final static ESTADO_NUEVA = "Nueva"
@@ -53,11 +55,7 @@ class Tarea {
 		borrado(nullable: false, blank: false, required: true)			
 	}
 	
-	public String getAsunto(){
-		return asunto
-	}
-	
-	
+		
 	static mapping = {
 		table 'sig_tareas'
    
@@ -71,9 +69,26 @@ class Tarea {
 			   
 	}
 	
-	def halRepresenter = [title: asunto, embedded: ["tipo", "tareasRelacionadas", "asignados", "seguidores", "responsable", "seguimientos"]]
-	
-	
-	
+	static halResource = {
+		tipo embedded: true
+		tareasRelacionadas embedded: true
+		asignados embedded: true
+		seguidores embedded: true
+		responsable embedded: true
+		seguimientos embedded: true
+
+		links(
+			fetch: [mapping: "resources", trimId: true, collection: true], 
+			find: [mapping: "resources", trimId: true, collection: true],
+			create: [mapping: "resources", trimId: true, collection: true],
+			update: [mapping: "resource"],
+			delete: [mapping: "resource"],
+			addSeguimiento: [mapping:"resources", trimId: true, controller: "Seguimiento"],
+			deleteAll: [mapping: "resources", trimId: true, collection: true]
+		)
+	}
    
+	public String getAsunto(){
+		return asunto
+	}
 }

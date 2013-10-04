@@ -321,10 +321,12 @@ directives.directive("linkSubtareas", function() {
 			function updateValues(){
 				var texto = " Subtarea";
 				var borrado = (scope.filtro == 'papelera');
-
-				var coleccion = _(scope.tarea._embedded.tareasRelacionadas).filter( function(value) {
-					return value.borrado == borrado;
-				});
+				var coleccion = [];
+				if(scope.tarea._embedded.tareasRelacionadas){
+					coleccion = _(scope.tarea._embedded.tareasRelacionadas).filter( function(value) {
+						return value.borrado == borrado;
+					});
+				}
 				
 				var cantidad = coleccion.length;
 				

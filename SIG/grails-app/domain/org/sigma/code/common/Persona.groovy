@@ -20,4 +20,15 @@ class Persona {
         nombres column: 'nombres'
         apellidos column: 'apellidos'
     }
+
+    static halResource = {
+        links(
+            fetch: [mapping: "resources", trimId: true], 
+            find: [mapping: "resources", trimId: true],
+            create: [mapping: "resources", trimId: true],
+            update: [mapping: "resource"],
+            delete: [mapping: "resource"],
+            deleteAll: [mapping: "resources", trimId: true]
+        )
+    }
 }

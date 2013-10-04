@@ -2,8 +2,8 @@
 // config files can be ConfigSlurper scripts, Java properties files, or classes
 // in the classpath in ConfigSlurper format
 
-grails.config.locations = [ "classpath:${appName}-config.groovy",
-                            "file:${userHome}/.grails/${appName}-config.groovy",
+grails.config.locations = [ "classpath:${appName}-config-datasource.groovy",
+                            "file:${userHome}/.grails/${appName}-config-datasource.groovy",
                             "file:${userHome}/.grails/${appName}-server-config.groovy"
                           ]
 
@@ -64,10 +64,41 @@ grails.hibernate.cache.queries = false
 environments {
     development {
         grails.logging.jul.usebridge = true
+
+        //Agregado para app-info
+        grails.plugins.dynamicController.mixins = [
+           'com.burtbeckwith.grails.plugins.appinfo.IndexControllerMixin':
+              'com.burtbeckwith.appinfo_test.AdminManageController',
+         
+           'com.burtbeckwith.grails.plugins.appinfo.Log4jControllerMixin' :
+              'com.burtbeckwith.appinfo_test.AdminManageController',
+         
+           'com.burtbeckwith.grails.plugins.appinfo.SpringControllerMixin' :
+              'com.burtbeckwith.appinfo_test.AdminManageController',
+         
+           'com.burtbeckwith.grails.plugins.appinfo.MemoryControllerMixin' :
+              'com.burtbeckwith.appinfo_test.AdminManageController',
+         
+           'com.burtbeckwith.grails.plugins.appinfo.PropertiesControllerMixin' :
+              'com.burtbeckwith.appinfo_test.AdminManageController',
+         
+           'com.burtbeckwith.grails.plugins.appinfo.ScopesControllerMixin' :
+              'com.burtbeckwith.appinfo_test.AdminManageController',
+         
+           'com.burtbeckwith.grails.plugins.appinfo.ThreadsControllerMixin' :
+              'com.burtbeckwith.appinfo_test.AdminManageController',
+         
+           'app.info.custom.example.MyConfigControllerMixin' :
+              'com.burtbeckwith.appinfo_test.AdminManageController'
+        ]
+        
     }
     production {
         grails.logging.jul.usebridge = false
         // TODO: grails.serverURL = "http://www.changeme.com"
+    }
+    appfog {
+        grails.loggin.jul.usebridge = false
     }
 }
 
@@ -95,4 +126,6 @@ log4j = {
 grails.plugins.springsecurity.userLookup.userDomainClassName = 'org.sigma.code.common.Usuario'
 grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.sigma.code.common.RolUsuario'
 grails.plugins.springsecurity.authority.className = 'org.sigma.code.common.Rol'
+
+
 

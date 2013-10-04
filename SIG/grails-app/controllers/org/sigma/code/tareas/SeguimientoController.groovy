@@ -14,7 +14,7 @@ class SeguimientoController {
 
 	def seguimientoService
 
-	static allowedMethods = [show: ["GET", "POST"], save: "POST", update: "PUT", delete: "DELETE"]
+	static allowedMethods = [show: "GET", find:"POST", save: "PUT", update: "PUT", delete: "DELETE"]
 
 	@Secured(['ROLE_ADMIN', 'ROLE_USER'])
 	def list() {
@@ -29,7 +29,6 @@ class SeguimientoController {
 
 	@Secured(['ROLE_ADMIN', 'ROLE_USER'])
 	def save() {
-		
 		def seguimientoInstance = seguimientoService.saveSeguimiento(request.JSON)
 
 		if (!seguimientoInstance) {
@@ -100,8 +99,9 @@ class SeguimientoController {
 
 	@Secured(['ROLE_ADMIN', 'ROLE_USER'])
 	def delete() {
-		def tareaInstance = Tarea.get(params.idTarea)
-		def seguimientoInstance = Seguimiento.get(params.id)
+		def tareaInstance = Tarea.get(params.idTarea as Long)
+		def seguimientoInstance = Seguimiento.get(params.id as Long)
+
 		if (!seguimientoInstance ) {
 			flash.message = message(code: 'default.not.found.message', args: [message(code: 'seguimiento.label', default: 'Seguimiento'), params.id])
 			response.status = 404
@@ -122,6 +122,7 @@ class SeguimientoController {
 			response.status = 200
 			render flash.message
 		}
+
 		catch (DataIntegrityViolationException e) {
 			flash.message = message(code: 'default.not.deleted.message', args: [message(code: 'seguimiento.label', default: 'Seguimiento'), params.id])
 			response.status = 500

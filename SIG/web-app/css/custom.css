@@ -373,7 +373,15 @@ body{
 
 .container-listado-estado{
 	padding-left: 4px;
-	padding-top: 6px;
+	padding-top: 0px;
+	margin-left: 2px !important;
+	min-height: 30px !important;
+}
+
+.container-listado-tags{
+	padding-left: 4px;
+	padding-top: 10px;
+	padding-bottom: 0px;
 	margin-left: 2px !important;
 	min-height: 32px !important;
 }
@@ -656,14 +664,13 @@ li.ui-animate {
 
 .listado-tareas{
 	margin-left: 0px !important;
-	;
 }
 
 .item-tareas{
 	border-bottom: solid 1px #e5e5e5;
 	padding-top: 3px;
 	padding-bottom: 3px;
-	min-height: 55px;
+	min-height: 80px;
 }
 
 .listado-titulo{

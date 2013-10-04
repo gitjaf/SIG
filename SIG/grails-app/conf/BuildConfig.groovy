@@ -74,5 +74,7 @@ grails.project.dependency.resolution = {
         compile ":twitter-bootstrap:2.3.0"
         compile ":underscore:1.4.3"
         compile ":font-awesome-resources:3.0"
+        compile ':spring-security-core:1.2.7.3'
+        compile ":app-info:1.0.2"
     }
 }

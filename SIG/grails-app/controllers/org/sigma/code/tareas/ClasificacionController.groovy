@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat
 
 class ClasificacionController {
 
-    static allowedMethods = [show: ["GET", "POST"], save: "POST", update: "PUT", delete: "DELETE"]
+    static allowedMethods = [show: "GET", find:"POST", save: "PUT", update: "PUT", delete: "DELETE"]
 
     def halBuilderService
 

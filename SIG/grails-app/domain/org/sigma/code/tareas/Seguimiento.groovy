@@ -27,7 +27,20 @@ class Seguimiento implements Comparable{
 		descripcion type:'text'
     }
 
-    def halRepresenter = [title: titulo, embedded: ["responsable"]]
+    static halResource = {
+        responsable embedded: true
+
+        links(
+            fetch: [mapping: "resources", trimId: true], 
+            find: [mapping: "resources", trimId: true],
+            create: [mapping: "resources", trimId: true],
+            update: [mapping: "resource"],
+            delete: [mapping: "resource"],
+            deleteAll: [mapping: "resources", trimId: true]
+        )
+    }
+
+    
     
 
     int compareTo(obj){

@@ -20,7 +20,7 @@ function LoginCtrl($scope, $rootScope, $routeParams, $location, AuthService) {
 				AuthService.data.usuario = usuario;
 				$rootScope.user = usuario;
 				$rootScope.userId = usuario.id;
-				$location.url("/tarea")
+				$location.url(usuario._links.appRoot.href)
 			},
 
 			function(response, putResponseHeaders){
@@ -43,7 +43,8 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		"text": "Salir",
 		"click": "logout()"
 	}];
-	
+
+
 	$scope.safeApply = function(fn) {
   		var phase = this.$root.$$phase;
 		if(phase == '$apply' || phase == '$digest') {
@@ -211,80 +212,82 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		$scope.tarea.fechaVencimiento = $filter('date')(tarea.fechaVencimiento, "dd/MM/yyyy");
 		
 		if($scope.tarea.id){
-			
-			$scope.tarea.$update({idTarea: $scope.tarea.id, userId: $rootScope.userId},
-			function(tarea, putResponseHeaders){
-				removeObject(tareas, tarea, "id");
-				if($scope.tareas._embedded.collection) {
-					if(!tarea.borrado && !restaurada){
-						$scope.tareas._embedded.collection.push(tarea);
+			Resource.getResource(
+				tarea._links.update.href
+			).update($scope.tarea,
+				function(tarea, putResponseHeaders){
+					removeObject(tareas, tarea, "id");
+					if($scope.tareas._embedded.collection) {
+						if(!tarea.borrado && !restaurada){
+							$scope.tareas._embedded.collection.push(tarea);
+						} else {
+							$scope.tareas.data.total = $scope.tareas.data.total - 1;
+						}
 					} else {
-						$scope.tareas.data.total = $scope.tareas.data.total - 1;
+						$scope.tareas._embedded.collection = [tarea];
 					}
-				} else {
-					$scope.tareas._embedded.collection = [tarea];
-				}
-				var mensaje = "La tarea '" + tarea.asunto + "' fue editada con exito",
-				titulo = "Editar Tarea: ",
-				duracion = 4000,
-				tipo = 'alert-success';
-				$scope.alert(titulo, mensaje, tipo, duracion);
-				
-			}, function(response, putResponseHeaders){
-				var mensaje = "Error al editar la tarea '" + $scope.tarea.asunto + "'",
-				duracion = 4000,
-				titulo = "Editar Tarea: ",
-				tipo = 'alert-error';
+					var mensaje = "La tarea '" + tarea.asunto + "' fue editada con exito",
+					titulo = "Editar Tarea: ",
+					duracion = 4000,
+					tipo = 'alert-success';
+					$scope.alert(titulo, mensaje, tipo, duracion);
+					
+				}, function(response, putResponseHeaders){
+					var mensaje = "Error al editar la tarea '" + $scope.tarea.asunto + "'",
+					duracion = 4000,
+					titulo = "Editar Tarea: ",
+					tipo = 'alert-error';
 
-				$scope.alert(titulo, mensaje, tipo, duracion);	
+					$scope.alert(titulo, mensaje, tipo, duracion);	
 			});
 		} else {
-			$scope.tarea.$save(function(tarea, putResponseHeaders){
-				if(_($scope.tareas._embedded.collection).isEmpty()) {
-					$scope.tareas = Tarea.query({
-										"page": $rootScope.page,
-										"itemsPerPage" : $rootScope.items,
-										"sortBy": $rootScope.sortBy,
-										"q": $rootScope.query,
-										userId: $rootScope.userId,
-										filtro: $rootScope.filtro,
-										tareaSuperior: $rootScope.idTarea
-									});
-				} else {
-					var tareaSuperior;
-					if(idTareaSuperior){
-						 tareaSuperior = _($scope.tareas._embedded.collection).find( function(value) {
-						  return value.id == idTareaSuperior;
-						});
-					} 
-
-					if(tareaSuperior){
-						if(tareaSuperior._embedded.tareasRelacionadas){
-							tareaSuperior._embedded.tareasRelacionadas.push(tarea);
-						}else {
-							tareaSuperior._embedded.tareasRelacionadas = [tarea];
-						}
-						$scope.$broadcast('subtareaAgregada');
+			Resource.getResource($scope.tareas._links.create.href).create($scope.tarea,
+				function(tarea, putResponseHeaders){
+					if(_($scope.tareas._embedded.collection).isEmpty()) {
+						$scope.tareas = Tarea.query({
+											"page": $rootScope.page,
+											"itemsPerPage" : $rootScope.items,
+											"sortBy": $rootScope.sortBy,
+											"q": $rootScope.query,
+											userId: $rootScope.userId,
+											filtro: $rootScope.filtro,
+											tareaSuperior: $rootScope.idTarea
+										});
 					} else {
-						$scope.tareas._embedded.collection.push(tarea);
-						$scope.tareas.data.total = $scope.tareas.data.total + 1;
-					}
-				} 
-				
-				var mensaje = "La tarea '" + tarea.asunto + "' fue creada con exito",
-				titulo = "Crear Tarea: ",
-				tipo = 'alert-success',
-				duracion = 4000;
+						var tareaSuperior;
+						if(idTareaSuperior){
+							 tareaSuperior = _($scope.tareas._embedded.collection).find( function(value) {
+							  return value.id == idTareaSuperior;
+							});
+						} 
 
-				$scope.alert(titulo, mensaje, tipo, duracion);
-				
-			},function(response, putResponseHeaders){
-				var mensaje = "Error al crear la tarea '" + $scope.tarea.asunto + "'",
-				titulo = "Crear Tarea: ",
-				tipo = 'alert-error',
-				duracion = 4000;
+						if(tareaSuperior){
+							if(tareaSuperior._embedded.tareasRelacionadas){
+								tareaSuperior._embedded.tareasRelacionadas.push(tarea);
+							}else {
+								tareaSuperior._embedded.tareasRelacionadas = [tarea];
+							}
+							$scope.$broadcast('subtareaAgregada');
+						} else {
+							$scope.tareas._embedded.collection.push(tarea);
+							$scope.tareas.data.total = $scope.tareas.data.total + 1;
+						}
+					} 
+					
+					var mensaje = "La tarea '" + tarea.asunto + "' fue creada con exito",
+					titulo = "Crear Tarea: ",
+					tipo = 'alert-success',
+					duracion = 4000;
 
-				$scope.alert(titulo, mensaje, tipo, duracion);
+					$scope.alert(titulo, mensaje, tipo, duracion);
+					
+				},function(response, putResponseHeaders){
+					var mensaje = "Error al crear la tarea '" + $scope.tarea.asunto + "'",
+					titulo = "Crear Tarea: ",
+					tipo = 'alert-error',
+					duracion = 4000;
+
+					$scope.alert(titulo, mensaje, tipo, duracion);
 			});
 		}
 	}
@@ -292,10 +295,8 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	$scope.borrar = function(tarea){
 		var tareas = $scope.tareas._embedded.collection;
 
-		$scope.tarea = new Tarea();
-		angular.copy(tarea, $scope.tarea);
+		Resource.getResource(tarea._links.delete.href).delete(
 
-		$scope.tarea.$delete({idTarea: $scope.tarea.id, userId: $rootScope.userId},
 			function(response, putResponseHeaders){
 				removeObject(tareas, tarea, "id");
 				$scope.tareas.data.total = $scope.tareas.data.total - 1;
@@ -317,6 +318,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	}
 
 	$scope.vaciarPapelera = function(){
+		
 		$scope.tareas.$deleteAll({userId: $rootScope.userId},
 			function(response, putResponseHeaders){
 				var mensaje = "La papelera se vacio con exito",
@@ -413,10 +415,11 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 
 
 	$scope.eliminarSeguimiento = function(seguimiento, tarea){
-		var seg = new Seguimiento();
-		angular.copy(seguimiento, seg);
-
-		seg.$delete({idTarea: tarea.id, idSeguimiento: seg.id, userId: $rootScope.userId},
+		seguimiento.idTarea = tarea.id;
+		Resource.getResource(
+			seguimiento._links.delete.href
+		).delete(seguimiento,
+		
 			function(success, putResponseHeaders){
 				
 				var seguimientos = _.reject(tarea._embedded.seguimientos,
@@ -539,50 +542,19 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	}
 
 	function refresh(){
-		var url = '/tarea';
+		var url = $rootScope.user._links.appRoot.href;
 
-		$scope.tareas = Resource.getResource(url).query({
-			"page": $rootScope.page,
-			"itemsPerPage" : $rootScope.items,
-			"sortBy": $rootScope.sortBy,
-			"q": $rootScope.query,
+		$scope.tareas = Resource.getResource(url).find({
+			page: $rootScope.page,
+			itemsPerPage: $rootScope.items,
+			sortBy: $rootScope.sortBy,
+			q: $rootScope.query,
 			userId: $rootScope.userId,
 			filtro: $rootScope.filtro,
 			tareaSuperior: $rootScope.idTarea
-			});
 
-		// $resource(url, {}, 
-		// 	{
-		// 		query: {method: 'GET', params:{page: '@page', itemsPerPage: '@itemsPerPage',
-		// 	 		sortBy: '@sortBy', q: '@q', userId:'@userId', filtro: '@filtro'}, isArray: false},
-			 	
-		// 	 	update: {method: 'PUT', params:{idTarea: '@id', userId:'@userId'}},
-
-		// 	 	delete: {method: 'DELETE', params:{idTarea: '@id', userId: '@userId'}},
-				
-		// 		vaciarPapelera: {method: 'DELETE', params:{userId: '@userId'}}
-		// 	}).query({
-		// 		"page": $rootScope.page,
-		// 		"itemsPerPage" : $rootScope.items,
-		// 		"sortBy": $rootScope.sortBy,
-		// 		"q": $rootScope.query,
-		// 		userId: $rootScope.userId,
-		// 		filtro: $rootScope.filtro,
-		// 		tareaSuperior: $rootScope.idTarea
-		// 	});
-
-
-
-		// $scope.tareas = Tarea.query({
-		// 	"page": $rootScope.page,
-		// 	"itemsPerPage" : $rootScope.items,
-		// 	"sortBy": $rootScope.sortBy,
-		// 	"q": $rootScope.query,
-		// 	userId: $rootScope.userId,
-		// 	filtro: $rootScope.filtro,
-		// 	tareaSuperior: $rootScope.idTarea
-		// });
-
+		})
+	
 	}
 
 	function compararFechas(fechaMenor, fechaMayor){
@@ -611,7 +583,7 @@ function DetalleTareaCtrl($scope, $routeParams, Tarea) {
 	// $scope.tarea = Tarea.get({idTarea:$routeParams.tareaId});
 }
 
-function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario, Tipo) {
+function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario, Tipo, Resource) {
 	var formElements = ['#form_asunto', '#form_inicio', '#form_vence', '#form_sigue', '#form_asigna',
 		'#form_desc'];
 	var page = 0;
@@ -695,7 +667,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 	$scope.selectTipo = function(tipo){
 		$scope.tarea.tipo = angular.copy(tipo);
 		
-		if(isAdmin($rootScope.userId)){
+		if(isAdmin($rootScope.user)){
 			$scope.showAddTipo = false;
 			$scope.showEditTipo = false;
 			$scope.showDeleteTipo = true;
@@ -721,39 +693,41 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 	}
 
 	$scope.saveTipo = function(nombre){
-		var t = new Tipo();
+		var t = new Object();
 		t.nombre = nombre;
-		t.$save(function(t,putResponseHeaders){
-			addTipo(t);
-			$scope.checkTipo(t);
-			$scope.message({
-				"element" : '#form_tipo',
-				"title" : 'Crear Clasificación',
-				"content" : 'Clasificación creada con éxito',
-				"timeout" : 3000,
-				"error" : false,
-				"delay" : 1000,
-				"trigger" : "manual"
-			});
-		}, function(response, putResponseHeaders){
-			$scope.message({
-				"element" : '#form_tipo',
-				"title" : 'Crear Clasificación',
-				"content" : 'Error al intentar crear la clasificación ' + nombre,
-				"timeout" :  3000,
-				"error" : true,
-				"delay" : 1000,
-				"trigger" : "manual"
-			});
-		});
+
+		Resource.getResource($rootScope.user._links.createClasificacion.href).create(t,
+		
+			function(t,putResponseHeaders){
+				addTipo(t);
+				$scope.checkTipo(t);
+				$scope.message({
+					"element" : '#form_tipo',
+					"title" : 'Crear Clasificación',
+					"content" : 'Clasificación creada con éxito',
+					"timeout" : 3000,
+					"error" : false,
+					"delay" : 1000,
+					"trigger" : "manual"
+				});
+			}, function(response, putResponseHeaders){
+				$scope.message({
+					"element" : '#form_tipo',
+					"title" : 'Crear Clasificación',
+					"content" : 'Error al intentar crear la clasificación ' + nombre,
+					"timeout" :  3000,
+					"error" : true,
+					"delay" : 1000,
+					"trigger" : "manual"
+				});
+			}
+		);
 	
 	}
 
 	$scope.editTipo = function(tipo){
-		var t = new Tipo(tipo);
-
-		t.$update({idTipo: tipo.id, userId: $rootScope.userId},
-			
+	
+		Resource.getResource(tipo._links.update.href).update(tipo,
 			function(t, putResponseHeaders){
 				$scope.message({
 					"element" : '#form_tipo',
@@ -790,9 +764,9 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 	}
 
 	$scope.deleteTipo = function(tipo){
-		var t = new Tipo(tipo);
 		
-		t.$delete({idTipo: tipo.id}, function(t, putResponseHeaders){
+		Resource.getResource(tipo._links.delete.href).delete(tipo,
+			function(t, putResponseHeaders){
 			removeTipo(tipo);
 			$scope.message({
 				"element" : '#form_tipo',
@@ -804,18 +778,19 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 				"trigger" : "manual"
 			});
 
-		}, function(response, putResponseHeaders){
-			
-			$scope.message({
-				"element" : '#form_tipo',
-				"title" : 'Eliminar Clasificación',
-				"content" : 'Error al intentar eliminar una clasificación',
-				"timeout" :  3000,
-				"error" : true,
-				"delay" : 1000,
-				"trigger" : "manual"
-			});
-		});
+			}, function(response, putResponseHeaders){
+				
+				$scope.message({
+					"element" : '#form_tipo',
+					"title" : 'Eliminar Clasificación',
+					"content" : 'Error al intentar eliminar una clasificación',
+					"timeout" :  3000,
+					"error" : true,
+					"delay" : 1000,
+					"trigger" : "manual"
+				});
+			}
+		);
 		
 		$scope.checkTipo($scope.tarea.tipo);
 	}
@@ -830,14 +805,15 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 		$scope.invalidDate = false;
 	}
 
-	function isAdmin(id){
-		//Por ahora el unico administrador es el usuario con id 1
-		//TODO implementar un criterio para distinguir administradores de usuarios
-		return id == 1;
+	function isAdmin(user){
+		if(user._links.createClasificacion){
+			return true
+		}
+		return false
 	}
 
 	function isValidTipo(tipo){
-		return (isAdmin($rootScope.userId) && tipo.length > 3);
+		return (isAdmin($rootScope.user) && tipo.length > 3);
 	}
 
 	function addTipo(tipo){

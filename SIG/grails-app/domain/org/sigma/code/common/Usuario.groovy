@@ -40,7 +40,24 @@ class Usuario {
 		seguidas column: 'id_usuario', joinTable: 'sig_usuario_tareas_seguidas'
 	}
 	
-	def halRepresenter = [title: username, embedded: ["persona"]]
+	static halResource = {
+		persona embedded: true
+		creadas embedded: false
+		asignadas embedded: false
+		seguidas embedded: false
+
+		links(
+			appRoot: [mapping: "resources", controller: "Tarea", trimId: true],
+			createTarea: [mapping: "resources", controller: "Tarea", trimId: true],
+			fetch: [mapping: "resources", trimId: true], 
+			find: [mapping: "resources", trimId: true],
+			create: [mapping: "resources", trimId: true],
+			update: [mapping: "resource"],
+			delete: [mapping: "resource"],
+			deleteAll: [mapping: "resources", trimId: true],
+			createClasificacion: [mapping: "resources", trimId: true, controller: "Clasificacion", role:["ROLE_ADMIN"]]
+		)
+	}
 
 	Set<Rol>getAuthorities(){
 		RolUsuario.findAllByUsuario(this).collect {it.rol} as Set
@@ -68,19 +85,7 @@ class Usuario {
 		cadena.toLowerCase().split(' ').collect{it.capitalize()}.join(' ')
 	}
 
+	
 
-//	
-//	boolean equals(other){
-//		if(other?.id != this.id) { return false }
-//	
-//		return true
-//	
-//	}
-//	
-//	int hashCode() {
-//		int result =  (id ? id.hashCode() : 0)
-//		result = 31 * result + (username ? username.hashCode() : 0)
-//		
-//		return result
-//	}
+
 }

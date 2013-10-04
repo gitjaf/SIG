@@ -111,13 +111,16 @@
 					<div id="tarea{{tarea.id}}" data-tooltip data-title="{{tarea.asunto}}" class="hoverDiv item-tareas" data-ng-mouseenter="showButtons=true" data-ng-mouseleave="showButtons=false" data-ng-class="{arrow_box: (detalle.id == tarea.id)}">
 						<div class="row-fluid span12 container-listado-titulo">
 							<span id="numero-tarea" class="numero-tarea muted"><small>#{{tarea.id}}</small></span>
-							<span id="titulo-tarea-{{tarea.id}}" class="listado-titulo has-tooltip muted" ><a href="" data-ng-click="verDetalleTarea(tarea)">{{tarea.asunto | cut:false:40}}</a></span>
-							<span data-ng-class="{label : tarea.estado}" class="{{(tarea.estado | lowercase).split(' ').join('')}}">
+							<span id="titulo-tarea-{{tarea.id}}" class="listado-titulo has-tooltip muted" ><a href="" data-ng-click="verDetalleTarea(tarea)">{{tarea.asunto | cut:false:70}}</a></span>
+						</div>
+						<div class="span12 container-listado-tags" style="margin-left: 2px;">
+							<span data-ng-class="{label : tarea.estado}" class="{{(tarea.estado | lowercase).split(' ').join('')}}"><i class="icon-flag"></i>
 								{{tarea.estado}}
 							</span>
-							<span data-ng-class="{label : tarea.prioridad}" class="{{(tarea.prioridad | lowercase).split(' ').join('')}}">
+							<span data-ng-class="{label : tarea.prioridad}" class="{{(tarea.prioridad | lowercase).split(' ').join('')}}"><i class="icon-exclamation-sign"></i>
 								{{tarea.prioridad}}
 							</span>
+							<span class="muted label" data-ng-show="tarea._embedded.tipo"><small><i class="icon-tag"></i>  {{tarea._embedded.tipo.nombre}}</small> </span>
 						</div>
 						<div class="span12 container-listado-estado" style="margin-left: 2px;">
 							<span class="muted"><small><i class="icon-user"></i> {{tarea._embedded.responsable.username}} | </small></span>
@@ -127,7 +130,6 @@
 							<span class="muted" data-ng-hide="tarea.fechaVencimiento"><small> - Sin Revision</small> </span> 
 							<span class="muted" data-ng-show="tarea.fechaVencimiento"><small> - V: {{tarea.fechaVencimiento | date:'dd/MM/yyyy'}}</small></span>
 							<span class="muted" data-ng-hide="tarea.fechaVencimiento"><small> - Sin Vencimiento</small> </span> 
-							<span class="muted" data-ng-show="tarea._embedded.tipo"><small> | <i class="icon-tag"></i>  {{tarea._embedded.tipo.nombre}}</small> </span>
 							<a link-subtareas filtro="filtro" tarea="tarea"></a>
 							<ng-switch on="filtro">
 								<div ng-switch-when="papelera" class="pull-right" data-ng-show="showButtons" >

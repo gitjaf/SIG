@@ -53,9 +53,7 @@ config(['$routeProvider', function($routeProvider) {
         }
     }).
 	
-    otherwise({redirectTo: function(params, path, search){
-        return (path + "tarea");
-	}});
+    otherwise({redirectTo: '/tarea'});
 }]);
 
 /**

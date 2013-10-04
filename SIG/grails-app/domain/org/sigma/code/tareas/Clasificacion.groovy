@@ -19,10 +19,20 @@ class Clasificacion {
     static mapping = {
         table 'sig_tipos_tarea'
     }
+
+    static halResource = {
+        links(
+            fetch: [mapping: "resources", trimId: true, collection: true], 
+            find: [mapping: "resources", trimId: true, collection: true],
+            create: [mapping: "resources", trimId: true, collection: true],
+            update: [mapping: "resource"],
+            delete: [mapping: "resource"],
+        )
+    }
     
     String toString(){
         nombre
     }
 
-    def halRepresenter = [title: nombre, embedded: []]
+    
 }

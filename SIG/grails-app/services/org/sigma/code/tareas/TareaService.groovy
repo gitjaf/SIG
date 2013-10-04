@@ -107,8 +107,8 @@ class TareaService {
         return this.getTareas(id).findAll { tarea -> tarea?.borrado == true }
     }
 
-
-    def getTareas(Map params, String idUsuario){
+    def getTareas = { params, String idUsuario ->
+        
         if(params.tareaSuperior){
             return this.getSubTareas(params.tareaSuperior as Integer, params?.sortBy)
         }
