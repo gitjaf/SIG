@@ -203,29 +203,22 @@ directives.directive("confirmDeleteSeguimiento", function() {
 	}
 });
 
+
 directives.directive("confirmDeleteTarea", function() {
 	return {
 		restrict: 'A',
 		transclude: true,
-		template: 	'<div id="modal-confirm-tarea" style="display: none">'+
-			    		'<h1>{{d2Titulo}}</h1>' +
-			    		'<p>{{d2Warn}}</p>'+
+		template:	'<div id="modal-confirm-tarea" >'+
+			    		'<h1>Eliminar Tarea</h1>' +
+			    		'<p>Esta acción eliminara la tarea y sus subtareas del listado pero no del sistema.'+
+    					' Podra consultarla accediendo a la papelera.'+
+    					' ¿Confirma que desea enviar esta tarea a la papelera?</p>'+
 					'</div>',
 		link: function(scope, element, attrs){
-			if(scope.item.borrado){
-				scope.d2Titulo = 'Eliminar Tarea Permanentemente';
-				scope.d2Warn = 'Esta acción eliminara la tarea y sus subtareas del sistema permanentemente.'+
-    					' Los cambios no podran deshacerse.'+
-    					' ¿Confirma que desea realizar esta eliminación?';
-			} else {
-				scope.d2Titulo = 'Eliminar Tarea';
-				scope.d2Warn = 'Esta acción eliminara la tarea y sus subtareas del listado pero no del sistema.'+
-    					' Podra consultarla accediendo a la papelera.'+
-    					' ¿Confirma que desea enviar esta tarea a la papelera?';
-			}
-
+			
 			//Eventos
 			element.on("click", function(){
+				
 				angular.element("#modal-confirm-tarea").dialog2({
 					id: "confirm-delete-tarea",
 					buttons: {
@@ -238,8 +231,8 @@ directives.directive("confirmDeleteTarea", function() {
 						},
 						Si: {
 							click: function(){
-								scope.item.borrado = true;
-								scope.del(scope.item);//del es una funcion wrapper definida en la directiva taskbuttons
+								scope.detalle.borrado = true;
+								scope.save(scope.detalle);
 								
 								angular.element('#confirm-delete-tarea').dialog2("close");
 							},
@@ -257,6 +250,54 @@ directives.directive("confirmDeleteTarea", function() {
 		
 	}
 });
+
+directives.directive("confirmDestroyTarea", function() {
+	return {
+		restrict: 'A',
+		template:	'<div id="modal-confirm-tarea" style="display: none">'+
+						'<h1>Eliminar Tarea Permanentemente</h1>' +
+						'<p>Esta acción eliminara la tarea y sus subtareas del sistema permanentemente.'+
+						' Los cambios no podran deshacerse.'+
+						' ¿Confirma que desea realizar esta eliminación?</p>'+
+					'</div>',
+
+		link: function(scope, element, attrs){
+			//Eventos
+			element.on("click", function(){
+				
+				angular.element("#modal-confirm-tarea").dialog2({
+					id: "confirm-delete-tarea",
+					buttons: {
+						No: {
+							click: function(){
+								angular.element('#confirm-delete-tarea').dialog2("close");
+							},
+							primary: false,
+							type: "dialog-close"
+						},
+						Si: {
+							click: function(){
+								scope.detalle.borrado = true;
+								scope.borrar(scope.detalle);
+								
+								angular.element('#confirm-delete-tarea').dialog2("close");
+							},
+							primary: false,
+							type: "btn-danger"
+						}
+					},
+					closeOnOverlayClick: true, // Should the dialog be closed on overlay click?
+					closeOnEscape: true, // Should the dialog be closed if [ESCAPE] key is pressed?
+					removeOnClose: true, // Should the dialog be removed from the document when it is closed?
+					showCloseHandle: true, // Should a close handle be shown?
+				});
+			});
+		}
+		
+	}
+});
+
+
 
 directives.directive("confirmVaciarPapelera", function() {
 	return {
@@ -311,7 +352,7 @@ directives.directive("linkSubtareas", function() {
 		restrict: 'A',
 		replace: true,
 		scope: {filtro:'=filtro', tarea: '=tarea'},
-		template: 	'<span class="muted" data-ng-show="cantidad" ><small> | <i class="icon-arrow-down"></i> <a>{{texto}}</a></small></span>',
+		template: 	'<span class="muted" data-ng-show="cantidad" ><small> | <a> </a></small></span>',
 		link: function(scope, element, attrs){
 			updateValues();
 			scope.$on("subtareaAgregada", function(){
@@ -332,7 +373,7 @@ directives.directive("linkSubtareas", function() {
 				
 				if(cantidad > 1){texto += 's'}
 				scope.cantidad = cantidad;
-				element.find('a').text(cantidad + texto);
+				element.find('a').append('<i class="icon-arrow-down"></i>  ' +cantidad);
 				
 			}
 			

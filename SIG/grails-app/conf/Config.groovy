@@ -64,7 +64,7 @@ grails.hibernate.cache.queries = false
 environments {
     development {
         grails.logging.jul.usebridge = true
-
+        grails.resources.debug = true
         //Agregado para app-info
         grails.plugins.dynamicController.mixins = [
            'com.burtbeckwith.grails.plugins.appinfo.IndexControllerMixin':

@@ -12,7 +12,7 @@
 
 </head>
 <body>
-	<div data-ng-view data-ng-controller="AppCtrl">
+	<div data-ng-view data-ng-controller="AppCtrl" data-ng-cloak>
 	</div>
 	
 <r:layoutResources/>	

@@ -21,6 +21,7 @@ function LoginCtrl($scope, $rootScope, $routeParams, $location, AuthService) {
 				$rootScope.user = usuario;
 				$rootScope.userId = usuario.id;
 				$location.url(usuario._links.appRoot.href)
+
 			},
 
 			function(response, putResponseHeaders){
@@ -43,6 +44,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		"text": "Salir",
 		"click": "logout()"
 	}];
+	$scope.detalle = {};
 
 
 	$scope.safeApply = function(fn) {
@@ -149,6 +151,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	}
 
 	$scope.nuevaTarea = function(tarea){
+		
 		$scope.form = 'tarea';
 		$scope.showTipo = false;
 		$scope.showTiempo = false;
@@ -168,6 +171,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	}
 
 	$scope.editarTarea = function(t){
+		
 		$scope.form = 'tarea';
 		$scope.tarea = new Tarea();
 		angular.copy(t, $scope.tarea);
@@ -176,9 +180,9 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		$scope.tarea.tipo = getProperty("tipo", $scope.tarea);
 		$scope.showTipo = !(_.isEmpty($scope.tarea.tipo));
 
-		$scope.tarea.fechaInicio = $filter('date')($scope.tarea.fechaInicio, "dd/MM/yyyy");
-		$scope.tarea.fechaRevision = $filter('date')($scope.tarea.fechaRevision, "dd/MM/yyyy");
-		$scope.tarea.fechaVencimiento = $filter('date')($scope.tarea.fechaVencimiento, "dd/MM/yyyy");
+		$scope.tarea.fechaInicio = $filter('date')($scope.tarea.fechaInicio, "dd/MM/yy");
+		$scope.tarea.fechaRevision = $filter('date')($scope.tarea.fechaRevision, "dd/MM/yy");
+		$scope.tarea.fechaVencimiento = $filter('date')($scope.tarea.fechaVencimiento, "dd/MM/yy");
 		angular.copy($scope.tarea.fechaInicio, $scope.dateInicia);
 		angular.copy($scope.tarea.fechaVencimiento, $scope.dateVence);
 
@@ -207,9 +211,9 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		angular.copy(tarea, $scope.tarea);
 		$scope.tarea.idTareaSuperior = idTareaSuperior;
 				
-		$scope.tarea.fechaInicio = $filter('date')(tarea.fechaInicio, "dd/MM/yyyy");
-		$scope.tarea.fechaRevision = $filter('date')($scope.tarea.fechaRevision, "dd/MM/yyyy");
-		$scope.tarea.fechaVencimiento = $filter('date')(tarea.fechaVencimiento, "dd/MM/yyyy");
+		$scope.tarea.fechaInicio = $filter('date')(tarea.fechaInicio, "dd/MM/yy");
+		$scope.tarea.fechaRevision = $filter('date')($scope.tarea.fechaRevision, "dd/MM/yy");
+		$scope.tarea.fechaVencimiento = $filter('date')(tarea.fechaVencimiento, "dd/MM/yy");
 		
 		if($scope.tarea.id){
 			Resource.getResource(
@@ -292,6 +296,12 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		}
 	}
 
+	$scope.borradoLogico = function(tarea){
+		tarea.borrado = true;
+		$scope.save(tarea);
+		$scope.ocultarDetalle();
+	}
+
 	$scope.borrar = function(tarea){
 		var tareas = $scope.tareas._embedded.collection;
 
@@ -344,15 +354,17 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		tarea.borrado = false;
 		tarea.restaurada = true;
 		$scope.save(tarea);
+		$scope.ocultarDetalle();
 	}
 
 	$scope.verDetalleTarea = function(tarea){
 		$scope.showDetalle = true;
-		setTimeout(function(){
-			$scope.safeApply(function(){
-				$scope.detalle = tarea;
-			});
-		}, 300);
+		$scope.detalle = tarea;		
+		// setTimeout(function(){
+		// 	$scope.safeApply(function(){
+		// 		$scope.detalle = tarea;
+		// 	});
+		// }, 5000);
 	}
 
 	
@@ -543,7 +555,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 
 	function refresh(){
 		var url = $rootScope.user._links.appRoot.href;
-
+		
 		$scope.tareas = Resource.getResource(url).find({
 			page: $rootScope.page,
 			itemsPerPage: $rootScope.items,

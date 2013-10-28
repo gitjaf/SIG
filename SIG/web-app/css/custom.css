@@ -1,6 +1,19 @@
 body{
 	background-color: #F5F5F5;
 	font-family: Lato;
+	overflow-y: hidden;
+	overflow-x: hidden;
+}
+
+[ng\:cloak], [ng-cloak], .ng-cloak {
+    display: none !important;
+}
+
+.background{
+	overflow-x: hidden;
+	overflow-y: scroll;
+	max-height: 615px;
+
 }
 
 .form-login{
@@ -42,7 +55,7 @@ body{
 .activeLink, .activeLink a{
 	font-weight: bolder;
 	text-transform: uppercase;
-	color: #FF9E24;
+	color: #049CDB;
 	
 }
 
@@ -56,7 +69,7 @@ body{
 
 .header{
 	background-color: #f1f1f1;
-	padding-top: 10px;
+	padding-top: 5px;
 	border-bottom: solid 1px #eaeaea;
 }
 
@@ -65,7 +78,7 @@ body{
 	padding-top: 0px;
 	padding-bottom: 0px;
 	padding-right: 0px;
-	color: #ddd;
+	color: #bbb;
 	margin: 0px;
 	margin-top: 5px !important;
 
@@ -76,13 +89,13 @@ body{
 	padding-top: 0px;
 	padding-bottom: 0px;
 	padding-right: 0px;
-	color: #ddd;
+	color: #ccc;
 	margin: 0px;
 	line-height:10px;
 }
 
 .buscador{
-	padding-top: 6px;
+	padding-top: 8px;
 
 }
 
@@ -162,28 +175,39 @@ body{
 
 .container-detalle{
 	margin-top: 2%;
-	min-height: 692px;
+	min-height: 580px;
 	border: solid 1px #eee;
 	border-radius: 5px;
-	width: 115%;
-	margin-left: -2px !important;
+	width: 110%;
+	margin-left: -15px !important;
 	margin-bottom: 2%;
 	padding-bottom: 2%;
 	background-color: white;
 	
-	-webkit-box-shadow:  4px 4px 6px 2px silver;
-    box-shadow:  4px 4px 6px 2px silver;
+	-webkit-box-shadow:  0px 0px 6px 3px silver;
+    box-shadow:  0px 0px 6px 3px silver;
 }
 
 .container-detalle .container-titulo{
 	background-color: white;
 	margin-left: 0px !important;
 	border-bottom: solid 1px #ddd;
-	
+	padding-top: 5px;
+	padding-bottom: 8px;
+	padding-left: 4px;
+}
+
+.container-detalle-actions{
+	padding-top: 6px;
+	margin-left: 0px !important;
+	border-bottom: solid 1px #ddd;
+	text-align: center;
 }
 
 .titulo-tarea{
 	margin-left: 5px !important;
+	font-size: 17px;
+	padding-top: 2px;
 }
 
 .detalle{
@@ -235,6 +259,7 @@ body{
 
 .detalle-titulo{
 	margin-left: 2%;
+
 }
 
 .detalle-fecha{
@@ -292,11 +317,16 @@ body{
     display: block;
     float: left;
 	white-space: nowrap !important;
-	
 }
+
+
 
 .row-fluid .span2.filtros{
 	width: 13%;
+	min-height: 560px;
+	border-right: 1px solid #dedede;
+	padding-right: 5px;
+
 }
 
 .filtros.filtros-toggle{
@@ -313,7 +343,7 @@ body{
 
 
 .filtros-toggle:hover{
-	background-color: #eee;
+	background-color: #ccc;
 }
 
 .filtros ul li{
@@ -324,17 +354,22 @@ body{
 }
 
 .filtros ul li:hover{
-	background-color: #eaeaea;
+	background-color: #049CDB;
+}
+
+.filtros ul li:hover a{
+	color: white;
 }
 
 .filtros ul li.active{
-	background-color: #FF9E24;
+	background-color: #049CDB;
 	color: white;
 	font-weight: bolder;
 }
 
 .filtros ul li a:hover{
 	text-decoration: none;
+
 }
 
 .filtros ul li.active a{
@@ -371,19 +406,27 @@ body{
 	text-decoration: underline;
 }
 
-.container-listado-estado{
+.container-listado-datos{
 	padding-left: 4px;
 	padding-top: 0px;
-	margin-left: 2px !important;
-	min-height: 30px !important;
+	margin-left: -10px !important;
+	min-height: 20px !important;
+}
+
+.container-listado-estado {
+	width: 0.9% !important;
+}
+
+.container-listado-estado div{
+	margin-top: 4px;
 }
 
 .container-listado-tags{
-	padding-left: 4px;
-	padding-top: 10px;
+	padding-right: 4px;
+	/*padding-top: 10px;*/
 	padding-bottom: 0px;
 	margin-left: 2px !important;
-	min-height: 32px !important;
+	min-height: 20px !important;
 }
 
 .listado-descripcion{
@@ -402,6 +445,7 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 
 .edited{
 	background-color: #FCF8E3;
+	
 }
 
 .created{
@@ -472,6 +516,10 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 	background-color: #46a546;	
 }
 
+.sinapuro{
+	background-color: silver;
+}
+
 /*----MODALS----*/
 
 .modal-body {
@@ -530,7 +578,7 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 	filter: alpha(opacity=30);
 }
 
-.dialog2-modal .modal-body{
+.confirm-modal .modal-body{
 	max-height: 100px;
 	height: 100px;
 }
@@ -576,6 +624,10 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 
 .txt-orange {
 	color: #FF9E24;
+}
+
+.txt-red{
+	color: #9d261d;
 }
 
 /*---TYPEAHEAD---*/
@@ -653,9 +705,9 @@ li.ui-animate {
 	border-radius: 4px;
 	margin-top: 10px;
 	background-color: white;
-
-	-webkit-box-shadow:  4px 4px 6px 2px silver;
-    box-shadow:  4px 4px 6px 2px silver;
+	margin-left: 10px !important;
+/*	-webkit-box-shadow:  4px 4px 6px 2px silver;
+    box-shadow:  4px 4px 6px 2px silver;*/
 }
 
 .row-fluid [class*="span"].container-listado-tareas{
@@ -664,18 +716,27 @@ li.ui-animate {
 
 .listado-tareas{
 	margin-left: 0px !important;
+	height: 555px;
 }
 
 .item-tareas{
 	border-bottom: solid 1px #e5e5e5;
-	padding-top: 3px;
+	/*padding-top: 3px;*/
 	padding-bottom: 3px;
-	min-height: 80px;
+	/*margin-top: 3px;*/
+	min-height: 50px;
+}
+
+.item-tareas-selected {
+	-webkit-box-shadow:  -6px 0px 6px 3px silver !important;
+    box-shadow: -6px 0 6px 3px #C0C0C0 !important;
+    position: relative;
+    width: 545px;
+    z-index: 0;
 }
 
 .listado-titulo{
-	font-size: 13pt;
-	font-weight: bold;
+	font-size: 11pt;
 	padding-left:8px;
 }
 
@@ -683,7 +744,7 @@ li.ui-animate {
 .row-fluid.span12.container-listado-titulo{
 	min-height: 0px;
 	height: 22px;
-	padding-top: 5px;
+	/*padding-top: 5px;*/
 	padding-bottom: 4px;
 
 }
@@ -713,12 +774,12 @@ li.ui-animate {
 
 /*------ CSS ARROW PLEASE -------*/
 
-.arrow_box {
+/*.arrow_box {
 	position: relative;
 	background: #f0edff;
 	/*border: 1px solid #040505;*/
 }
-.arrow_box:after, .arrow_box:before {
+/*.arrow_box:after, .arrow_box:before {
 	right: 100%;
 	border: solid transparent;
 	content: "";
@@ -726,24 +787,26 @@ li.ui-animate {
 	width: 0;
 	position: absolute;
 	pointer-events: none;
-}
+}*/
 
-.arrow_box:after {
+/*.arrow_box:after {
 	border-color: rgba(240, 237, 255, 0);
 	border-right-color: white;
 	border-width: 25px;
 	top: 50%;
 	right: -5.4%;
 	margin-top: -25px;
-}
-.arrow_box:before {
+}*/
+/*.arrow_box:before {
 	border-color: rgba(4, 5, 5, 0);
 	border-right-color: transparent;
 	border-width: 26px;
 	top: 50%;
 	right: -5.3%;
 	margin-top: -26px;
-}
+}*/
+
+
 
 .row-fluid [class*="span"].no-margin-left{
 	margin-left: 0px !important;

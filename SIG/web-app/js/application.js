@@ -8,7 +8,7 @@ if (typeof jQuery !== 'undefined') {
 	})(jQuery);
 }
 
-angular.module('sig', ['sig.services', 'sig.directives', 'ui', 'angular-underscore', '$strap']).
+angular.module('sig', ['sig.services', 'sig.directives', 'ui', 'angular-underscore', '$strap.directives']).
 config(['$routeProvider', function($routeProvider) {
 	$routeProvider.
 	when('/login', {
