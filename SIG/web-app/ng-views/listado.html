@@ -24,24 +24,24 @@
 			<div class="muted"><small>Mostrar tareas:</small></div>
 			<ul class="unstyled">
 				<li data-ng-class="{active: isActive('todas') }">
-					<i data-ng-show="isActive('todas')" class="icon-chevron-right"></i>
-					<a class="muted" data-ng-click="changeFilter('todas')">Todas</a> <span class="badge bdg-white txt-blue" data-ng-show="isActive('todas')">{{tareas.data.total}}</span>
+					
+					<span class="pull-left"><a class="muted" data-ng-click="changeFilter('todas')">Todas</a></span> <span class="badge bdg-white txt-blue pull-right" data-ng-show="isActive('todas')">{{tareas.data.total}}</span>
 				</li>
 				<li data-ng-class="{active: isActive('propias')}">
-					<i data-ng-show="isActive('propias')"  class="icon-chevron-right "></i>
-					<a class="muted" data-ng-click="changeFilter('propias')">Propias</a> <span class="badge bdg-white txt-blue" data-ng-show="isActive('propias')">{{tareas.data.total}}</span>
+					
+					<span class="pull-left"><a class="muted" data-ng-click="changeFilter('propias')">Propias</a></span> <span class="badge bdg-white txt-blue pull-right" data-ng-show="isActive('propias')">{{tareas.data.total}}</span>
 				</li>
 				<li data-ng-class="{active: isActive('asignadas')}">
-					<i data-ng-show="isActive('asignadas')" class="icon-chevron-right "></i>
-					<a class="muted" data-ng-click="changeFilter('asignadas')">Asignadas</a> <span class="badge bdg-white txt-blue" data-ng-show="isActive('asignadas')">{{tareas.data.total}}</span>
+					
+					<span class="pull-left"><a class="muted" data-ng-click="changeFilter('asignadas')">Asignadas</a></span> <span class="badge bdg-white txt-blue pull-right" data-ng-show="isActive('asignadas')">{{tareas.data.total}}</span>
 				</li>
 				<li data-ng-class="{active: isActive('seguidas')}">
-					<i data-ng-show="isActive('seguidas')" class="icon-chevron-right "></i>
-					<a class="muted" data-ng-click="changeFilter('seguidas')">Seguidas</a> <span class="badge bdg-white txt-blue" data-ng-show="isActive('seguidas')">{{tareas.data.total}}</span>
+					
+					<span class="pull-left"><a class="muted" data-ng-click="changeFilter('seguidas')">Seguidas</a></span> <span class="badge bdg-white txt-blue pull-right" data-ng-show="isActive('seguidas')">{{tareas.data.total}}</span>
 				</li>
 				<li data-ng-class="{active: isActive('papelera')}">
-					<i data-ng-show="isActive('papelera')" class="icon-chevron-right "></i>
-					<a class="muted" data-ng-click="changeFilter('papelera')">Papelera</a> <span class="badge bdg-white txt-blue" data-ng-show="isActive('papelera')">{{tareas.data.total}}</span>
+					
+					<span class="pull-left"><a class="muted" data-ng-click="changeFilter('papelera')">Papelera</a></span> <span class="badge bdg-white txt-blue pull-right" data-ng-show="isActive('papelera')">{{tareas.data.total}}</span>
 				</li>
 				
 			</ul>
@@ -137,9 +137,10 @@
 							<div class="{{(tarea.prioridad | lowercase).split(' ').join('')}}">&nbsp;</div>
 						</div>
 						<div class="row-fluid span11">
-							<div class="row-fluid span12 container-listado-titulo">
+							<div class="row-fluid span11 container-listado-titulo">
 								<span id="numero-tarea" class="numero-tarea muted"><small>#{{tarea.id}}</small></span>
 								<span id="titulo-tarea-{{tarea.id}}" class="listado-titulo has-tooltip muted" ><a href="" data-ng-click="verDetalleTarea(tarea)">{{tarea.asunto | cut:false:60}}</a></span>
+							
 							<!-- 	<ng-switch on="filtro">
 									<div ng-switch-when="papelera" class="pull-right" data-ng-show="showButtons" >
 										<div taskbuttons item="tarea" alt="true" raiz="{{raiz}}" undo="restaurar(tarea)" delete="borrar(tarea)"></div>
@@ -149,6 +150,7 @@
 									</div>
 								</ng-switch> -->
 						</div>
+						
 							<div class="span12 container-listado-datos" style="margin-left: 2px;">
 								<span class="muted"><small><i class="icon-user"></i> {{tarea._embedded.responsable.username}} | </small></span>
 								<span class="muted" data-ng-show="tarea.fechaInicio"><small><i class="icon-calendar"></i> I: {{tarea.fechaInicio | date:'dd/MM/yy'}}</small></span>
@@ -176,7 +178,7 @@
 				<pager collection="tareas"  class="span6 pagination pagination-small footer-listado"/>
 			</div>
 		</div>
-		<div id="detalle" class="span5 container-tarea-detalle" data-ng-show="showDetalle" data-ng-include src="'./ng-views/detalle.html'" >
+		<div id="detalle" class="span5 container-tarea-detalle" data-ng-show="detalle" data-ng-include src="'./ng-views/detalle.html'" >
 		</div>
 	</div>
 </div>

@@ -298,7 +298,6 @@ directives.directive("confirmDestroyTarea", function() {
 });
 
 
-
 directives.directive("confirmVaciarPapelera", function() {
 	return {
 		restrict: 'A',
@@ -352,7 +351,7 @@ directives.directive("linkSubtareas", function() {
 		restrict: 'A',
 		replace: true,
 		scope: {filtro:'=filtro', tarea: '=tarea'},
-		template: 	'<span class="muted" data-ng-show="cantidad" ><small> | <a> </a></small></span>',
+		template: 	'<span class="muted" data-ng-show="cantidad" ><small> | <a><i class="icon-arrow-down"></i> {{cantidad}} </a></small></span>',
 		link: function(scope, element, attrs){
 			updateValues();
 			scope.$on("subtareaAgregada", function(){
@@ -371,9 +370,9 @@ directives.directive("linkSubtareas", function() {
 				
 				var cantidad = coleccion.length;
 				
-				if(cantidad > 1){texto += 's'}
+				// if(cantidad > 1){texto += 's'}
 				scope.cantidad = cantidad;
-				element.find('a').append('<i class="icon-arrow-down"></i>  ' +cantidad);
+				// element.find('a').append(cantidad);
 				
 			}
 			

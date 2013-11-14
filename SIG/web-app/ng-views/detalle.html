@@ -1,83 +1,108 @@
 <div>
 	<div class="row-fluid container-detalle">
 		<div class="span12 container-titulo">
-			<div class="span10 titulo-tarea">{{detalle.asunto}}</div>
-			<div class="span1 pull-right muted">
+			<div class="span1 pull-left muted">
 				<a data-ng-click="ocultarDetalle()">
-					<i class="icon-remove icon-large muted"></i>
+					<i class="icon-arrow-left icon-large muted"></i>
 				</a>
 			</div>
-		</div>
-
-		<div class="span12 container-detalle-actions" data-ng-show="isActive('papelera')">
-			<a data-ng-click="restaurar(detalle)" class="span3"><i class="icon-reply"></i> Restaurar</a>	
-			<a class="span3 txt-red pull-right" bs-modal="'./ng-views/partials/confirmDestroyTarea.html'"> <i class="icon-trash"> </i> Eliminar</a>	
-		</div>
-		<div class="span12 container-detalle-actions" data-ng-hide="isActive('papelera')">
-			<a data-ng-click="nuevaTarea(detalle)" data-toggle="modal" data-target="#edit" class="span3"><i class="icon-arrow-down"></i> Subtarea</a>	
-			<a data-ng-click="editarSeguimiento(detalle)" data-toggle="modal" data-target="#edit" class="span3"><i class="icon-eye-open"></i> Seguimiento</a>	
-			<a data-ng-click="editarTarea(detalle)" data-toggle="modal" data-target="#edit" class="span3"><i class="icon-pencil"></i> Editar</a>	
-			<a class="span3 txt-red" bs-modal="'./ng-views/partials/confirmDeleteTarea.html'"> <i class="icon-trash"> </i> Eliminar</a>	
-		</div>
-
-		<div class="span12 detalle-estado">
-			<div >
-				<span class="detalle-fecha"><i class="icon-calendar txt-orange"></i> Inicia: 
-				{{detalle.fechaInicio |date: 'fullDate'}}<small class="muted" data-ng-hide="detalle.fechaInicio">Sin Inicio</small></span>
-				<span class="detalle-titulo"><i class="icon-flag txt-orange"></i> Estado: </span>
-				<span data-ng-class="{label : detalle.estado}" class="{{(detalle.estado | lowercase).split(' ').join('')}} detalle-label">{{detalle.estado}}
-				</span>
-
+			<div class="span10 titulo-tarea">
+			{{detalle.asunto}}
+			&nbsp;&nbsp;<a data-ng-click="restaurar(detalle)" data-ng-show="isActive('papelera')" class="detalle-edit btn btn-mini">
+				<i class="icon-reply"></i> Restaurar
+			</a>
+			&nbsp;&nbsp;<a data-ng-click="editarTarea(detalle)" data-ng-hide="isActive('papelera')" data-toggle="modal" data-target="#edit" class="detalle-edit btn btn-mini">
+				<i class="icon-pencil txt-blue"></i> 
+			</a>
 			</div>
-			<div >
-				<span class="detalle-fecha"><i class="icon-calendar txt-orange"></i> Revisión: {{detalle.fechaRevision |date: 'fullDate'}} <small class="muted" data-ng-hide="detalle.fechaRevision">Sin Revisión</small></span>
-				<span class="detalle-titulo"><i class="icon-flag txt-orange"></i> Prioridad: </span>
-				<span data-ng-class="{label : detalle.prioridad}" class="{{(detalle.prioridad | lowercase).split(' ').join('')}} detalle-label">{{detalle.prioridad}}
-				</span>
-
-			</div>
-			<div >
-				<span class="detalle-fecha"><i class="icon-calendar txt-orange"></i> Vence: {{detalle.fechaVencimiento |date: 'fullDate'}} <small class="muted" data-ng-hide="detalle.fechaVencimiento">Sin Vencimiento</small></span>
-				<span class="detalle-tipo"><i class="icon-tag txt-orange"></i> Clasificada: {{detalle._embedded.tipo.nombre}}</span>
-			</div>
-			
-		</div>
-		<div class="span12 body-detalles">
-			<div id="creador" class="span11 detalle-asignados">
-				<span class="detalle-responsable"><i class="icon-user txt-orange"></i> Creada por: {{detalle._embedded.responsable._embedded.persona.nombres}} {{detalle._embedded.responsable._embedded.persona.apellidos}} </span>
-			</div>
-			<div id="asignados" class="span11 detalle-asignados" data-ng-show="detalle._embedded.asignados">
-				<i class="icon-group txt-orange"></i>  Asignados:<br>
-				<div>
-					<span class="muted" data-ng-repeat="asignado in detalle._embedded.asignados">{{asignado._embedded.persona.nombres}} {{asignado._embedded.persona.apellidos}}, </span>
+			<div class="span1 muted">
+				<div class="span12">
+					<a class="btn btn-mini btn-danger" data-ng-hide="isActive('papelera')" bs-modal="'./ng-views/partials/confirmDeleteTarea.html'">
+						<i class="icon-trash icon-large txt-white"></i>
+					</a>
+					<a class="btn btn-mini btn-danger" data-ng-show="isActive('papelera')"bs-modal="'./ng-views/partials/confirmDestroyTarea.html'">
+						<i class="icon-trash icon-large txt-white"></i>
+					</a>
 				</div>
 			</div>
-			<div id="seguidores" class="span11 detalle-asignados detalle-seguidores" data-ng-show="detalle._embedded.seguidores" style="margin-left:0px;">
-				<i class="icon-group txt-orange"></i>  Seguidores:<br>
-				<div>
-					<span class="muted" data-ng-repeat="seguidor in detalle._embedded.seguidores">{{seguidor._embedded.persona.nombres}} {{seguidor._embedded.persona.apellidos}}, </span>
+		</div>
+
+		<div class="span12 detalle-body">
+			<div class="span12 detalle-estado">
+				<div >
+					<span class="detalle-fecha"><i class="icon-calendar txt-orange"></i> Inicia: 
+					{{detalle.fechaInicio |date: 'fullDate'}}<small class="muted" data-ng-hide="detalle.fechaInicio">Sin Inicio</small></span>
+					<span class="detalle-titulo"><i class="icon-flag txt-orange"></i> Estado: </span>
+					<span data-ng-class="{label : detalle.estado}" class="{{(detalle.estado | lowercase).split(' ').join('')}} detalle-label">{{detalle.estado}}
+					</span>
+
 				</div>
+				<div >
+					<span class="detalle-fecha"><i class="icon-calendar txt-orange"></i> Revisión: {{detalle.fechaRevision |date: 'fullDate'}} <small class="muted" data-ng-hide="detalle.fechaRevision">Sin Revisión</small></span>
+					<span class="detalle-titulo"><i class="icon-flag txt-orange"></i> Prioridad: </span>
+					<span data-ng-class="{label : detalle.prioridad}" class="{{(detalle.prioridad | lowercase).split(' ').join('')}} detalle-label">{{detalle.prioridad}}
+					</span>
+
+				</div>
+				<div>
+					<span class="detalle-fecha"><i class="icon-calendar txt-orange"></i> Vence: {{detalle.fechaVencimiento |date: 'fullDate'}} <small class="muted" data-ng-hide="detalle.fechaVencimiento">Sin Vencimiento</small></span>
+				</div>
+				<div class="detalle-tipo">
+					<i class="icon-tag txt-orange"></i> Clasificada: {{detalle._embedded.tipo.nombre}}
+				</div>
+				
 			</div>
-			<div id="descripcion" class="span12 detalle-descripcion" data-ng-show="detalle.descripcion"><i class="icon-reorder txt-orange"></i> Descripción: <br>{{detalle.descripcion}}</div>
-			
-			<div class="span12 detalle-seguimientos" data-ng-show="detalle._embedded.seguimientos"> 
-				<div class="span12" ><i class="icon-eye-open txt-orange"></i> Seguimientos: </div>
-				<div class="span11 seguimiento" data-ng-repeat="seguimiento in detalle._embedded.seguimientos" data-ng-mouseenter="showButtons=true" data-ng-mouseleave="showButtons=false">
-					<div class="span8">
-						<div class="span12 titulo_seguimiento txt-blue"><a data-ng-click="editarSeguimiento(detalle, seguimiento)" data-toggle="modal" data-target="#edit">{{seguimiento.titulo}}</a></div>
-						<div class="span12 muted"><small>{{seguimiento.descripcion}}</small></div>
-					</div>
-					<div class="span2 muted fecha_seguimiento pull-right"><small class="">{{seguimiento.fecha | date:mediumDate}}</small>
-						<a class="btn btn-mini btn-danger" data-ng-show="showButtons"confirm-delete-seguimiento data-ng-transclude><i class="icon-trash"></i> Borrar</a>
+			<div class="span12 body-detalles">
+				
+				<div id="creador" class="span11 detalle-asignados">
+					<span class="detalle-responsable"><i class="icon-user txt-orange"></i> Creada por: {{detalle._embedded.responsable._embedded.persona.nombres}} {{detalle._embedded.responsable._embedded.persona.apellidos}} </span>
+				</div>
+
+				<div id="asignados" class="span11 detalle-asignados" data-ng-show="detalle._embedded.asignados">
+					<i class="icon-group txt-orange"></i>  Asignados:<br>
+					<div>
+						<span class="muted" data-ng-repeat="asignado in detalle._embedded.asignados">{{asignado._embedded.persona.nombres}} {{asignado._embedded.persona.apellidos}}, </span>
 					</div>
 				</div>
-			</div>
-			<div class="span12 detalle-seguimientos" data-ng-show="detalle._embedded.tareasRelacionadas"> 
-				<div class="span12" ><i class="icon-tasks txt-orange"></i> Subtareas: </div>
-				<div id="seguimientos" class="span11 seguimiento" data-ng-repeat="subtarea in detalle._embedded.tareasRelacionadas">
-						<div class="span8 titulo_seguimiento txt-blue">{{subtarea.asunto}}</div>
-						<div class="span2 muted fecha_seguimiento pull-right"><small class="">{{subtarea.fechaInicio | date:mediumDate}}</small></div>
-						<div class="span12 muted"><small>{{subtarea.descripcion}}</small></div>
+
+				<div id="seguidores" class="span11 detalle-asignados detalle-seguidores" data-ng-show="detalle._embedded.seguidores" style="margin-left:0px;">
+					<i class="icon-group txt-orange"></i>  Seguidores:<br>
+					<div>
+						<span class="muted" data-ng-repeat="seguidor in detalle._embedded.seguidores">{{seguidor._embedded.persona.nombres}} {{seguidor._embedded.persona.apellidos}}, </span>
+					</div>
+				</div>
+				<div id="descripcion" class="span12 detalle-descripcion" data-ng-show="detalle.descripcion"><i class="icon-reorder txt-orange"></i> Descripción: <br>{{detalle.descripcion}}</div>
+				
+				<div class="span12 detalle-seguimientos" > 
+					<div class="span12" ><i class="icon-arrow-down txt-orange"></i> Subtareas: &nbsp; 
+						<a class="btn btn-mini txt-blue" data-ng-click="nuevaTarea(detalle)" data-toggle="modal" data-target="#edit">
+							<i class="icon-plus"></i> 
+						</a>
+					</div>
+					<div id="seguimientos" class="span11 seguimiento" data-ng-repeat="subtarea in detalle._embedded.tareasRelacionadas">
+							<div class="span8 titulo_seguimiento txt-blue">
+								<a data-ng-click="addCrumb(detalle, subtarea)">{{subtarea.asunto}}</a>
+							</div>
+							<div class="span2 muted fecha_seguimiento pull-right"><small class="">{{subtarea.fechaInicio | date:mediumDate}}</small></div>
+							<!-- <div class="span12 muted"><small>{{subtarea.descripcion}}</small></div> -->
+					</div>
+				</div>
+				
+				<div class="span12 detalle-seguimientos"> 
+					<div class="span12" ><i class="icon-eye-open txt-orange"></i> Seguimientos: &nbsp; 
+						<a class="btn btn-mini txt-blue"  data-ng-click="editarSeguimiento(detalle)" data-toggle="modal" data-target="#edit">
+							<i class="icon-plus"></i> 
+						</a>
+					</div>
+					<div class="span11 seguimiento" data-ng-repeat="seguimiento in detalle._embedded.seguimientos" data-ng-mouseenter="showButtons=true" data-ng-mouseleave="showButtons=false">
+						<div class="span8">
+							<div class="span12 titulo_seguimiento txt-blue"><a data-ng-click="editarSeguimiento(detalle, seguimiento)" data-toggle="modal" data-target="#edit">{{seguimiento.titulo}}</a></div>
+							<div class="span12 muted"><small>{{seguimiento.descripcion}}</small></div>
+						</div>
+						<div class="span2 muted fecha_seguimiento pull-right"><small class="">{{seguimiento.fecha | date:mediumDate}}</small>
+							<a class="btn btn-mini btn-danger" data-ng-show="showButtons" bs-modal="'./ng-views/partials/confirmDeleteSeguimiento.html'"><i class="icon-trash"></i> Borrar</a>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

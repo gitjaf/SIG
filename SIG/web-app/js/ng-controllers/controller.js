@@ -44,7 +44,16 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		"text": "Salir",
 		"click": "logout()"
 	}];
-	$scope.detalle = {};
+	
+	$scope.detalle = undefined;
+
+	$scope.verDetalleTarea = function(tarea){
+		$scope.detalle = tarea;		
+	}
+
+	if($rootScope.detalle){
+		$scope.verDetalleTarea($rootScope.detalle);
+	}
 
 
 	$scope.safeApply = function(fn) {
@@ -100,6 +109,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		$scope.query = "";
 		$rootScope.tareaSuperior = undefined;
 		$rootScope.idTarea = undefined;
+		$rootScope.detalle = undefined;
 	}
 
 	$scope.$on('filter', function(event, filter){
@@ -133,7 +143,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		return undefined;
 	}
 
-	$scope.addCrumb = function(tarea){
+	$scope.addCrumb = function(tarea, subtarea){
 		if(!$rootScope.navigation){
 			$rootScope.navigation = [];
 		}
@@ -144,10 +154,12 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		});
 		$rootScope.raiz = undefined;
 		$rootScope.navigation.push(tarea);
+		$rootScope.detalle = subtarea;
 		$location.url(tarea._links.self.href+"/"+$rootScope.filtro);
 		$routeParams.page = 0;
 		$rootScope.idTarea = tarea.id;
 		$rootScope.tareaSuperior = tarea;
+		
 	}
 
 	$scope.nuevaTarea = function(tarea){
@@ -235,6 +247,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 					duracion = 4000,
 					tipo = 'alert-success';
 					$scope.alert(titulo, mensaje, tipo, duracion);
+					$scope.detalle = tarea;
 					
 				}, function(response, putResponseHeaders){
 					var mensaje = "Error al editar la tarea '" + $scope.tarea.asunto + "'",
@@ -276,6 +289,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 							$scope.tareas._embedded.collection.push(tarea);
 							$scope.tareas.data.total = $scope.tareas.data.total + 1;
 						}
+						$scope.detalle = tareaSuperior;
 					} 
 					
 					var mensaje = "La tarea '" + tarea.asunto + "' fue creada con exito",
@@ -357,19 +371,10 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		$scope.ocultarDetalle();
 	}
 
-	$scope.verDetalleTarea = function(tarea){
-		$scope.showDetalle = true;
-		$scope.detalle = tarea;		
-		// setTimeout(function(){
-		// 	$scope.safeApply(function(){
-		// 		$scope.detalle = tarea;
-		// 	});
-		// }, 5000);
-	}
+	
 
 	
 	$scope.ocultarDetalle = function(){
-		$scope.showDetalle = undefined;
 		$scope.detalle = undefined;
 	}
 

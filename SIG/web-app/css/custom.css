@@ -1,5 +1,6 @@
 body{
 	background-color: #F5F5F5;
+	background-image:url(../images/retina_wood.png);
 	font-family: Lato;
 	overflow-y: hidden;
 	overflow-x: hidden;
@@ -11,7 +12,7 @@ body{
 
 .background{
 	overflow-x: hidden;
-	overflow-y: scroll;
+	overflow-y: hidden;
 	max-height: 615px;
 
 }
@@ -55,7 +56,7 @@ body{
 .activeLink, .activeLink a{
 	font-weight: bolder;
 	text-transform: uppercase;
-	color: #049CDB;
+	color: #049CDB !important;
 	
 }
 
@@ -71,6 +72,8 @@ body{
 	background-color: #f1f1f1;
 	padding-top: 5px;
 	border-bottom: solid 1px #eaeaea;
+	box-shadow: inset 0px 0px 2px 1px gray;
+	-webkit-box-shadow: inset 0px 0px 2px 1px gray;
 }
 
 .module-name{
@@ -207,6 +210,7 @@ body{
 .titulo-tarea{
 	margin-left: 5px !important;
 	font-size: 17px;
+	line-height: 25px;
 	padding-top: 2px;
 }
 
@@ -218,15 +222,28 @@ body{
 	text-decoration: none;
 }
 
+.detalle-edit{
+	font-size: 9pt;
+	margin-bottom: 3px;
+}
+
 .detalle.active{
 	color: #FF9E24 !important;
 	font-weight: bold !important;
 	border-bottom: solid 3px #FF9E24;
 }
 
+.detalle-body{
+	overflow-x: hidden;
+	overflow-y: auto;
+	max-height: 488px;
+	margin-left: 2px !important;
+}
+
 .detalle-asignados{
 	margin-left: 2% !important;
 	margin-top: 2%;
+	border-bottom: 1px solid #eaeaea;
 }
 
 .detalle-asignados div{
@@ -243,13 +260,14 @@ body{
 
 .detalle-seguimientos{
 	margin-top: 2%;
+	margin-left: 2% !important;
 }
 
 .detalle-estado {
 	margin-left: 2% !important;
 	padding-bottom: 2%;
 	border-bottom: 1px solid #eee;
-	width: 92% !important;
+	width: 91.5% !important;
 }
 
 .detalle-estado div{
@@ -319,6 +337,17 @@ body{
 	white-space: nowrap !important;
 }
 
+.filtros ul li a.muted{
+	color:#606060;
+}
+
+.filtros div div.muted{
+	color: #606060;
+}
+
+.filtros div div a.muted{
+	color: #606060;
+}
 
 
 .row-fluid .span2.filtros{
@@ -351,6 +380,7 @@ body{
 	padding-bottom: 4px;
 	padding-left: 10px;
 	white-space: nowrap;
+	height: 20px;
 }
 
 .filtros ul li:hover{
@@ -365,6 +395,15 @@ body{
 	background-color: #049CDB;
 	color: white;
 	font-weight: bolder;
+    height: 20px;
+	-webkit-box-shadow: 0 2px 5px 1px #555555 inset;
+    box-shadow:  0 2px 5px 1px #555555 inset
+
+}
+
+.filtros ul li.active .pull-right{
+	margin-right: 5px;
+	margin-top: 2px;
 }
 
 .filtros ul li a:hover{
@@ -377,7 +416,6 @@ body{
 }
 
 .seguimiento{
-	background-color: white;
 	border-radius: 2px;
 	margin-left: 0px !important;
 	border-top: 1px solid #ddd;
@@ -396,8 +434,8 @@ body{
 }
 
 .titulo_seguimiento{
-	font-weight: bold;
 	padding-left: 5px;
+	font-size:10pt;
 }
 
 .fecha_seguimiento{
@@ -458,6 +496,9 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 
 .form-header{
 	background-color: #FFB93F;
+	box-shadow: 0px 0px 4px 0px silver;
+	--webkit-box-shadow: 0px 0px 4px 0px silver;
+
 }
 
 /*----BOOTSTRAP -----*/
@@ -485,7 +526,7 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 }
 
 .bdg-white {
-	background-color: rgba(255,255,255,0.4);
+	background-color: rgba(255,255,255,0.75);
 }
 
 .nueva {
@@ -731,7 +772,7 @@ li.ui-animate {
 	-webkit-box-shadow:  -6px 0px 6px 3px silver !important;
     box-shadow: -6px 0 6px 3px #C0C0C0 !important;
     position: relative;
-    width: 545px;
+    width: 551px;
     z-index: 0;
 }
 
@@ -778,7 +819,7 @@ li.ui-animate {
 	position: relative;
 	background: #f0edff;
 	/*border: 1px solid #040505;*/
-}
+/*}*/
 /*.arrow_box:after, .arrow_box:before {
 	right: 100%;
 	border: solid transparent;
