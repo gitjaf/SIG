@@ -70,6 +70,7 @@ body{
 
 .header{
 	background-color: #f1f1f1;
+	/*background-image: url(../images/retina_wood.png);*/
 	padding-top: 5px;
 	border-bottom: solid 1px #eaeaea;
 	box-shadow: inset 0px 0px 2px 1px gray;
@@ -214,6 +215,11 @@ body{
 	padding-top: 2px;
 }
 
+.titulo-tarea-buttons{
+	padding-top: 3px;
+	padding-left: 2px;
+}
+
 .detalle{
 	padding-bottom: 8px;
 }
@@ -250,12 +256,16 @@ body{
 	margin-left: 4%;
 }
 
-.detalle-descripcion{
+.row-fluid [class*="span"].detalle-descripcion{
 	margin-left: 2%;
 	margin-top: 2%;
 	border-bottom: 1px solid #eee;
 	padding-bottom: 2%;
 	width: 92% !important;
+}
+
+.detalle-descripcion-body{
+	margin-left: 4%;
 }
 
 .detalle-seguimientos{
@@ -276,13 +286,13 @@ body{
 }
 
 .detalle-titulo{
-	margin-left: 2%;
+	margin-left: 0%;
 
 }
 
 .detalle-fecha{
 	display: inline-block;
-	width: 55%;
+	width: 80%;
 }
 
 .detalle-tipo{
@@ -472,7 +482,7 @@ body{
 }
 
 .numero-tarea{
-	vertical-align: text-bottom;
+	vertical-align: top;
 	padding-left: 4px;
 }
 
@@ -782,11 +792,10 @@ li.ui-animate {
 }
 
 
-.row-fluid.span12.container-listado-titulo{
+.container-listado-titulo{
 	min-height: 0px;
 	height: 22px;
-	/*padding-top: 5px;*/
-	padding-bottom: 4px;
+	padding-top: 4px;
 
 }
 

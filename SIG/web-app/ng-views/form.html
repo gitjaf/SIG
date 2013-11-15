@@ -32,9 +32,9 @@
 				    			</span>
 				    			<input id="form_tipo" type="text" class="input-xlarge" data-ng-model="tarea.tipo.nombre" data-ng-change="checkTipo(tarea.tipo)" placeholder="Clasificación de la tarea">
 				    		</div>
-				    		<div class="span1" data-ng-show="showAddTipo"><button id="save_tipo" class="btn btn-success" data-ng-click="saveTipo(tarea.tipo.nombre)"><i class="icon-plus icon-white"></i></button></div>
-				    		<div class="span1" data-ng-show="showEditTipo"><button id="delete_tipo" class="btn btn-warning" data-ng-click="editTipo(tarea.tipo)"><i class="icon-pencil icon-white"></i></button></div>
-				    		<div class="span1" data-ng-show="showDeleteTipo"><button id="delete_tipo" class="btn btn-danger" data-ng-click="deleteTipo(tarea.tipo)"><i class="icon-trash icon-white"></i></button></div>
+				    		<div class="span1" data-ng-show="showAddTipo"><button id="save_tipo" class="btn btn-success" data-ng-click="saveTipo(tarea.tipo.nombre)"><i class="fa fa-plus icon-white"></i></button></div>
+				    		<div class="span1" data-ng-show="showEditTipo"><button id="delete_tipo" class="btn btn-warning" data-ng-click="editTipo(tarea.tipo)"><i class="fa fa-pencil icon-white"></i></button></div>
+				    		<div class="span1" data-ng-show="showDeleteTipo"><button id="delete_tipo" class="btn btn-danger" data-ng-click="deleteTipo(tarea.tipo)"><i class="fa fa-trash-o icon-white"></i></button></div>
 				    		
 			    		</div>
 			    		<span class="span1"><button class="close" data-ng-click="showTipo=!showTipo">&times;</button></span>
@@ -55,15 +55,14 @@
 				    		<label>Inicia</label>
 				    		<div id="dp_inicio" class="input-append span9 no-margin-left" >
 				    			<input id="fechaInicio" type="text" class="span12" placeholder="Inicia el" ng-model="tarea.fechaInicio" data-date-format="dd/mm/yyyy" bs-datepicker data-language="es" data-unique="1" data-ng-change="changeDateEvent()">
-				    			<span class="add-on" data-ng-click="clearDate('#fechaInicio', 'fechaInicio'); changeDateEvent()"><i class="icon-trash"></i></span>
-				    			
+				    			<span class="add-on" data-ng-click="clearDate('#fechaInicio', 'fechaInicio'); changeDateEvent()"><i class="fa fa-trash-o"></i></span>
 				    		</div>
 				    	</div>
 				    	<div class="span3" data-ng-class="{invalid: invalidDate}">
 				    		<label>Revisión</label>
 				    		<div id="dp_revisa" class="input-append span9 no-margin-left" >
 				    			<input id="fechaRevision" type="text" class="span12" placeholder="A revisar el" data-ng-model="tarea.fechaRevision" data-unique="1" data-date-format="dd/mm/yyyy" bs-datepicker data-language="es" data-ng-change="changeDateEvent()">
-				    			<span id="add_on_revisa" class="add-on"  data-ng-click="clearDate('#fechaRevision', 'fechaRevision'); changeDateEvent()"><i class="icon-trash"></i></span>
+				    			<span id="add_on_revisa" class="add-on"  data-ng-click="clearDate('#fechaRevision', 'fechaRevision'); changeDateEvent()"><i class="fa fa-trash-o"></i></span>
 				    			
 				    		</div>
 				    	</div>
@@ -71,7 +70,7 @@
 				    		<label>Vence</label>
 				    		<div id="dp_vence" class="input-append span9 no-margin-left" >
 				    			<input id="fechaVencimiento" type="text" class="span12" placeholder="Vence el" data-ng-model="tarea.fechaVencimiento" data-unique="1" data-date-format="dd/mm/yyyy" bs-datepicker data-language="es" data-ng-change="changeDateEvent()">
-				    			<span id="add_on_vence" class="add-on"  data-ng-click="clearDate('#fechaVencimiento', 'fechaVencimiento'); changeDateEvent()"><i class="icon-trash"></i></span>
+				    			<span id="add_on_vence" class="add-on"  data-ng-click="clearDate('#fechaVencimiento', 'fechaVencimiento'); changeDateEvent()"><i class="fa fa-trash-o"></i></span>
 				    			
 				    		</div>
 				    	</div>
@@ -128,13 +127,13 @@
 			    			<div class="input-append span12 no-margin-left">
 				    			<input type="text" id="form_asigna" class="span10" placeholder="Buscar y agregar usuario como asignado" >
 				    			<button class="btn" data-ng-click="agregar(usuario, id, tarea.asignados, '#form_asigna')">
-				    				<i class="icon-plus"></i>
+				    				<i class="fa fa-plus"></i>
 				    			</button>
 
 			    			</div>
 			    			<ul>
 			    				<li data-ng-repeat="asignado in tarea.asignados" ui-animate>{{asignado._embedded.persona.nombres}} {{asignado._embedded.persona.apellidos}}
-			    					<button class="btn btn-link" data-ng-click="remover($index, tarea.asignados)"><i class="icon-remove"></i></button>
+			    					<button class="btn btn-link" data-ng-click="remover($index, tarea.asignados)"><i class="fa fa-remove"></i></button>
 			    				</li>
 			    			</ul>
 			    				 
@@ -145,12 +144,12 @@
 				    			<input type="text" id="form_sigue" class="span10" 
 				    				placeholder="Buscar y agregar usuario como seguidor">
 				    			<button class="btn" data-ng-click="agregar(usuario, id, tarea.seguidores, '#form_sigue')">
-				    				<i class="icon-plus"></i>
+				    				<i class="fa fa-plus"></i>
 				    			</button>
 			    			</div>
 			    			<ul>
 			    				<li data-ng-repeat="seguidor in tarea.seguidores" ui-animate>{{seguidor._embedded.persona.nombres}} {{seguidor._embedded.persona.apellidos}}
-			    					<button class="btn btn-link" data-ng-click="remover($index, tarea.seguidores)"><i class="icon-remove"></i></button>
+			    					<button class="btn btn-link" data-ng-click="remover($index, tarea.seguidores)"><i class="fa fa-remove"></i></button>
 			    				</li>
 			    			</ul>
 			    		</div>

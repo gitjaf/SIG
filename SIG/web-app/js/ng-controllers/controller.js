@@ -192,9 +192,9 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		$scope.tarea.tipo = getProperty("tipo", $scope.tarea);
 		$scope.showTipo = !(_.isEmpty($scope.tarea.tipo));
 
-		$scope.tarea.fechaInicio = $filter('date')($scope.tarea.fechaInicio, "dd/MM/yy");
-		$scope.tarea.fechaRevision = $filter('date')($scope.tarea.fechaRevision, "dd/MM/yy");
-		$scope.tarea.fechaVencimiento = $filter('date')($scope.tarea.fechaVencimiento, "dd/MM/yy");
+		$scope.tarea.fechaInicio = $filter('date')($scope.tarea.fechaInicio, "dd/MM/yyyy");
+		$scope.tarea.fechaRevision = $filter('date')($scope.tarea.fechaRevision, "dd/MM/yyyy");
+		$scope.tarea.fechaVencimiento = $filter('date')($scope.tarea.fechaVencimiento, "dd/MM/yyyy");
 		angular.copy($scope.tarea.fechaInicio, $scope.dateInicia);
 		angular.copy($scope.tarea.fechaVencimiento, $scope.dateVence);
 
@@ -223,9 +223,9 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		angular.copy(tarea, $scope.tarea);
 		$scope.tarea.idTareaSuperior = idTareaSuperior;
 				
-		$scope.tarea.fechaInicio = $filter('date')(tarea.fechaInicio, "dd/MM/yy");
-		$scope.tarea.fechaRevision = $filter('date')($scope.tarea.fechaRevision, "dd/MM/yy");
-		$scope.tarea.fechaVencimiento = $filter('date')(tarea.fechaVencimiento, "dd/MM/yy");
+		$scope.tarea.fechaInicio = $filter('date')(tarea.fechaInicio, "dd/MM/yyyy");
+		$scope.tarea.fechaRevision = $filter('date')($scope.tarea.fechaRevision, "dd/MM/yyyy");
+		$scope.tarea.fechaVencimiento = $filter('date')(tarea.fechaVencimiento, "dd/MM/yyyy");
 		
 		if($scope.tarea.id){
 			Resource.getResource(

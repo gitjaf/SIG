@@ -6,12 +6,14 @@
 			<div class="span12 module-version"> <small>Version: {{tareas.data.version}}</small></div>
 		</div>
 		<div class="input-append span5 hidden-phone buscador">
-			<input data-ng-model="query" type="search" placeholder="Buscar Tareas" class="span9">
-			<button class="btn" data-ng-click="search(query)">&nbsp;<i class="icon-search"></i>&nbsp;</button><br>
+			<form data-ng-sumbit="search(query)" class="span12">
+				<input data-ng-model="query" type="search" placeholder="Buscar Tareas" class="span9">
+				<button class="btn" data-ng-click="search(query)">&nbsp;<i class="fa fa-search"></i>&nbsp;</button><br>
+			</form>
 		</div>
 		<div id="user-actions" class="span2 pull-right header-usuario">
 			
-			 <a bs-dropdown="userActions"><i class="icon-user icon-2x"></i><br>{{user._embedded.persona.nombres}} {{user._embedded.persona.apellidos}}</a>
+			 <a bs-dropdown="userActions"><i class="fa fa-user fa-2x"></i><br>{{user._embedded.persona.nombres}} {{user._embedded.persona.apellidos}}</a>
 			 
 		</div>
 	</div>
@@ -48,131 +50,104 @@
 			<div class="span10">
 				<div class="muted"><small>Con Estado:</small></div>
 				<div class="offset1" data-ng-class="{activeLink: isActiveQuery('') == undefined }" >
-					<i data-ng-show="isActiveQuery('') == undefined"  class="icon-chevron-right"></i>
+					<i data-ng-show="isActiveQuery('') == undefined"  class="fa fa-chevron-right"></i>
 					<a class="muted" data-ng-click="$emit('filter', '')" data-toggle="tab">Cualquiera</a>
 				</div>
 				<div class="offset1" data-ng-class="{activeLink: isActiveQuery('Nueva')}">
-					<i data-ng-show="isActiveQuery('Nueva')"  class="icon-chevron-right"></i>
+					<i data-ng-show="isActiveQuery('Nueva')"  class="fa fa-chevron-right"></i>
 					<a class="muted" data-ng-click="$emit('filter', 'Nueva')" data-toggle="tab">A Iniciar</a>
 				</div>
 				<div class="offset1" data-ng-class="{activeLink: isActiveQuery('En Curso')}">
-					<i data-ng-show="isActiveQuery('En Curso')"  class="icon-chevron-right"></i>
+					<i data-ng-show="isActiveQuery('En Curso')"  class="fa fa-chevron-right"></i>
 					<a class="muted" data-ng-click="$emit('filter', 'En Curso')" data-toggle="tab">En Curso</a>
 				</div>
 				<div class="offset1" data-ng-class="{activeLink: isActiveQuery('Terminada')}">
-					<i data-ng-show="isActiveQuery('Terminada')"  class="icon-chevron-right"></i>
+					<i data-ng-show="isActiveQuery('Terminada')"  class="fa fa-chevron-right"></i>
 					<a class="muted" data-ng-click="$emit('filter', 'Terminada')" data-toggle="tab">Terminadas</a>
 				</div>
 				<div class="offset1" data-ng-class="{activeLink: isActiveQuery('Cerrada')}">
-					<i data-ng-show="isActiveQuery('Cerrada')"  class="icon-chevron-right"></i>
+					<i data-ng-show="isActiveQuery('Cerrada')"  class="fa fa-chevron-right"></i>
 					<a class="muted" data-ng-click="$emit('filter', 'Cerrada')" data-toggle="tab">Cerradas</a>
 				</div>
 			</div>
 			<div class="span10">
 				<div class="muted"><small>Ordenadas por:</small></div>
 				<div class="offset1" data-ng-class="{activeLink: tareas.data.sortBy == 'asunto' }">
-					<i data-ng-show="tareas.data.sortBy == 'asunto'"  class="icon-chevron-right"></i>
+					<i data-ng-show="tareas.data.sortBy == 'asunto'"  class="fa fa-chevron-right"></i>
 					<a class="muted" data-ng-click="sort('asunto')">Asunto</a>
 				</div>
 				<div class="offset1" data-ng-class="{activeLink: tareas.data.sortBy == 'fechaInicio' }">
-					<i data-ng-show="tareas.data.sortBy == 'fechaInicio'"  class="icon-chevron-right"></i>
+					<i data-ng-show="tareas.data.sortBy == 'fechaInicio'"  class="fa fa-chevron-right"></i>
 					<a class="muted" data-ng-click="sort('fechaInicio')">Inicio</a>
 				</div>
 				<div class="offset1" data-ng-class="{activeLink: tareas.data.sortBy == 'fechaVencimiento' }">
-					<i data-ng-show="tareas.data.sortBy == 'fechaVencimiento'"  class="icon-chevron-right"></i>
+					<i data-ng-show="tareas.data.sortBy == 'fechaVencimiento'"  class="fa fa-chevron-right"></i>
 					<a class="muted" data-ng-click="sort('fechaVencimiento')">Vencimiento</a>
 				</div>
 				<div class="offset1" data-ng-class="{activeLink: tareas.data.sortBy == 'estado' }">
-					<i data-ng-show="tareas.data.sortBy == 'estado'"  class="icon-chevron-right"></i>
+					<i data-ng-show="tareas.data.sortBy == 'estado'"  class="fa fa-chevron-right"></i>
 					<a class="muted" data-ng-click="sort('estado')">Estado</a>
 				</div>
 				<div class="offset1" data-ng-class="{activeLink: tareas.data.sortBy == 'prioridad' }">
-					<i data-ng-show="tareas.data.sortBy == 'prioridad'"  class="icon-chevron-right"></i>
+					<i data-ng-show="tareas.data.sortBy == 'prioridad'"  class="fa fa-chevron-right"></i>
 					<a class="muted" data-ng-click="sort('prioridad')">Prioridad</a>
 				</div>
 			</div>
 			
 		</div>
-		<!-- <div class="filtros filtros-toggle">
-			<toggle-link id="toggleFiltros" element-id="#filtros" showing-icon="icon-arrow-left" hidding-icon="icon-arrow-right" showing="true" hide-on="showDetalle" data-toggle="slide-left" class="span2 filtros-button muted" hide="detalle"></toggle-link>
-		</div> -->
+
 		<div class="span5 container-listado-tareas" >
 
 			<div class="row-fluid span12 muted header-listado">
-
-				<!-- <div class="span12 header-tabs">
-					<ul class="nav nav-tabs">
-						<li data-ng-class="{active: isActiveQuery('') == undefined }" ><a data-ng-click="$emit('filter', '')" data-toggle="tab">Todas</a></li>
-					    <li data-ng-class="{active: isActiveQuery('Nueva')}"><a data-ng-click="$emit('filter', 'Nueva')" data-toggle="tab">A Iniciar</a></li>
-					    <li data-ng-class="{active: isActiveQuery('En Curso')}"><a data-ng-click="$emit('filter', 'En Curso')" data-toggle="tab">En Curso</a></li>
-					    <li data-ng-class="{active: isActiveQuery('Terminada')}"><a data-ng-click="$emit('filter', 'Terminada')" data-toggle="tab">Terminadas</a></li>
-					    <li  data-ng-class="{active: isActiveQuery('Cerrada')}"><a data-ng-click="$emit('filter', 'Cerrada')" data-toggle="tab">Cerradas</a></li>
-		    	    </ul>
-				
-				</div> -->
+			
 				<div class="span12 header-pagination">
 					<pager collection="tareas"  class="span6 pagination pagination-small"/>
 					<ng-switch on="filtro">
 						<div ng-switch-when="papelera" class="span3 pull-right boton-nueva">
-							<a class="btn btn-small btn-danger pull-right" id="vaciar" confirm-vaciar-papelera data-ng-transclude ><i class="icon-trash"></i>  Vaciar</a>
+							<a class="btn btn-small btn-danger pull-right" id="vaciar" confirm-vaciar-papelera data-ng-transclude ><i class="fa fa-trash-o"></i>  Vaciar</a>
 						</div>
 						<div ng-switch-default class="span3 pull-right boton-nueva">
-							<a class="btn btn-small pull-right" id="nueva" data-ng-click="nuevaTarea(tareaSuperior)" data-toggle="modal" data-target="#edit"><i class="icon-plus"></i>  Nueva</a>
+							<a class="btn btn-small pull-right" id="nueva" data-ng-click="nuevaTarea(tareaSuperior)" data-toggle="modal" data-target="#edit"><i class="fa fa-plus"></i>  Nueva</a>
 						</div>
 					</ng-switch>
 					<div class="span11" data-ng-show="navigation">
 						<span><small>Viendo Subtareas de:</small></span>
 						<ul class="breadcrumb">
-							<li><a data-ng-click="changeFilter(filtro)"><i class="icon-reply"></i></a> <span class="divider">/</span></li>
+							<li><a data-ng-click="changeFilter(filtro)"><i class="fa fa-reply"></i></a> <span class="divider">/</span></li>
 							 <li data-ng-repeat="crumb in navigation"><a data-ng-click="addCrumb(crumb)">#{{crumb.id}}</a> <span class="divider">/</span></li>
 						</ul>
 					</div>
 				</div>
 			</div>
+
 			<div class="row-fluid span12 listado-tareas" >
 				<div class="row-fluid" data-ng-repeat="tarea in tareas._embedded.collection | filter: query | orderBy: sortBy" >
 					<div id="tarea{{tarea.id}}" data-tooltip data-title="{{tarea.asunto}}" class="hoverDiv item-tareas" data-ng-mouseenter="showButtons=true" data-ng-mouseleave="showButtons=false" data-ng-class="{'item-tareas-selected': (detalle.id == tarea.id)}">
-						<div class="span1 container-listado-estado">
-							<div class="{{(tarea.estado | lowercase).split(' ').join('')}}">&nbsp;</div>
-							<div class="{{(tarea.prioridad | lowercase).split(' ').join('')}}">&nbsp;</div>
+						<div class="span1 container-listado-estado txt-white">
+							<div class="{{(tarea.estado | lowercase).split(' ').join('')}}">&nbsp;</i></div>
+							<div class="{{(tarea.prioridad | lowercase).split(' ').join('')}}">&nbsp;</i></div>
 						</div>
 						<div class="row-fluid span11">
 							<div class="row-fluid span11 container-listado-titulo">
 								<span id="numero-tarea" class="numero-tarea muted"><small>#{{tarea.id}}</small></span>
 								<span id="titulo-tarea-{{tarea.id}}" class="listado-titulo has-tooltip muted" ><a href="" data-ng-click="verDetalleTarea(tarea)">{{tarea.asunto | cut:false:60}}</a></span>
 							
-							<!-- 	<ng-switch on="filtro">
-									<div ng-switch-when="papelera" class="pull-right" data-ng-show="showButtons" >
-										<div taskbuttons item="tarea" alt="true" raiz="{{raiz}}" undo="restaurar(tarea)" delete="borrar(tarea)"></div>
-									</div>
-									<div ng-switch-default class="pull-right" data-ng-show="showButtons" >
-										<div taskbuttons alt="false" item="tarea" edit="editarTarea(tarea)" addsub="nuevaTarea(tarea)" addseg="editarSeguimiento(tarea)" delete="save(tarea)"></div>
-									</div>
-								</ng-switch> -->
 						</div>
 						
 							<div class="span12 container-listado-datos" style="margin-left: 2px;">
-								<span class="muted"><small><i class="icon-user"></i> {{tarea._embedded.responsable.username}} | </small></span>
-								<span class="muted" data-ng-show="tarea.fechaInicio"><small><i class="icon-calendar"></i> I: {{tarea.fechaInicio | date:'dd/MM/yy'}}</small></span>
-								<span class="muted" data-ng-hide="tarea.fechaInicio"><small><i class="icon-calendar"></i> S/I</small></span>
+								<span class="muted"><small><i class="fa fa-user"></i> {{tarea._embedded.responsable.username}} | </small></span>
+								<span class="muted" data-ng-show="tarea.fechaInicio"><small><i class="fa fa-calendar"></i> I: {{tarea.fechaInicio | date:'dd/MM/yy'}}</small></span>
+								<span class="muted" data-ng-hide="tarea.fechaInicio"><small><i class="fa fa-calendar"></i> S/I</small></span>
 								<span class="muted" data-ng-show="tarea.fechaVencimiento"><small> - R: {{tarea.fechaRevision | date:'dd/MM/yy'}}</small></span>
 								<span class="muted" data-ng-hide="tarea.fechaVencimiento"><small> - S/R</small> </span> 
 								<span class="muted" data-ng-show="tarea.fechaVencimiento"><small> - V: {{tarea.fechaVencimiento | date:'dd/MM/yy'}}</small></span>
 								<span class="muted" data-ng-hide="tarea.fechaVencimiento"><small> - S/V</small> </span> 
-								<span class="muted" data-ng-show="tarea._embedded.tipo"> | <small> <i class="icon-tag"></i>  {{tarea._embedded.tipo.nombre | cut:false:22}} </small></span>
+								<span class="muted" data-ng-show="tarea._embedded.tipo"> | <small> <i class="fa fa-tag"></i>  {{tarea._embedded.tipo.nombre | cut:false:22}} </small></span>
 								<a link-subtareas filtro="filtro" tarea="tarea"></a>
 								
 							</div>
 						</div>
-						<!-- <div class="span12 container-listado-tags" style="margin-left: 2px;">
-							<span data-ng-class="{label : tarea.estado}" class="{{(tarea.estado | lowercase).split(' ').join('')}} "><i class="icon-flag"></i>
-								{{tarea.estado}}
-							</span>
-							<span data-ng-class="{label : tarea.prioridad}" class="{{(tarea.prioridad | lowercase).split(' ').join('')}}"><i class="icon-exclamation-sign"></i>
-								{{tarea.prioridad}}
-							</span>
-							<span class="muted label" data-ng-show="tarea._embedded.tipo"><i class="icon-tag"></i>  {{tarea._embedded.tipo.nombre}} </span>
-						</div> -->
+					
 					</div>
 				</div>
 				<pager collection="tareas"  class="span6 pagination pagination-small footer-listado"/>

@@ -351,7 +351,7 @@ directives.directive("linkSubtareas", function() {
 		restrict: 'A',
 		replace: true,
 		scope: {filtro:'=filtro', tarea: '=tarea'},
-		template: 	'<span class="muted" data-ng-show="cantidad" ><small> | <a><i class="icon-arrow-down"></i> {{cantidad}} </a></small></span>',
+		template: 	'<span class="muted" data-ng-show="cantidad" ><small> | <a><i class="fa fa-arrow-down"></i> {{cantidad}} </a></small></span>',
 		link: function(scope, element, attrs){
 			updateValues();
 			scope.$on("subtareaAgregada", function(){
