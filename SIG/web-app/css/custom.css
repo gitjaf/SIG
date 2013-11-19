@@ -75,6 +75,7 @@ body{
 	border-bottom: solid 1px #eaeaea;
 	box-shadow: inset 0px 0px 2px 1px gray;
 	-webkit-box-shadow: inset 0px 0px 2px 1px gray;
+	height: 60px;
 }
 
 .module-name{
@@ -250,6 +251,7 @@ body{
 	margin-left: 2% !important;
 	margin-top: 2%;
 	border-bottom: 1px solid #eaeaea;
+	padding-bottom: 5px;
 }
 
 .detalle-asignados div{
@@ -271,6 +273,13 @@ body{
 .detalle-seguimientos{
 	margin-top: 2%;
 	margin-left: 2% !important;
+	margin-bottom: -9px !important;
+}
+
+.detalle-seguimientos-titulo{
+	border-top: solid 1px #eaeaea;
+	padding-top: 8px;
+	padding-bottom: 8px;
 }
 
 .detalle-estado {
@@ -425,6 +434,17 @@ body{
 	color: white;
 }
 
+.subtarea{
+	border-radius: 2px;
+	margin-left: 0px !important;
+	border-top: 1px solid #ddd;
+	height: 46px;
+}
+
+.subtarea:hover{
+	background-color: #f8f8f8;
+}
+
 .seguimiento{
 	border-radius: 2px;
 	margin-left: 0px !important;
@@ -448,6 +468,12 @@ body{
 	font-size:10pt;
 }
 
+.titulo_subtarea{
+	padding-left: 5px;
+	font-size:10pt;
+	min-height:0px !important;
+}
+
 .fecha_seguimiento{
 	font-weight: bold;
 	font-style: italic;
@@ -460,6 +486,12 @@ body{
 	margin-left: -10px !important;
 	min-height: 20px !important;
 }
+.datos-subtareas{
+	padding-left: 4px;
+	padding-top: 0px;
+	margin-left: 0px !important;
+	min-height: 20px !important;
+}
 
 .container-listado-estado {
 	width: 0.9% !important;
@@ -467,15 +499,16 @@ body{
 
 .container-listado-estado div{
 	margin-top: 4px;
+	height: 17px;
 }
 
-.container-listado-tags{
+/*.container-listado-tags{
 	padding-right: 4px;
-	/*padding-top: 10px;*/
+	padding-top: 10px;
 	padding-bottom: 0px;
 	margin-left: 2px !important;
 	min-height: 20px !important;
-}
+}*/
 
 .listado-descripcion{
 	padding-top: 5px;
@@ -527,7 +560,8 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 
 .label {
 	margin-left: 5px;
-	vertical-align: text-top;
+	vertical-align: top;
+	margin-top: 2px;
 }
 
 .badge {
@@ -775,7 +809,7 @@ li.ui-animate {
 	/*padding-top: 3px;*/
 	padding-bottom: 3px;
 	/*margin-top: 3px;*/
-	min-height: 50px;
+	min-height: 45px;
 }
 
 .item-tareas-selected {
@@ -791,6 +825,9 @@ li.ui-animate {
 	padding-left:8px;
 }
 
+.row-fluid [class*="span"] .container-listado-titulo{
+	min-height:0px!important;
+}
 
 .container-listado-titulo{
 	min-height: 0px;
@@ -862,8 +899,16 @@ li.ui-animate {
 	margin-left: 0px !important;
 }
 
+.user-actions{
+	margin-right: 45px;
+}
+
+.remove-user-link{
+	vertical-align: baseline;
+}
 
 #user-actions ul{
 	top: 62px;
 	margin-right: 20px;
 }
+

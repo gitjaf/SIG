@@ -21,7 +21,7 @@
 						<i class="fa fa-trash-o fa-lg txt-white"></i>
 					</a>
 					<a class="btn btn-mini btn-danger" data-ng-show="isActive('papelera')"bs-modal="'./ng-views/partials/confirmDestroyTarea.html'">
-						<i class="fa-trash-o fa-lg txt-white"></i>
+						<i class="fa fa-trash-o fa-lg txt-white"></i>
 					</a>
 				</div>
 			</div>
@@ -104,24 +104,48 @@
 				<div class="span12 detalle-seguimientos" > 
 					<div class="span12" >
 						<i class="fa fa-arrow-down txt-orange"></i> 
-						<span class="muted">Añadir Subtareas: </span>&nbsp; 
+						<span class="muted">Añadir Subtarea: </span>&nbsp; 
 						<a class="btn btn-mini txt-blue" data-ng-click="nuevaTarea(detalle)" data-toggle="modal" data-target="#edit">
 							<i class="fa fa-plus"></i> 
 						</a>
 					</div>
-					<div id="seguimientos" class="span11 seguimiento" data-ng-repeat="subtarea in detalle._embedded.tareasRelacionadas">
-							<div class="span8 titulo_seguimiento txt-blue">
-								<a data-ng-click="addCrumb(detalle, subtarea)">{{subtarea.asunto}}</a>
+					<div id="seguimientos" class="span11 subtarea" data-ng-repeat="subtarea in detalle._embedded.tareasRelacionadas">
+							<div class="span1 container-listado-estado">
+								<div class="{{(subtarea.estado | lowercase).split(' ').join('')}}">&nbsp;</i></div>
+							<div class="{{(subtarea.prioridad | lowercase).split(' ').join('')}}">&nbsp;</i></div>
 							</div>
-							<div class="span2 muted fecha_seguimiento pull-right"><small class="">{{subtarea.fechaInicio | date:mediumDate}}</small></div>
-							<!-- <div class="span12 muted"><small>{{subtarea.descripcion}}</small></div> -->
+							<div class="span11">
+								<div class="span12 titulo_subtarea txt-blue">
+									<a data-ng-click="addCrumb(detalle, subtarea)">{{subtarea.asunto | cut:false:60}}</a>
+								</div>
+								<!-- <div class="span2 muted fecha_seguimiento pull-right"><small class="">{{subtarea.fechaInicio | date:mediumDate}}</small></div> -->
+								<div class="span12 muted datos-subtareas">
+									<span data-ng-show="subtarea._embedded.responsable">
+										<small><i class="fa fa-user"></i>  {{subtarea._embedded.responsable.username}} | 
+	 									</small>
+									</span>
+									<span data-ng-show="subtarea.fechaInicio">
+										<small><i class="fa fa-calendar"></i>  I: {{subtarea.fechaInicio | date:mediumDate}} </small>
+									</span>
+									<span class="muted" data-ng-hide="subtarea.fechaInicio"><small> - S/I</small> </span>
+									<span data-ng-show="subtarea.fechaRevision">
+										<small> - R: {{subtarea.fechaRevision | date:mediumDate}}</small>
+									</span>
+									<span class="muted" data-ng-hide="subtarea.fechaRevision"><small> - S/R</small> </span>
+									<span data-ng-show="subtarea.fechaVencimiento">
+										<small> - V: {{subtarea.fechaVencimiento | date:mediumDate}}</small>
+									</span>
+									<span class="muted" data-ng-hide="subtarea.fechaVencimiento"><small> - S/V</small> </span> 
+									<span class="muted" data-ng-show="subtarea._embedded.tipo"> | <small> <i class="fa fa-tag"></i>  {{subtarea._embedded.tipo.nombre | cut:false:22}} </small></span>
+								</div>
+							</div>
 					</div>
 				</div>
 				
 				<div class="span12 detalle-seguimientos"> 
-					<div class="span12" >
+					<div class="span11 detalle-seguimientos-titulo" >
 						<i class="fa fa-eye txt-orange"></i> 
-						<span class="muted">Añadir Seguimientos: </span>&nbsp; 
+						<span class="muted">Añadir Seguimiento: </span>&nbsp; 
 						<a class="btn btn-mini txt-blue"  data-ng-click="editarSeguimiento(detalle)" data-toggle="modal" data-target="#edit">
 							<i class="fa fa-plus"></i> 
 						</a>

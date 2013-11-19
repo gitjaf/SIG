@@ -133,7 +133,7 @@
 			    			</div>
 			    			<ul>
 			    				<li data-ng-repeat="asignado in tarea.asignados" ui-animate>{{asignado._embedded.persona.nombres}} {{asignado._embedded.persona.apellidos}}
-			    					<button class="btn btn-link" data-ng-click="remover($index, tarea.asignados)"><i class="fa fa-remove"></i></button>
+			    					<button class="btn btn-link remove-user-link" data-ng-click="remover($index, tarea.asignados)"><i class="fa fa-times"></i></button>
 			    				</li>
 			    			</ul>
 			    				 
@@ -149,7 +149,7 @@
 			    			</div>
 			    			<ul>
 			    				<li data-ng-repeat="seguidor in tarea.seguidores" ui-animate>{{seguidor._embedded.persona.nombres}} {{seguidor._embedded.persona.apellidos}}
-			    					<button class="btn btn-link" data-ng-click="remover($index, tarea.seguidores)"><i class="fa fa-remove"></i></button>
+			    					<button class="btn btn-link remove-user-link" data-ng-click="remover($index, tarea.seguidores)"><i class="fa fa-times"></i></button>
 			    				</li>
 			    			</ul>
 			    		</div>

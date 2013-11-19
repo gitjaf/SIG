@@ -232,16 +232,17 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 				tarea._links.update.href
 			).update($scope.tarea,
 				function(tarea, putResponseHeaders){
-					removeObject(tareas, tarea, "id");
-					if($scope.tareas._embedded.collection) {
-						if(!tarea.borrado && !restaurada){
-							$scope.tareas._embedded.collection.push(tarea);
-						} else {
-							$scope.tareas.data.total = $scope.tareas.data.total - 1;
-						}
-					} else {
-						$scope.tareas._embedded.collection = [tarea];
-					}
+					// removeObject(tareas, tarea, "id");
+					// if($scope.tareas._embedded.collection) {
+					// 	if(!tarea.borrado && !restaurada){
+					// 		$scope.tareas._embedded.collection.push(tarea);
+					// 	} else {
+					// 		$scope.tareas.data.total = $scope.tareas.data.total - 1;
+					// 	}
+					// } else {
+					// 	$scope.tareas._embedded.collection = [tarea];
+					// }
+					refresh();
 					var mensaje = "La tarea '" + tarea.asunto + "' fue editada con exito",
 					titulo = "Editar Tarea: ",
 					duracion = 4000,
@@ -261,24 +262,14 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 			Resource.getResource($scope.tareas._links.create.href).create($scope.tarea,
 				function(tarea, putResponseHeaders){
 					if(_($scope.tareas._embedded.collection).isEmpty()) {
-						$scope.tareas = Tarea.query({
-											"page": $rootScope.page,
-											"itemsPerPage" : $rootScope.items,
-											"sortBy": $rootScope.sortBy,
-											"q": $rootScope.query,
-											userId: $rootScope.userId,
-											filtro: $rootScope.filtro,
-											tareaSuperior: $rootScope.idTarea
-										});
+						refresh();
 					} else {
 						var tareaSuperior;
 						if(idTareaSuperior){
 							 tareaSuperior = _($scope.tareas._embedded.collection).find( function(value) {
 							  return value.id == idTareaSuperior;
 							});
-						} 
-
-						if(tareaSuperior){
+						
 							if(tareaSuperior._embedded.tareasRelacionadas){
 								tareaSuperior._embedded.tareasRelacionadas.push(tarea);
 							}else {
@@ -286,8 +277,9 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 							}
 							$scope.$broadcast('subtareaAgregada');
 						} else {
-							$scope.tareas._embedded.collection.push(tarea);
-							$scope.tareas.data.total = $scope.tareas.data.total + 1;
+							// $scope.tareas._embedded.collection.push(tarea);
+							// $scope.tareas.data.total = $scope.tareas.data.total + 1;
+							refresh();
 						}
 						$scope.detalle = tareaSuperior;
 					} 
@@ -324,7 +316,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 			function(response, putResponseHeaders){
 				removeObject(tareas, tarea, "id");
 				$scope.tareas.data.total = $scope.tareas.data.total - 1;
-				
+				$scope.detalle = undefined;
 				var mensaje = "La tarea '" + tarea.asunto + "' fue eliminada con exito del sistema",
 				titulo = "Eliminar Tarea Permanentemente: ",
 				duracion = 4000,
@@ -349,9 +341,10 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 				titulo = "Vaciar Papelera: ",
 				duracion = 4000,
 				tipo = 'alert-success';
-				
+				$scope.detalle = undefined;
+				refresh();
 				$scope.alert(titulo, mensaje, tipo, duracion);
-				$scope.tareas._embedded.collection = [];		
+						
 			},
 			function(response, putResponseHeaders){
 				var mensaje = "Error al intentar vaciar la papelera",

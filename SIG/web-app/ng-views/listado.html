@@ -11,16 +11,19 @@
 				<button class="btn" data-ng-click="search(query)">&nbsp;<i class="fa fa-search"></i>&nbsp;</button><br>
 			</form>
 		</div>
-		<div id="user-actions" class="span2 pull-right header-usuario">
-			
-			 <a bs-dropdown="userActions"><i class="fa fa-user fa-2x"></i><br>{{user._embedded.persona.nombres}} {{user._embedded.persona.apellidos}}</a>
-			 
+		<div id="user-actions" class="span2 pull-right header-usuario dropdown">
+			<div class="dropdown user-actions">
+		    	<a class="dropdown-toggle" data-toggle="dropdown" data-ng-click="">
+		    	<i class="fa fa-user fa-2x"></i><br>{{user._embedded.persona.nombres}} {{user._embedded.persona.apellidos}}</a>
+			    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+			    	<li><a data-ng-click="logout()"><i class="fa fa-sign-out"></i> Salir</a></li>
+			    </ul>
+		    </div>
+
 		</div>
 	</div>
-				
 </div>
 <div class="container-fluid background" >
-
 	<div class="row-fluid">
 		<div class="span2 filtros" id="filtros" >
 			<div class="muted"><small>Mostrar tareas:</small></div>
@@ -104,7 +107,7 @@
 					<pager collection="tareas"  class="span6 pagination pagination-small"/>
 					<ng-switch on="filtro">
 						<div ng-switch-when="papelera" class="span3 pull-right boton-nueva">
-							<a class="btn btn-small btn-danger pull-right" id="vaciar" confirm-vaciar-papelera data-ng-transclude ><i class="fa fa-trash-o"></i>  Vaciar</a>
+							<a class="btn btn-small btn-danger pull-right" id="vaciar"  bs-modal="'./ng-views/partials/confirmVaciarPapelera.html'" ><i class="fa fa-trash-o"></i>  Vaciar</a>
 						</div>
 						<div ng-switch-default class="span3 pull-right boton-nueva">
 							<a class="btn btn-small pull-right" id="nueva" data-ng-click="nuevaTarea(tareaSuperior)" data-toggle="modal" data-target="#edit"><i class="fa fa-plus"></i>  Nueva</a>
