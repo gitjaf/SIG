@@ -4,7 +4,7 @@ grails.project.test.class.dir = "target/test-classes"
 grails.project.test.reports.dir = "target/test-reports"
 grails.project.target.level = 1.6
 grails.project.source.level = 1.6
-//grails.project.war.file = "target/${appName}-${appVersion}.war"
+grails.project.war.file = "target/${appName}-${appVersion}.war"
 
 //Agregado por el error del la JDK1.7u25
 grails.project.fork = false
@@ -76,5 +76,7 @@ grails.project.dependency.resolution = {
         compile ":font-awesome-resources:4.0.3.0"
         compile ':spring-security-core:1.2.7.3'
         compile ":app-info:1.0.2"
+        compile ":angularjs-resources:1.0.2"
+        compile ":mail:1.0.5"
     }
 }

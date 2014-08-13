@@ -125,7 +125,7 @@
 			    		<div class="span5 span5-5">
 			    			<label>Asignados</label>
 			    			<div class="input-append span12 no-margin-left">
-				    			<input type="text" id="form_asigna" class="span10" placeholder="Buscar y agregar usuario como asignado" >
+				    			<input type="text" id="form_asigna" class="span10" placeholder="Buscar y agregar usuario como asignado" ng-model="typeaheadValue" bs-typeahead="usuarios" >
 				    			<button class="btn" data-ng-click="agregar(usuario, id, tarea.asignados, '#form_asigna')">
 				    				<i class="fa fa-plus"></i>
 				    			</button>
@@ -184,57 +184,7 @@
 <script type="text/javascript">
 	var scope = angular.element('#form_asigna').scope();
 
-	// jQuery('#form_inicio').datepicker('place').on('changeDate', function(ev){
-	// 	if(scope.tarea.fechaVencimiento < ev.date.valueOf()){
-	// 		scope.invalidDate = true;
-	// 		scope.message({
-	// 			"element":'#add_on_vence',
-	// 			"title" : 'Fecha No Valida', 
-	// 			"content" : 'La tarea vence antes de iniciar',
-	// 			"timeout" : 3000,
-	// 			"error" : true,
-	// 			"trigger" : "manual",
-	// 			"delay" : 1000,
-	// 			"action" :'show'
-	// 		});
-	// 		scope.$apply();
-	// 	} else {
-	// 		scope.invalidDate = false;
-	// 		scope.message({
-	// 			"element":'#add_on_vence',
-	// 			"action" :'destroy'
-	// 		});
-	// 		scope.$apply();
-	// 	}
-	// 	scope.tarea.fechaInicio = ev.date.valueOf();
-	// })
-
-	// jQuery('#form_vence').datepicker('place').on('changeDate', function(ev){
-	// 	if(scope.tarea.fechaInicio > ev.date.valueOf()){
-	// 		scope.invalidDate = true;
-	// 		scope.message({
-	// 			"element":'#add_on_vence',
-	// 			"title" : 'Fecha No Valida', 
-	// 			"content" : 'La tarea vence antes de iniciar',
-	// 			"timeout" : 3000,
-	// 			"error" : true,
-	// 			"trigger" : "manual",
-	// 			"delay" : 1000,
-	// 			"action" :'show'
-	// 		});
-	// 		scope.$apply();
-	// 	} else {
-	// 		scope.invalidDate = false;
-	// 		scope.message({
-	// 			"element":'#add_on_vence',
-	// 			"action" :'destroy'
-	// 		});
-	// 		scope.$apply();
-	// 	}
-	// 	scope.tarea.fechaVencimiento = ev.date.valueOf();
-	// })
-
-	jQuery('#form_asigna').typeaheadmap({
+	angular.element('#form_asigna').typeaheadmap({
 		"source": scope.usuarios,
 		"key" : ["_embedded.persona.nombres", "_embedded.persona.apellidos"],
 		"value" : "id",
@@ -254,7 +204,5 @@
 		"value": "id",
 		"listener": scope.autocompleteTipo
 	})
-
-	
 
 </script>

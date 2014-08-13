@@ -13,7 +13,7 @@ services.factory('AuthService', function($resource, $rootScope, $location){
 			$rootScope.$on('$routeChangeStart', function(event, currRoute, prevRoute){
 				var data = {url: "/login"};
 				
-				if(!currRoute.access.isFree) {
+				if(!currRoute.access || !currRoute.access.isFree) {
 					authService.checkCredentials(data);
 				}
 
@@ -34,7 +34,7 @@ services.factory('AuthService', function($resource, $rootScope, $location){
 				function(response, putResponseHeaders){
 					$rootScope.user = undefined;
 					$rootScope.userId = undefined;
-					$location.url(data.url);
+					$location.url("/login");
 				}
 			);
 		},
@@ -97,8 +97,8 @@ services.factory('Resource', function($resource){
 							q: '@q',
 							userId: '@userId',
 							filtro: '@filtro',
-							isArray: false
-						}
+						},
+						isArray: true
 					},
 
 					update: {

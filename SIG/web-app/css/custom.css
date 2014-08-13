@@ -184,7 +184,7 @@ body{
 	border: solid 1px #eee;
 	border-radius: 5px;
 	width: 110%;
-	margin-left: -15px !important;
+	margin-left: -3% !important;
 	margin-bottom: 2%;
 	padding-bottom: 2%;
 	background-color: white;
@@ -243,6 +243,7 @@ body{
 .detalle-body{
 	overflow-x: hidden;
 	overflow-y: auto;
+	min-height: 480px !important;
 	max-height: 488px;
 	margin-left: 2px !important;
 }
@@ -619,6 +620,10 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
 	-webkit-top: 40%;*/
 }
 
+.modal{
+	margin-left: -21% !important;
+}
+
 .modal.fade{
 	top:1%;
 }
@@ -816,7 +821,7 @@ li.ui-animate {
 	-webkit-box-shadow:  -6px 0px 6px 3px silver !important;
     box-shadow: -6px 0 6px 3px #C0C0C0 !important;
     position: relative;
-    width: 551px;
+    width: 104%;
     z-index: 0;
 }
 

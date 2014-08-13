@@ -10,6 +10,7 @@ import grails.plugins.springsecurity.Secured
 import java.text.SimpleDateFormat
 import org.codehaus.groovy.grails.commons.GrailsDomainClass
 
+
 class TareaController {
 
 	def halBuilderService
@@ -17,7 +18,11 @@ class TareaController {
 	def halCollectionBuilderService
 
 	def tareaService
-		
+	
+    def mailService
+
+    LinkGenerator grailsLinkGenerator
+
     static allowedMethods = [list: "GET", show: "GET", find:"POST", save: "PUT", update: "PUT", delete: "DELETE"]
 
     
@@ -81,6 +86,25 @@ class TareaController {
 			response.status = 500
 			return
         }
+
+        tareaInstance.asignados.each{
+            def email = it.username + "@frd.utn.edu.ar" 
+            mailService.sendMail {
+                to "${email}"
+                subject "Nueva Tarea"
+                html (view: '/mail/notification', model: [tarea: tareaInstance, url: grailsLinkGenerator.serverBaseURL])
+            }
+        }
+        
+        tareaInstance.seguidores.each{
+            def email = it.username + "@frd.utn.edu.ar" 
+            mailService.sendMail {
+                to "${email}"
+                subject "Nueva Tarea"
+                html (view: '/mail/notification', model: [tarea: tareaInstance, url: grailsLinkGenerator.serverBaseURL])
+            }
+        }
+        
 
 		flash.message = message(code: 'default.created.message', args: [message(code: 'tarea.label', default: 'Tarea'), tareaInstance.id])
         response.status = 201

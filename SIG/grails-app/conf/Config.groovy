@@ -1,3 +1,4 @@
+// import com.sun.mail.util.MailSSLSocketFactory
 // locations to search for config files that get merged into the main config;
 // config files can be ConfigSlurper scripts, Java properties files, or classes
 // in the classpath in ConfigSlurper format
@@ -36,7 +37,7 @@ grails.mime.types = [
 grails.resources.adhoc.patterns = ['/images/*', '/css/*', '/js/*', '/plugins/*']
 
 // The default codec used to encode data with ${}
-grails.views.default.codec = "none" // none, html, base64
+grails.views.default.codec = "html" // none, html, base64
 grails.views.gsp.encoding = "UTF-8"
 grails.converters.encoding = "UTF-8"
 
@@ -91,6 +92,8 @@ environments {
            'app.info.custom.example.MyConfigControllerMixin' :
               'com.burtbeckwith.appinfo_test.AdminManageController'
         ]
+
+        grails.converters.default.pretty.print = true
         
     }
     production {
@@ -128,4 +131,9 @@ grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'org.sigma.cod
 grails.plugins.springsecurity.authority.className = 'org.sigma.code.common.Rol'
 
 
-
+grails{
+  mail{
+    host = "172.16.2.1"
+    port = 25
+  }
+}

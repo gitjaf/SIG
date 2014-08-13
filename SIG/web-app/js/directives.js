@@ -13,7 +13,7 @@ directives.directive("pager", function($location) {
     	replace: true,
     	transclude: true,
     	scope: {collection: '=collection'},
-		templateUrl: 'js/templates/pager.html',
+		templateUrl: 'js/ng-templates/pager.html',
 		restrict: 'E',
 		link: function(scope, element, attrs){
 			scope.changePage = function(href){
@@ -28,7 +28,7 @@ directives.directive("taskbuttons", function() {
 	return {
 		scope: {item: '=item', alt:'@alt', edit:'&edit', raiz:'@raiz', addsub:'&addsub', addseg:'&addseg', undo: '&undo', del: '&delete' },
 		restrict: 'A',
-		templateUrl: 'js/templates/task-buttons.html'
+		templateUrl: 'js/ng-templates/task-buttons.html'
 		
 	}
 });
@@ -38,7 +38,7 @@ directives.directive("alert", function() {
 		replace: true,
 		scope: {title:'=title', message:'=message', alert: '=showon', type: '=type'},
 		restrict: 'A',
-		templateUrl: 'js/templates/alert.html',
+		templateUrl: 'js/ng-templates/alert.html',
 		link: function(scope, element, attrs){
 			scope.$watch("type", function(){
 				element.removeClass('alert-error alert-success');

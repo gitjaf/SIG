@@ -31,4 +31,8 @@ class Persona {
             deleteAll: [mapping: "resources", trimId: true]
         )
     }
+
+    String getNombreCompleto() {
+        return nombres + " " + apellidos
+    }
 }

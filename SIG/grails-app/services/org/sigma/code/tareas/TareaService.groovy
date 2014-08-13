@@ -115,91 +115,156 @@ class TareaService {
 
         def usuario = Usuario.get(idUsuario as Integer)
 
-        def query = "from org.sigma.code.tareas.Tarea as t where "
-
-        def borrado = false
-
-        def superior = " and t.tareaSuperior is null "
-
         def tareas = []
 
-        def parametros = [usuario: usuario]
+        def queryParams = [usuario: usuario, borrado: false]
 
         if(usuario){
             switch(params.filtro) {
                 case "propias":
-                    query += this.getTareasPropias()
+                    tareas += this.getTareasPropias(queryParams, params)
+                    return tareas
                 break
 
                 case "asignadas":
-                    query += this.getTareasAsignadas()
+                    tareas += this.getTareasAsignadas(queryParams, params)
+                    tareas += this.getSubtareasAsignadas(queryParams, params)
+                    return tareas
                 break
 
                 case "seguidas":
-                    query += this.getTareasSeguidas()
+                    tareas += this.getTareasSeguidas(queryParams, params)
+                    tareas += this.getSubtareasSeguidas(queryParams, params)
+                    return tareas
                 break
 
                 case "papelera":
-                    borrado = true
-                    superior = ""
+                    tareas += this.getTareasEnPapelera(queryParams, params)
+                    return tareas
+                break
 
                 default:
-                    query += this.getTareasTodas()                   
+                    tareas += this.getTareasTodas(queryParams, params)
+                    return tareas            
             }
 
 
-            if (params.q) {
-                query += this.getBusquedaTareas(params.q, parametros)
-            }
+            // if (params.q) {
+            //     query += this.getBusquedaTareas(params.q, queryParams)
+            // }
                     
-            query += " and ( t.borrado = :borrado ) " + superior +  " order by t.${params.sortBy}"
+            // query += " and ( t.borrado = :borrado ) " + " order by t.${params.sortBy}"
             
-            parametros['borrado'] = borrado 
-                      
-            tareas = Tarea.executeQuery(query, parametros)
+            // queryParams['borrado'] = borrado 
+            
+            
+            // tareas = Tarea.executeQuery(query, queryParams)
 
         } 
 
-        if(!superior){
-            tareas = tareas.findAll{ it -> 
-                !it.tareaSuperior || it.tareaSuperior.borrado == false
-            }
-        }
-        return tareas
+        // if(!superior){
+        //     tareas = tareas.findAll{ it -> 
+        //         !it.tareaSuperior || it.tareaSuperior.borrado == false
+        //     }
+        // }
+        // return tareas
     }
 
-    def getBusquedaTareas(String busqueda, Map parametros){
-        parametros['search'] = "%" + busqueda + "%" 
+    def getBusquedaTareas(String busqueda, Map queryParams){
+        queryParams['search'] = "%" + busqueda + "%" 
         return " and ( lower(t.asunto) like lower(:search) or " +
             " lower(t.estado) like lower(:search) or " +
             " lower(t.prioridad) like lower(:search) ) " 
     }
 
-    def getTareasPropias(){
-        return " t.responsable = :usuario "
+    def getTareasPropias(Map queryParams, Map params){
+        def query = "from org.sigma.code.tareas.Tarea as t where t.responsable = :usuario and " +
+                    " ( t.borrado = :borrado )  and t.tareaSuperior = null"
+        if (params.q){
+            query += getBusquedaTareas(params.q, queryParams)
+        }
+        return (Tarea.executeQuery(query, queryParams))
     }
 
-    protected getTareasAsignadas(){
-        return " :usuario in elements(t.asignados) "
+    
+    protected getTareasAsignadas(Map queryParams, Map params){
+        def query = "from org.sigma.code.tareas.Tarea as t where " +
+                    " :usuario in elements(t.asignados) and (t.tareaSuperior is null) and " +
+                    " (t.borrado = :borrado) "
+
+        if (params.q){
+            query += getBusquedaTareas(params.q, queryParams)
+        }
+
+        return (Tarea.executeQuery(query, queryParams))
+                
     }
 
-    protected getTareasSeguidas(){
-        return " :usuario in elements(t.seguidores) "
+    protected getSubtareasAsignadas(Map queryParams, Map params){
+        def query = "from org.sigma.code.tareas.Tarea as t where " +
+                    " :usuario in elements(t.asignados) and (t.tareaSuperior is not null) and " +
+                    " (:usuario not in elements(t.tareaSuperior.asignados)) and " +
+                    " (:usuario not in elements(t.tareaSuperior.seguidores)) and " +
+                    " (:usuario <> t.tareaSuperior.responsable ) and " +
+                    " (t.borrado = :borrado) "
+
+        if (params.q){
+            query += getBusquedaTareas(params.q, queryParams)
+        }
+
+        return (Tarea.executeQuery(query, queryParams))
     }
 
-    protected getTareasTodas(){
-        def query = "( " + this.getTareasPropias() + " or " +
-                    this.getTareasAsignadas() + " or " + 
-                    this.getTareasSeguidas() + " ) "
+    protected getTareasSeguidas(Map queryParams, Map params){
+         def query = "from org.sigma.code.tareas.Tarea as t where " +
+                    " :usuario in elements(t.seguidores) and (t.tareaSuperior is null) and " +
+                    " (t.borrado = :borrado) "
+
+        if (params.q){
+            query += getBusquedaTareas(params.q, queryParams)
+        }
+
+        return (Tarea.executeQuery(query, queryParams))
         
-        return query
     }
 
+    protected getSubtareasSeguidas(Map queryParams, Map params) {
+         def query = "from org.sigma.code.tareas.Tarea as t where " +
+                    " :usuario in elements(t.seguidores) and (t.tareaSuperior is not null) and " +
+                    " (:usuario not in elements(t.tareaSuperior.seguidores)) and " +
+                    " (:usuario not in elements(t.tareaSuperior.asignados)) and " +
+                    " (:usuario <> t.tareaSuperior.responsable ) and " +
+                    " (t.borrado = :borrado) "
+
+        if (params.q){
+            query += getBusquedaTareas(params.q, queryParams)
+        }
+
+        return (Tarea.executeQuery(query, queryParams))
+    }
+
+    protected getTareasTodas(Map queryParams, Map params){
+        def tareas = (this.getTareasPropias(queryParams, params) + this.getTareasAsignadas(queryParams, params) +
+                     this.getTareasSeguidas(queryParams, params) + this.getSubtareasAsignadas(queryParams, params) +
+                     this.getSubtareasSeguidas(queryParams, params))
+        
+        return tareas
+    }
+
+    protected getTareasEnPapelera(Map queryParams, Map params){
+        def query = "from org.sigma.code.tareas.Tarea as t where " +
+                    // " (t.responsable = :usuario) and " +
+                    " ((t.tareaSuperior is not null and t.tareaSuperior.borrado = false) or " +
+                    " (t.tareaSuperior is null and t.borrado = true )) "
+        return (Tarea.executeQuery(query))
+
+    }
 
     protected getSubTareas(int id, String orden){
         def tarea = Tarea.get(id)      
         return Tarea.findAllByTareaSuperior(tarea, [sortBy: orden])
     }
+
 
     protected Tarea setValues(Tarea tarea, JSONObject json){
 
