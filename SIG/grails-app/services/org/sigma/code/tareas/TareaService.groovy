@@ -5,8 +5,13 @@ import org.sigma.code.common.*
 import grails.gorm.*
 import org.codehaus.groovy.grails.web.json.JSONObject
 import org.springframework.dao.DataIntegrityViolationException
+import org.codehaus.groovy.grails.web.mapping.LinkGenerator
 
 class TareaService {
+
+    def mailService
+
+    LinkGenerator grailsLinkGenerator
 
     Comparator fechaInicio = [compare: {a, b -> 
             !a.fechaInicio && b.fechaInicio ? 1 : !b.fechaInicio && a.fechaInicio ? -1 : !a.fechaInicio &&
@@ -25,13 +30,17 @@ class TareaService {
 
 		Usuario usuario = Usuario.get(json.responsable)
 		
-		Tarea tarea = this.setValues(new Tarea(), json);
+		def tarea = this.setValues(new Tarea(), json)
+
+        def nuevos = this.asignarTarea(tarea, json)
 
         usuario.addToCreadas(tarea)
 
         if(!tarea.save(flush: true)){
             return null
         }
+
+        this.notificarUsuarios(nuevos, tarea)
 
         return tarea
 
@@ -41,9 +50,13 @@ class TareaService {
                 
         tarea = this.setValues(tarea, json)
 
+        def nuevos = this.asignarTarea(tarea, json)
+
         if(!tarea.save(flush: true)){
             return null
         }
+
+        this.notificarUsuarios(nuevos, tarea)
 
         return tarea
     }
@@ -86,6 +99,27 @@ class TareaService {
 
         respuesta.status = 200
         return respuesta
+    }
+
+    def notificarUsuarios(Map nuevos, Tarea tarea){
+        println nuevos
+        nuevos.asignados.each{
+            def email = it.username + "@frd.utn.edu.ar" 
+            mailService.sendMail {
+                to "${email}"
+                subject "Nueva Tarea"
+                html (view: '/mail/notification', model: [tarea: tarea, url: grailsLinkGenerator.serverBaseURL])
+            }
+        }
+        
+        nuevos.seguidores.each{
+            def email = it.username + "@frd.utn.edu.ar" 
+            mailService.sendMail {
+                to "${email}"
+                subject "Nueva Tarea"
+                html (view: '/mail/notification', model: [tarea: tarea, url: grailsLinkGenerator.serverBaseURL])
+            }
+        }
     }
 
 
@@ -292,19 +326,7 @@ class TareaService {
 
         json?.idTareasRelacionadas?.each{ id -> tarea.addToTareasRelacionadas(Tarea.get(id))}
 
-        if(tarea.asignados){
-            def asignados = Usuario.executeQuery("from Usuario u where :tarea in elements(u.asignadas)", [tarea: tarea])
-            asignados*.removeFromAsignadas(tarea)
-            if(tarea.asignados != null){tarea.asignados.clear()}
-        }
-        json?.asignados?.each { usuario -> tarea.addToAsignados(Usuario.get(usuario.id))}
-        
-        if(tarea.seguidores){
-            def seguidores = Usuario.executeQuery("from Usuario u where :tarea in elements(u.seguidas)", [tarea: tarea])
-            seguidores*.removeFromSeguidas(tarea)
-            if(tarea.seguidores != null){tarea.seguidores.clear()}
-        }        
-        json?.seguidores?.each { usuario -> tarea.addToSeguidores(Usuario.get(usuario.id))}
+       
         
         if(tarea.borrado != json?.borrado as Boolean){
             borradoRecursivo(tarea, json.borrado as Boolean)
@@ -313,6 +335,37 @@ class TareaService {
         return tarea
 
     }
+
+    protected asignarTarea(Tarea tarea, JSONObject json){
+        def nuevos = [:] 
+        def asignar = json?.asignados?.collect {usuario -> Usuario.get(usuario.id)}
+        def seguir = json?.seguidores?.collect {usuario -> Usuario.get(usuario.id)}
+
+        if(tarea.asignados){
+            def asignados = Usuario.executeQuery("from Usuario u where :tarea in elements(u.asignadas)", [tarea: tarea])
+            asignados*.removeFromAsignadas(tarea)
+            if(tarea.asignados != null){tarea.asignados.clear()}
+            nuevos << [asignados: (asignar - asignados)]
+        } else {
+            nuevos << [asignados: asignar]
+        }
+        
+        asignar.each { usuario -> tarea.addToAsignados(usuario)}
+                
+        if(tarea.seguidores){
+            def seguidores = Usuario.executeQuery("from Usuario u where :tarea in elements(u.seguidas)", [tarea: tarea])
+            seguidores*.removeFromSeguidas(tarea)
+            if(tarea.seguidores != null){tarea.seguidores.clear()}
+            nuevos << [seguidores: (seguir - seguidores)]
+        } else {
+            nuevos << [seguidores: seguir]
+        }
+
+        seguir.each { usuario -> tarea.addToSeguidores(usuario)}
+
+        return nuevos
+    }
+
 
     /*
     * Este metodo se ejecuta cuando se esta a punto de eliminar una o mas tareas.

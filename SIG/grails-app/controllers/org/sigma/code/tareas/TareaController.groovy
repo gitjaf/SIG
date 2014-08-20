@@ -1,7 +1,7 @@
 
 package org.sigma.code.tareas
 
-import org.codehaus.groovy.grails.web.mapping.LinkGenerator
+
 import org.h2.command.ddl.CreateLinkedTable
 import org.sigma.code.plugins.HalBuilderService
 import org.springframework.dao.DataIntegrityViolationException
@@ -17,11 +17,7 @@ class TareaController {
 	
 	def halCollectionBuilderService
 
-	def tareaService
-	
-    def mailService
-
-    LinkGenerator grailsLinkGenerator
+    def tareaService
 
     static allowedMethods = [list: "GET", show: "GET", find:"POST", save: "PUT", update: "PUT", delete: "DELETE"]
 
@@ -87,25 +83,7 @@ class TareaController {
 			return
         }
 
-        tareaInstance.asignados.each{
-            def email = it.username + "@frd.utn.edu.ar" 
-            mailService.sendMail {
-                to "${email}"
-                subject "Nueva Tarea"
-                html (view: '/mail/notification', model: [tarea: tareaInstance, url: grailsLinkGenerator.serverBaseURL])
-            }
-        }
-        
-        tareaInstance.seguidores.each{
-            def email = it.username + "@frd.utn.edu.ar" 
-            mailService.sendMail {
-                to "${email}"
-                subject "Nueva Tarea"
-                html (view: '/mail/notification', model: [tarea: tareaInstance, url: grailsLinkGenerator.serverBaseURL])
-            }
-        }
-        
-
+       
 		flash.message = message(code: 'default.created.message', args: [message(code: 'tarea.label', default: 'Tarea'), tareaInstance.id])
         response.status = 201
         render halBuilderService.buildModel(tareaInstance) as JSON
