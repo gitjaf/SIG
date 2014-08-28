@@ -110,6 +110,7 @@ class TareaService {
                 mailService.sendMail {
                     async true
                     to "${email}"
+                    from "SIG@Tareas"
                     subject "Nueva Tarea"
                     html (view: '/mail/notification', model: [tarea: tarea, url: grailsLinkGenerator.serverBaseURL])
                 }
@@ -120,6 +121,7 @@ class TareaService {
                 mailService.sendMail {
                     async true
                     to "${email}"
+                    from "SIG@Tareas"
                     subject "Nueva Tarea"
                     html (view: '/mail/notification', model: [tarea: tarea, url: grailsLinkGenerator.serverBaseURL])
                 }
@@ -294,18 +296,19 @@ class TareaService {
     }
 
     protected getTareasEnPapelera(Map queryParams, Map params){
+        
         def query = "from org.sigma.code.tareas.Tarea as t where " +
-                    " (t.tareaSuperior is null and t.borrado = true)"
+                    " (t.tareaSuperior is null and t.borrado = true and t.responsable = :usuario)"
         def tareas = [] 
 
-        Tarea.executeQuery(query).each{
+        Tarea.executeQuery(query, [usuario: queryParams.usuario]).each{
             tareas << it
         }
 
         query = "from org.sigma.code.tareas.Tarea as t where " +
-                " (t.tareaSuperior.borrado = false and t.borrado = true ) "
+                " (t.tareaSuperior.borrado = false and t.borrado = true and t.responsable = :usuario) "
 
-        Tarea.executeQuery(query).each{
+        Tarea.executeQuery(query, [usuario: queryParams.usuario]).each{
             tareas << it
         }
         
