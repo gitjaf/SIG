@@ -6,6 +6,7 @@ import grails.gorm.*
 import org.codehaus.groovy.grails.web.json.JSONObject
 import org.springframework.dao.DataIntegrityViolationException
 import org.codehaus.groovy.grails.web.mapping.LinkGenerator
+import com.sun.mail.util.MailConnectException
 
 class TareaService {
 
@@ -102,23 +103,29 @@ class TareaService {
     }
 
     def notificarUsuarios(Map nuevos, Tarea tarea){
-        println nuevos
-        nuevos.asignados.each{
-            def email = it.username + "@frd.utn.edu.ar" 
-            mailService.sendMail {
-                to "${email}"
-                subject "Nueva Tarea"
-                html (view: '/mail/notification', model: [tarea: tarea, url: grailsLinkGenerator.serverBaseURL])
-            }
-        }
         
-        nuevos.seguidores.each{
-            def email = it.username + "@frd.utn.edu.ar" 
-            mailService.sendMail {
-                to "${email}"
-                subject "Nueva Tarea"
-                html (view: '/mail/notification', model: [tarea: tarea, url: grailsLinkGenerator.serverBaseURL])
+        try{
+            nuevos.asignados.each{
+                def email = it.username + "@frd.utn.edu.ar" 
+                mailService.sendMail {
+                    async true
+                    to "${email}"
+                    subject "Nueva Tarea"
+                    html (view: '/mail/notification', model: [tarea: tarea, url: grailsLinkGenerator.serverBaseURL])
+                }
             }
+            
+            nuevos.seguidores.each{
+                def email = it.username + "@frd.utn.edu.ar" 
+                mailService.sendMail {
+                    async true
+                    to "${email}"
+                    subject "Nueva Tarea"
+                    html (view: '/mail/notification', model: [tarea: tarea, url: grailsLinkGenerator.serverBaseURL])
+                }
+            }
+        } catch (Exception e){
+            println "No se pudo notificar por mail"
         }
     }
 
@@ -144,7 +151,8 @@ class TareaService {
     def getTareas = { params, String idUsuario ->
         
         if(params.tareaSuperior){
-            return this.getSubTareas(params.tareaSuperior as Integer, params?.sortBy)
+            def borrado = params?.filtro == "papelera"
+            return this.getSubTareas(params.tareaSuperior as Integer, borrado, params?.sortBy)
         }
 
         def usuario = Usuario.get(idUsuario as Integer)
@@ -287,16 +295,27 @@ class TareaService {
 
     protected getTareasEnPapelera(Map queryParams, Map params){
         def query = "from org.sigma.code.tareas.Tarea as t where " +
-                    // " (t.responsable = :usuario) and " +
-                    " ((t.tareaSuperior is not null and t.tareaSuperior.borrado = false) or " +
-                    " (t.tareaSuperior is null and t.borrado = true )) "
-        return (Tarea.executeQuery(query))
+                    " (t.tareaSuperior is null and t.borrado = true)"
+        def tareas = [] 
+
+        Tarea.executeQuery(query).each{
+            tareas << it
+        }
+
+        query = "from org.sigma.code.tareas.Tarea as t where " +
+                " (t.tareaSuperior.borrado = false and t.borrado = true ) "
+
+        Tarea.executeQuery(query).each{
+            tareas << it
+        }
+        
+        return tareas
 
     }
 
-    protected getSubTareas(int id, String orden){
+    protected getSubTareas(int id, Boolean borrado, String orden){
         def tarea = Tarea.get(id)      
-        return Tarea.findAllByTareaSuperior(tarea, [sortBy: orden])
+        return Tarea.findAllByTareaSuperiorAndBorrado(tarea, borrado, [sortBy: orden])
     }
 
 
@@ -341,27 +360,32 @@ class TareaService {
         def asignar = json?.asignados?.collect {usuario -> Usuario.get(usuario.id)}
         def seguir = json?.seguidores?.collect {usuario -> Usuario.get(usuario.id)}
 
-        if(tarea.asignados){
-            def asignados = Usuario.executeQuery("from Usuario u where :tarea in elements(u.asignadas)", [tarea: tarea])
-            asignados*.removeFromAsignadas(tarea)
-            if(tarea.asignados != null){tarea.asignados.clear()}
-            nuevos << [asignados: (asignar - asignados)]
-        } else {
-            nuevos << [asignados: asignar]
-        }
-        
-        asignar.each { usuario -> tarea.addToAsignados(usuario)}
-                
-        if(tarea.seguidores){
-            def seguidores = Usuario.executeQuery("from Usuario u where :tarea in elements(u.seguidas)", [tarea: tarea])
-            seguidores*.removeFromSeguidas(tarea)
-            if(tarea.seguidores != null){tarea.seguidores.clear()}
-            nuevos << [seguidores: (seguir - seguidores)]
-        } else {
-            nuevos << [seguidores: seguir]
+        if(asignar){
+            if(tarea.asignados){
+                def asignados = Usuario.executeQuery("from Usuario u where :tarea in elements(u.asignadas)", [tarea: tarea])
+                asignados*.removeFromAsignadas(tarea)
+                if(tarea.asignados != null){tarea.asignados.clear()}
+
+                nuevos << [asignados: (asignar - asignados)]
+            } else {
+                nuevos << [asignados: asignar]
+            }
+            
+            asignar.each { usuario -> tarea.addToAsignados(usuario)}
         }
 
-        seguir.each { usuario -> tarea.addToSeguidores(usuario)}
+        if(seguir){
+            if(tarea.seguidores){
+                def seguidores = Usuario.executeQuery("from Usuario u where :tarea in elements(u.seguidas)", [tarea: tarea])
+                seguidores*.removeFromSeguidas(tarea)
+                if(tarea.seguidores != null){tarea.seguidores.clear()}
+                nuevos << [seguidores: (seguir - seguidores)]
+            } else {
+                nuevos << [seguidores: seguir]
+            }
+
+            seguir.each { usuario -> tarea.addToSeguidores(usuario)}
+        }
 
         return nuevos
     }

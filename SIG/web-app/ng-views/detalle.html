@@ -16,7 +16,7 @@
 			</a>
 			</div>
 			<div class="span1 muted">
-				<div class="span12 titulo-tarea-buttons">
+				<div class="span12 titulo-tarea-buttons" data-ng-show="detalle._embedded.responsable.id == user.id">
 					<a class="btn btn-mini btn-danger" data-ng-hide="isActive('papelera')" bs-modal="'./ng-views/partials/confirmDeleteTarea.html'">
 						<i class="fa fa-trash-o fa-lg txt-white"></i>
 					</a>

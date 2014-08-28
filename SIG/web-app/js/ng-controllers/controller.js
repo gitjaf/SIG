@@ -48,7 +48,8 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	$scope.detalle = undefined;
 
 	$scope.verDetalleTarea = function(tarea){
-		$scope.detalle = tarea;		
+		$scope.detalle = tarea;	
+	
 	}
 
 	if($rootScope.detalle){

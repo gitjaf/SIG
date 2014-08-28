@@ -16,8 +16,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 		   	this.$apply(fn);
 		}
 	};
-	console.log($rootScope.user);
-	console.log(AuthService.data);
+	
 	$scope.usuarios = Resource.getResource($rootScope.user._links.find.href)
 		.query({"page": page, "itemsPerPage": items, "sortBy": sort, "q": q});
 	
