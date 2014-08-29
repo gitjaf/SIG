@@ -85,17 +85,17 @@
 				<div id="asignados" class="span11 detalle-asignados" data-ng-show="detalle._embedded.asignados">
 					<i class="fa fa-group txt-orange"></i>  <span class="muted"> Asignados:</span><br>
 					<div>
-						<span data-ng-repeat="asignado in detalle._embedded.asignados">{{asignado._embedded.persona.nombres}} {{asignado._embedded.persona.apellidos}}, &nbsp;</span>
+						<span data-ng-repeat="asignado in detalle._embedded.asignados">{{asignado._embedded.persona.nombres}} {{asignado._embedded.persona.apellidos}} <span data-ng-hide="$index == (detalle._embedded.asignados.length - 1)">, &nbsp;</span></span>
 					</div>
 				</div>
 
 				<div id="seguidores" class="span11 detalle-asignados detalle-seguidores" data-ng-show="detalle._embedded.seguidores" style="margin-left:0px;">
 					<i class="fa fa-group txt-orange"></i>  <span class="muted"> Seguidores: </span><br>
 					<div>
-						<span data-ng-repeat="seguidor in detalle._embedded.seguidores">{{seguidor._embedded.persona.nombres}} {{seguidor._embedded.persona.apellidos}}, &nbsp;</span>
+						<span data-ng-repeat="seguidor in detalle._embedded.seguidores">{{seguidor._embedded.persona.nombres}} {{seguidor._embedded.persona.apellidos}} <span data-ng-hide="$index == (detalle._embedded.seguidores.length - 1)">, &nbsp;</span></span>
 					</div>
-				</div>
-				<div id="descripcion" class="span12 detalle-descripcion" data-ng-show="detalle.descripcion">
+				</div
+>				<div id="descripcion" class="span12 detalle-descripcion" data-ng-show="detalle.descripcion">
 					<i class="fa fa-info-circle txt-orange"></i> 
 					<span class="muted"> Descripción:</span> <br>
 					<span class="detalle-descripcion-body">{{detalle.descripcion}}</span>

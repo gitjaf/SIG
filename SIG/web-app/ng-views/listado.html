@@ -28,25 +28,25 @@
 		<div class="span2 filtros" id="filtros" >
 			<div class="muted"><small>Mostrar tareas:</small></div>
 			<ul class="unstyled">
-				<li data-ng-class="{active: isActive('todas') }">
+				<li data-ng-class="{active: isActive('todas') }" data-ng-click="changeFilter('todas')">
 					
-					<span class="pull-left"><a class="muted" data-ng-click="changeFilter('todas')">Todas</a></span> <span class="badge bdg-white txt-blue pull-right" data-ng-show="isActive('todas')">{{tareas.data.total}}</span>
+					<span class="pull-left"><a class="muted" >Todas</a></span> <span class="badge bdg-white txt-blue pull-right" data-ng-show="isActive('todas')">{{tareas.data.total}}</span>
 				</li>
-				<li data-ng-class="{active: isActive('propias')}">
+				<li data-ng-class="{active: isActive('propias')}" data-ng-click="changeFilter('propias')">
 					
-					<span class="pull-left"><a class="muted" data-ng-click="changeFilter('propias')">Propias</a></span> <span class="badge bdg-white txt-blue pull-right" data-ng-show="isActive('propias')">{{tareas.data.total}}</span>
+					<span class="pull-left"><a class="muted" >Propias</a></span> <span class="badge bdg-white txt-blue pull-right" data-ng-show="isActive('propias')">{{tareas.data.total}}</span>
 				</li>
-				<li data-ng-class="{active: isActive('asignadas')}">
+				<li data-ng-class="{active: isActive('asignadas')}" data-ng-click="changeFilter('asignadas')">
 					
-					<span class="pull-left"><a class="muted" data-ng-click="changeFilter('asignadas')">Asignadas</a></span> <span class="badge bdg-white txt-blue pull-right" data-ng-show="isActive('asignadas')">{{tareas.data.total}}</span>
+					<span class="pull-left"><a class="muted" >Asignadas</a></span> <span class="badge bdg-white txt-blue pull-right" data-ng-show="isActive('asignadas')">{{tareas.data.total}}</span>
 				</li>
-				<li data-ng-class="{active: isActive('seguidas')}">
+				<li data-ng-class="{active: isActive('seguidas')}" data-ng-click="changeFilter('seguidas')">
 					
-					<span class="pull-left"><a class="muted" data-ng-click="changeFilter('seguidas')">Seguidas</a></span> <span class="badge bdg-white txt-blue pull-right" data-ng-show="isActive('seguidas')">{{tareas.data.total}}</span>
+					<span class="pull-left"><a class="muted" >Seguidas</a></span> <span class="badge bdg-white txt-blue pull-right" data-ng-show="isActive('seguidas')">{{tareas.data.total}}</span>
 				</li>
-				<li data-ng-class="{active: isActive('papelera')}">
+				<li data-ng-class="{active: isActive('papelera')}" data-ng-click="changeFilter('papelera')">
 					
-					<span class="pull-left"><a class="muted" data-ng-click="changeFilter('papelera')">Papelera</a></span> <span class="badge bdg-white txt-blue pull-right" data-ng-show="isActive('papelera')">{{tareas.data.total}}</span>
+					<span class="pull-left"><a class="muted" >Papelera</a></span> <span class="badge bdg-white txt-blue pull-right" data-ng-show="isActive('papelera')">{{tareas.data.total}}</span>
 				</li>
 				
 			</ul>
@@ -104,7 +104,7 @@
 			<div class="row-fluid span12 muted header-listado">
 			
 				<div class="span12 header-pagination">
-					<pager collection="tareas"  class="span6 pagination pagination-small"/>
+					<pager collection="tareas"  class="span9 pagination pagination-small"/>
 					<ng-switch on="filtro">
 						<div ng-switch-when="papelera" class="span3 pull-right boton-nueva">
 							<a class="btn btn-small btn-danger pull-right" id="vaciar"  bs-modal="'./ng-views/partials/confirmVaciarPapelera.html'" ><i class="fa fa-trash-o"></i>  Vaciar</a>
@@ -153,7 +153,7 @@
 					
 					</div>
 				</div>
-				<pager collection="tareas"  class="span6 pagination pagination-small footer-listado"/>
+				<pager collection="tareas"  class="span9 pagination pagination-small footer-listado"/>
 			</div>
 		</div>
 		<div id="detalle" class="span5 container-tarea-detalle" data-ng-show="detalle" data-ng-include src="'./ng-views/detalle.html'" >

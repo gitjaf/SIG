@@ -112,7 +112,7 @@ class TareaService {
                     to "${email}"
                     from "SIG@Tareas"
                     subject "Nueva Tarea"
-                    html (view: '/mail/notification', model: [tarea: tarea, url: grailsLinkGenerator.serverBaseURL])
+                    html (view: '/mail/notification', model: [tarea: tarea, url: grailsLinkGenerator.serverBaseURL, tipoAsignacion: "Asignado"])
                 }
             }
             
@@ -123,7 +123,7 @@ class TareaService {
                     to "${email}"
                     from "SIG@Tareas"
                     subject "Nueva Tarea"
-                    html (view: '/mail/notification', model: [tarea: tarea, url: grailsLinkGenerator.serverBaseURL])
+                    html (view: '/mail/notification', model: [tarea: tarea, url: grailsLinkGenerator.serverBaseURL, tipoAsignacion: "Seguidor"])
                 }
             }
         } catch (Exception e){
@@ -360,35 +360,35 @@ class TareaService {
 
     protected asignarTarea(Tarea tarea, JSONObject json){
         def nuevos = [:] 
-        def asignar = json?.asignados?.collect {usuario -> Usuario.get(usuario.id)}
-        def seguir = json?.seguidores?.collect {usuario -> Usuario.get(usuario.id)}
+        def asignar = json?.asignados?.collect {usuario -> Usuario.get(usuario.id)} ?: []
+        def seguir = json?.seguidores?.collect {usuario -> Usuario.get(usuario.id)} ?: []
 
-        if(asignar){
-            if(tarea.asignados){
-                def asignados = Usuario.executeQuery("from Usuario u where :tarea in elements(u.asignadas)", [tarea: tarea])
-                asignados*.removeFromAsignadas(tarea)
-                if(tarea.asignados != null){tarea.asignados.clear()}
+    
+        if(tarea.asignados){
+            def asignados = Usuario.executeQuery("from Usuario u where :tarea in elements(u.asignadas)", [tarea: tarea])
+            asignados*.removeFromAsignadas(tarea)
+            if(tarea.asignados != null){tarea.asignados.clear()}
 
-                nuevos << [asignados: (asignar - asignados)]
-            } else {
-                nuevos << [asignados: asignar]
-            }
-            
-            asignar.each { usuario -> tarea.addToAsignados(usuario)}
+            nuevos << [asignados: (asignar - asignados)]
+        } else {
+            nuevos << [asignados: asignar]
+        }
+        
+        asignar.each { usuario -> tarea.addToAsignados(usuario)}
+    
+
+    
+        if(tarea.seguidores){
+            def seguidores = Usuario.executeQuery("from Usuario u where :tarea in elements(u.seguidas)", [tarea: tarea])
+            seguidores*.removeFromSeguidas(tarea)
+            if(tarea.seguidores != null){tarea.seguidores.clear()}
+            nuevos << [seguidores: (seguir - seguidores)]
+        } else {
+            nuevos << [seguidores: seguir]
         }
 
-        if(seguir){
-            if(tarea.seguidores){
-                def seguidores = Usuario.executeQuery("from Usuario u where :tarea in elements(u.seguidas)", [tarea: tarea])
-                seguidores*.removeFromSeguidas(tarea)
-                if(tarea.seguidores != null){tarea.seguidores.clear()}
-                nuevos << [seguidores: (seguir - seguidores)]
-            } else {
-                nuevos << [seguidores: seguir]
-            }
-
-            seguir.each { usuario -> tarea.addToSeguidores(usuario)}
-        }
+        seguir.each { usuario -> tarea.addToSeguidores(usuario)}
+    
 
         return nuevos
     }

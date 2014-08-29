@@ -305,12 +305,12 @@ a.badge:focus {
         <tbody><tr>
           <td>
             <h2 class="text-primary">${tarea.asunto}</h2>
-            <p class="text-muted">Usted ha sido agregado a esta tarea por <span class="text-muted text-bold">${tarea.responsable.persona.nombreCompleto}</span>.</p>
+            <p class="text-muted">Usted ha sido agregado a esta tarea como <b>${tipoAsignacion}</b> por <span class="text-muted text-bold">${tarea.responsable.persona.nombreCompleto}</span>.</p>
             <g:if test="${tarea.tipo}">
               <p><span class="text-bold">Clasificada como: </span> ${tarea.tipo}</p>
             </g:if>
             <g:if test="${tarea.prioridad}">
-              <p><span class="text-bold">Estado: </span> <label class="label ${tarea.estado.toLowerCase()}"> ${tarea.estado}</label>&nbsp; <span class="text-bold">Prioridad: </span> <label class="label ${tarea.prioridad.toLowerCase()}">${tarea.prioridad}</label></p>
+              <p><span class="text-bold">Estado: </span> <label class="label ${tarea.estado.replaceAll('\\s','').toLowerCase()}"> ${tarea.estado}</label>&nbsp; <span class="text-bold">Prioridad: </span> <label class="label ${tarea.prioridad.replaceAll('\\s','').toLowerCase()}">${tarea.prioridad}</label></p>
             </g:if>
             <g:if test="${tarea.fechaInicio || tarea.fechaRevision || tarea.fechaVencimiento} ">
               <p>
