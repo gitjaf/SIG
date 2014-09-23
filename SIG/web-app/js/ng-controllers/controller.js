@@ -4,11 +4,11 @@ function AppCtrl($rootScope, $location, $routeParams, AuthService){
 }
 
 function LoginCtrl($scope, $rootScope, $routeParams, $location, AuthService) {
-	
+
 	$scope.login = function(){
 		var loginData = {url: "/login"}
 		var loginResource =	AuthService.sdo(loginData)
-		
+
 		loginResource.login(
 			{
 			 "username": $scope.username,
@@ -33,7 +33,7 @@ function LoginCtrl($scope, $rootScope, $routeParams, $location, AuthService) {
 
 function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Usuario,
  Tarea, Tipo, Seguimiento, Resource, $document, AuthService) {
-	
+
 	$rootScope.page = $routeParams.page ? $routeParams.page : 0;
 	$rootScope.items = $routeParams.itemsPerPage ? $routeParams.itemsPerPage : 10;
 	$rootScope.sortBy = $routeParams.sortBy ? $routeParams.sortBy : "fechaInicio";
@@ -44,12 +44,12 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		"text": "Salir",
 		"click": "logout()"
 	}];
-	
+
 	$scope.detalle = undefined;
 
 	$scope.verDetalleTarea = function(tarea){
-		$scope.detalle = tarea;	
-	
+		$scope.detalle = tarea;
+
 	}
 
 	if($rootScope.detalle){
@@ -80,7 +80,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 				$location.url(loginData.url);
 			}
 		);
-		
+
 	}
 
 	$scope.$on('refresh', function(event){
@@ -98,7 +98,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	}
 
 	$scope.changeFilter = function(filterName){
-		var loc = "/tarea" ; 
+		var loc = "/tarea" ;
 		if(filterName){
 			loc +=  "/" + filterName;
 		}
@@ -161,11 +161,11 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		$routeParams.page = 0;
 		$scope.idTarea = tarea.id;
 		$rootScope.tareaSuperior = tarea;
-		
+
 	}
 
 	$scope.nuevaTarea = function(tarea){
-		
+
 		$scope.form = 'tarea';
 		$scope.showTipo = false;
 		$scope.showTiempo = false;
@@ -185,11 +185,11 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	}
 
 	$scope.editarTarea = function(t){
-		
+
 		$scope.form = 'tarea';
 		$scope.tarea = new Tarea();
 		angular.copy(t, $scope.tarea);
-		
+
 		$scope.tarea.asunto = t.asunto;
 		$scope.tarea.tipo = getProperty("tipo", $scope.tarea);
 		$scope.showTipo = !(_.isEmpty($scope.tarea.tipo));
@@ -208,27 +208,27 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		$scope.showAsigna = !(_.isEmpty($scope.tarea.asignados) && _.isEmpty($scope.tarea.seguidores));
 
 		$scope.showDesc = !(_.isEmpty($scope.tarea.descripcion));
-		
+
 		$scope.form_action = "Editar Tarea";
-		
+
 	}
 
 	$scope.save = function(tarea){
 
 		var tareas = $scope.tareas._embedded.collection;
-		
+
 		var idTareaSuperior = $rootScope.idTarea;
-		
-		var restaurada = tarea.restaurada; 
+
+		var restaurada = tarea.restaurada;
 
 		$scope.tarea = new Tarea();
 		angular.copy(tarea, $scope.tarea);
 		$scope.tarea.idTareaSuperior = idTareaSuperior;
-				
+
 		$scope.tarea.fechaInicio = $filter('date')(tarea.fechaInicio, "dd/MM/yyyy");
 		$scope.tarea.fechaRevision = $filter('date')($scope.tarea.fechaRevision, "dd/MM/yyyy");
 		$scope.tarea.fechaVencimiento = $filter('date')(tarea.fechaVencimiento, "dd/MM/yyyy");
-		
+
 		if($scope.tarea.id){
 			Resource.getResource(
 				tarea._links.update.href
@@ -246,14 +246,14 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 					} else {
 						$scope.detalle = tarea;
 					}
-					
+
 				}, function(response, putResponseHeaders){
 					var mensaje = "Error al editar la tarea '" + $scope.tarea.asunto + "'",
 					duracion = 4000,
 					titulo = "Editar Tarea: ",
 					tipo = 'alert-error';
 
-					$scope.alert(titulo, mensaje, tipo, duracion);	
+					$scope.alert(titulo, mensaje, tipo, duracion);
 			});
 		} else {
 			Resource.getResource($scope.tareas._links.create.href).create($scope.tarea,
@@ -266,7 +266,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 							 tareaSuperior = _($scope.tareas._embedded.collection).find( function(value) {
 							  return value.id == idTareaSuperior;
 							});
-						
+
 							if(tareaSuperior._embedded.tareasRelacionadas){
 								tareaSuperior._embedded.tareasRelacionadas.push(tarea);
 							}else {
@@ -277,15 +277,15 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 							refresh();
 						}
 						$scope.detalle = tareaSuperior;
-					} 
-					
+					}
+
 					var mensaje = "La tarea '" + tarea.asunto + "' fue creada con exito",
 					titulo = "Crear Tarea: ",
 					tipo = 'alert-success',
 					duracion = 4000;
 
 					$scope.alert(titulo, mensaje, tipo, duracion);
-					
+
 				},function(response, putResponseHeaders){
 					var mensaje = "Error al crear la tarea '" + $scope.tarea.asunto + "'",
 					titulo = "Crear Tarea: ",
@@ -317,19 +317,19 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 				duracion = 4000,
 				tipo = 'alert-success';
 				$scope.alert(titulo, mensaje, tipo, duracion);
-				
+
 			}, function(response, putResponseHeaders){
 				var mensaje = "Error al intentar eliminar la tarea '" + $scope.tarea.asunto + "'",
 				duracion = 4000,
 				titulo = "Eliminar Tarea Permanentemente: ",
 				tipo = 'alert-error';
 
-				$scope.alert(titulo, mensaje, tipo, duracion);	
+				$scope.alert(titulo, mensaje, tipo, duracion);
 			});
 	}
 
 	$scope.vaciarPapelera = function(){
-		
+
 		$scope.tareas.$deleteAll({userId: $rootScope.userId},
 			function(response, putResponseHeaders){
 				var mensaje = "La papelera se vacio con exito",
@@ -339,15 +339,15 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 				$scope.detalle = undefined;
 				refresh();
 				$scope.alert(titulo, mensaje, tipo, duracion);
-						
+
 			},
 			function(response, putResponseHeaders){
 				var mensaje = "Error al intentar vaciar la papelera",
 				duracion = 4000,
 				titulo = "Vaciar Papelera: ",
 				tipo = 'alert-error';
-							
-				$scope.alert(titulo, mensaje, tipo, duracion);	
+
+				$scope.alert(titulo, mensaje, tipo, duracion);
 			});
 
 	}
@@ -359,9 +359,9 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		$scope.ocultarDetalle();
 	}
 
-	
 
-	
+
+
 	$scope.ocultarDetalle = function(){
 		$scope.detalle = undefined;
 	}
@@ -375,8 +375,8 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		if(seguimiento){
 			angular.copy(seguimiento, $scope.seguimiento)
 			$scope.dateSeg = $filter('date')($scope.seguimiento.fecha, "dd/MM/yyyy");;
-		} 
-		
+		}
+
 	}
 
 	$scope.alert = function(titulo, mensaje, tipo, duracion){
@@ -424,9 +424,9 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		Resource.getResource(
 			seguimiento._links.delete.href
 		).delete(seguimiento,
-		
+
 			function(success, putResponseHeaders){
-				
+
 				var seguimientos = _.reject(tarea._embedded.seguimientos,
 				 	function(value) {
 				  		return (value.id == seguimiento.id);
@@ -446,22 +446,22 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 				titulo = "Eliminar Seguimiento: ",
 				tipo = 'alert-error';
 
-				$scope.alert(titulo, mensaje, tipo, duracion);	
+				$scope.alert(titulo, mensaje, tipo, duracion);
 			});
 	}
 
 	$scope.changeDateEvent = function(elementID){
 		var t = $scope.tarea;
-		
+
 		destroyDateWarnings('#fechaInicio');
 		destroyDateWarnings('#fechaRevision');
 		destroyDateWarnings('#fechaVencimiento');
-		
+
 		if(!(compararFechas(t.fechaInicio, t.fechaVencimiento))){
 			scope.invalidDate = true;
 			scope.message({
 				"element": '#fechaVencimiento',
-				"title" : 'Fecha No Valida', 
+				"title" : 'Fecha No Valida',
 				"position": 'top',
 				"content" : 'La tarea no puede vencer o revisarse antes de iniciar',
 				"timeout" : 3000,
@@ -471,13 +471,13 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 				"unique": 1,
 				"action" :'show'
 			});
-		} 
-		
+		}
+
 		if(!(compararFechas(t.fechaRevision, t.fechaVencimiento))){
 			scope.invalidDate = true;
 			scope.message({
 				"element": "#fechaVencimiento",
-				"title" : 'Fecha No Valida', 
+				"title" : 'Fecha No Valida',
 				"position": 'top',
 				"content" : 'La tarea no puede vencer o revisarse antes de iniciar',
 				"timeout" : 3000,
@@ -494,7 +494,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 			scope.message({
 				"element": "#fechaRevision",
 				"title" : 'Fecha No Valida',
-				"position": 'bottom', 
+				"position": 'bottom',
 				"content" : 'La tarea no puede vencer o revisarse antes de iniciar',
 				"timeout" : 3000,
 				"error" : true,
@@ -503,7 +503,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 				"unique": 1,
 				"action" :'show'
 			});
-		} 
+		}
 
 	}
 
@@ -558,17 +558,17 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 			tareaSuperior: $rootScope.idTarea
 
 		})
-	
+
 	}
 
 	function compararFechas(fechaMenor, fechaMayor){
-		fechaMenor = ($filter('date')(fechaMenor, "dd/MM/yyyy"));
-		fechaMayor = ($filter('date')(fechaMayor, "dd/MM/yyyy"));
-		
+		fechaMenor = ($filter('date')(fechaMenor, "yyyyMMdd"));
+		fechaMayor = ($filter('date')(fechaMayor, "yyyyMMdd"));
+
 		if(fechaMenor == undefined || fechaMayor == undefined){
 			return true;
 		}
-		
+
 		return (fechaMenor <= fechaMayor);
 	}
 
@@ -580,10 +580,9 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		scope.invalidDate = false;
 	}
 
-	
+
 }
 
 function DetalleTareaCtrl($scope, $routeParams, Tarea) {
 	// $scope.tarea = Tarea.get({idTarea:$routeParams.tareaId});
 }
-

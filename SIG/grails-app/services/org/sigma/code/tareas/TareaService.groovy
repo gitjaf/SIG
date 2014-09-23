@@ -110,7 +110,7 @@ class TareaService {
                 mailService.sendMail {
                     async true
                     to "${email}"
-                    from "SIG@Tareas"
+                    from "sig-tareas@frd.utn.edu.ar"
                     subject "Nueva Tarea"
                     html (view: '/mail/notification', model: [tarea: tarea, url: grailsLinkGenerator.serverBaseURL, tipoAsignacion: "Asignado"])
                 }
@@ -121,7 +121,7 @@ class TareaService {
                 mailService.sendMail {
                     async true
                     to "${email}"
-                    from "SIG@Tareas"
+                    from "sig-tareas@frd.utn.edu.ar"
                     subject "Nueva Tarea"
                     html (view: '/mail/notification', model: [tarea: tarea, url: grailsLinkGenerator.serverBaseURL, tipoAsignacion: "Seguidor"])
                 }

@@ -5,7 +5,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 	var items = 0;
 	var sort = "apellidos";
 	var q = "";
-	
+
 	$scope.safeApply = function(fn) {
   		var phase = this.$root.$$phase;
 		if(phase == '$apply' || phase == '$digest') {
@@ -16,20 +16,20 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 		   	this.$apply(fn);
 		}
 	};
-	
+
 	$scope.usuarios = Resource.getResource($rootScope.user._links.find.href)
 		.query({"page": page, "itemsPerPage": items, "sortBy": sort, "q": q});
-	
-		
-	
+
+
+
 	// $scope.usuarios = Usuario.query({"page": page, "itemsPerPage": items, "sortBy": sort, "q": q});
 
 	$scope.tipos = Tipo.query({q: '', userId: ''});
-	
+
 	$scope.showAddTipo = false;
 	$scope.showEditTipo = false;
 	$scope.showDeleteTipo = false;
-	
+
 
 	$scope.selectUser = function(k, v){
 		$scope.usuario = k;
@@ -39,8 +39,10 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 	$scope.agregar = function(usuario, id, collection, elemento) {
 		var fields = ["#form_asigna", "#form_sigue"]
 		if(usuario !== undefined && id !== undefined){
-		var duplicate = $scope.checkForDuplicate("id", id, $scope.tarea.asignados) 
-				|| $scope.checkForDuplicate("id", id, $scope.tarea.seguidores);
+		var isAsignado = $scope.checkForDuplicate("id", id, $scope.tarea.asignados);
+		var isSeguidor = $scope.checkForDuplicate("id", id, $scope.tarea.seguidores);
+		var isResponsable = $scope.checkForDuplicate("id", id, $scope.tarea.responsable);
+		var duplicate = isAsignado || isSeguidor || isResponsable;
 			if(!duplicate){
 				collection.push(($filter('filter')($scope.usuarios, function(u){
 					return (u.id == id);
@@ -49,16 +51,16 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 				$scope.usuario = undefined;
 				$scope.id = undefined;
 			} else{
-				
+
 				$scope.message({
 					"element": elemento,
-					"title" : 'Asignar un usuario', 
-					"content" : 'El usuario ya esta asignado en otro rol',
+					"title" : 'Asignar un usuario',
+					"content" : 'El usuario ya esta agregado a esta tarea en el rol de ' + (isAsignado ? "Asignado" : isSeguidor ? "Seguidor" : "Responsable"),
 					"timeout" : 3000,
 					"error" : true,
 					"trigger" : "manual",
 					"delay" : 1000
-					
+
 			});
 			}
 		}
@@ -84,18 +86,25 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 
 	$scope.checkForDuplicate = function(property, value, collection){
 		var duplicate = false
-		angular.forEach(collection, function(item){
-			if(item[property].toString().toLowerCase() == value.toString().toLowerCase()) {
-				duplicate = true;
-				return;
-			}
-		});
+		console.log(angular.isArray(collection));
+		console.log(collection);
+		if(angular.isArray(collection)){
+			angular.forEach(collection, function(item){
+				if(item[property].toString().toLowerCase() == value.toString().toLowerCase()) {
+					duplicate = true;
+					return;
+				}
+			});
+		} else {
+			return (collection.toString().toLowerCase() == value.toString().toLowerCase())
+
+		}
 		return duplicate;
 	}
 
 	$scope.selectTipo = function(tipo){
 		$scope.tarea.tipo = angular.copy(tipo);
-		
+
 		if(isAdmin($rootScope.user)){
 			$scope.showAddTipo = false;
 			$scope.showEditTipo = false;
@@ -126,7 +135,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 		t.nombre = nombre;
 
 		Resource.getResource($rootScope.user._links.createClasificacion.href).create(t,
-		
+
 			function(t,putResponseHeaders){
 				addTipo(t);
 				$scope.checkTipo(t);
@@ -151,11 +160,11 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 				});
 			}
 		);
-	
+
 	}
 
 	$scope.editTipo = function(tipo){
-	
+
 		Resource.getResource(tipo._links.update.href).update(tipo,
 			function(t, putResponseHeaders){
 				$scope.message({
@@ -166,14 +175,14 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 					"error" : false,
 					"delay" : 1000,
 					"trigger" : "manual"
-				});	
+				});
 				removeTipo(tipo);
 				addTipo(t);
 				if($rootScope.tareaSuperior){
 					$rootScope.tareaSuperior._embedded.tipo = t;
 				}
 				$scope.$emit('refresh');
-				
+
 			},
 
 			function(response, putResponseHeaders){
@@ -193,7 +202,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 	}
 
 	$scope.deleteTipo = function(tipo){
-		
+
 		Resource.getResource(tipo._links.delete.href).delete(tipo,
 			function(t, putResponseHeaders){
 			removeTipo(tipo);
@@ -208,7 +217,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 			});
 
 			}, function(response, putResponseHeaders){
-				
+
 				$scope.message({
 					"element" : '#form_tipo',
 					"title" : 'Eliminar Clasificación',
@@ -220,7 +229,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 				});
 			}
 		);
-		
+
 		$scope.checkTipo($scope.tarea.tipo);
 	}
 
@@ -249,7 +258,7 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 		$scope.tipos.push(tipo);
 		$scope.tarea.tipo = angular.copy(tipo);
 	}
-	
+
 	function removeTipo(tipo){
 		for (var i = 0; i < $scope.tipos.length; i++) {
 			if($scope.tipos[i].id == tipo.id){
@@ -275,5 +284,3 @@ function removeObject(collection, object, property){
 		}
 	};
 }
-
-

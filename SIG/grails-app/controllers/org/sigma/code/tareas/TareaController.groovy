@@ -14,33 +14,33 @@ import org.codehaus.groovy.grails.commons.GrailsDomainClass
 class TareaController {
 
 	def halBuilderService
-	
+
 	def halCollectionBuilderService
 
     def tareaService
 
     static allowedMethods = [list: "GET", show: "GET", find:"POST", save: "PUT", update: "PUT", delete: "DELETE"]
 
-    
+
     @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def list() {
-    	       
+
         def list = halBuilderService.buildModel(new Tarea())
 
         if(params?.userId){
             list = (halCollectionBuilderService.buildRepresentation(tareaService.getTareas(params, params.userId),
                 request.getMethod(), params))
             response.status = 200
-            
+
         } else {
             response.status = 401
         }
-        
+
         list.data += [version: version]
-        
+
         render list as JSON
     }
-    
+
     @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def find() {
         def list = [:]
@@ -50,20 +50,20 @@ class TareaController {
             list = (halCollectionBuilderService.buildRepresentation(tareaService.getTareas(json, json.userId as String),
                 Tarea, json))
             response.status = 200
-            
+
         } else {
             response.status = 401
         }
-        
+
         list.data += [version: version]
-        
+
         render list as JSON
     }
 
     @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def show() {
         def tareaInstance = halBuilderService.buildModel(Tarea.get(params.id))
-        
+
         if (!tareaInstance) {
             flash.message = message(code: 'default.not.found.message', args: [message(code: 'tarea.label', default: 'Tarea'), params.id])
             response.status = 404
@@ -77,13 +77,13 @@ class TareaController {
     @Secured(['ROLE_ADMIN', 'ROLE_USER'])
     def save() {
         def tareaInstance = tareaService.saveTarea(request.JSON)
-		        
+
 		if (!tareaInstance) {
 			response.status = 500
 			return
         }
 
-       
+
 		flash.message = message(code: 'default.created.message', args: [message(code: 'tarea.label', default: 'Tarea'), tareaInstance.id])
         response.status = 201
         render halBuilderService.buildModel(tareaInstance) as JSON
@@ -132,7 +132,7 @@ class TareaController {
 
         response.status = tareaService.deleteTarea(tareaInstance)
         render 'ok';
-        
+
     }
 
     @Secured(['ROLE_ADMIN', 'ROLE_USER'])
@@ -144,5 +144,5 @@ class TareaController {
 
         render respuesta
     }
-	
+
 }
