@@ -30,7 +30,6 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 	$scope.showEditTipo = false;
 	$scope.showDeleteTipo = false;
 
-
 	$scope.selectUser = function(k, v){
 		$scope.usuario = k;
 		$scope.id = v;
@@ -86,8 +85,6 @@ function FormTareaCtrl($rootScope, $scope, $routeParams, $filter, Tarea, Usuario
 
 	$scope.checkForDuplicate = function(property, value, collection){
 		var duplicate = false
-		console.log(angular.isArray(collection));
-		console.log(collection);
 		if(angular.isArray(collection)){
 			angular.forEach(collection, function(item){
 				if(item[property].toString().toLowerCase() == value.toString().toLowerCase()) {

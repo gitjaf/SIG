@@ -190,6 +190,7 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 		$scope.tarea = new Tarea();
 		angular.copy(t, $scope.tarea);
 
+		$scope.tarea.responsable = t._embedded.responsable.id
 		$scope.tarea.asunto = t.asunto;
 		$scope.tarea.tipo = getProperty("tipo", $scope.tarea);
 		$scope.showTipo = !(_.isEmpty($scope.tarea.tipo));
