@@ -563,12 +563,15 @@ function ListaTareaCtrl($scope, $routeParams, $location, $rootScope, $filter, Us
 	}
 
 	function compararFechas(fechaMenor, fechaMayor){
-		fechaMenor = ($filter('date')(fechaMenor, "yyyyMMdd"));
-		fechaMayor = ($filter('date')(fechaMayor, "yyyyMMdd"));
-
 		if(fechaMenor == undefined || fechaMayor == undefined){
 			return true;
 		}
+
+		fechaMenor = new Date(fechaMenor.toString().split('/').reverse().join('/'));
+		fechaMayor = new Date(fechaMayor.toString().split('/').reverse().join('/'));
+
+		fechaMenor = ($filter('date')(fechaMenor, "yyyyMMdd"));
+		fechaMayor = ($filter('date')(fechaMayor, "yyyyMMdd"));
 
 		return (fechaMenor <= fechaMayor);
 	}
